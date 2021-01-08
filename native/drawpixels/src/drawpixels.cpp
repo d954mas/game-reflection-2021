@@ -547,6 +547,12 @@ static int draw_bezier(lua_State* L) {
   return 0;
 }
 
+static int buffer_destroy(lua_State* L){
+     dmScript::LuaHBuffer *lua_buffer = dmScript::CheckBuffer(L, 1);
+     dmBuffer::Destroy(lua_buffer->m_Buffer);
+    return 0;
+}
+
 // Functions exposed to Lua
 static const luaL_reg Module_methods[] = {
   {"line", draw_line},
@@ -559,6 +565,7 @@ static const luaL_reg Module_methods[] = {
   {"color", read_color},
   {"bezier", draw_bezier},
   {"check_fill", check_fill},
+  {"buffer_destroy", buffer_destroy},
   {0, 0}
 };
 

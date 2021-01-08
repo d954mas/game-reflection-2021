@@ -47,24 +47,36 @@ function Matcher:update_screenshot()
         self.working = true
         local x,y = CAMERAS.current.viewport.x, CAMERAS.current.viewport.y
         self.w, self.h = CAMERAS.current.viewport.width, CAMERAS.current.viewport.height
+        local left_bottom = CAMERAS.current:world_to_screen(vmath.vector3(-540/2,0-512/2,0))
+        local right_top = CAMERAS.current:world_to_screen(vmath.vector3(540/2,512/2,0))
+        x,y = math.ceil(left_bottom.x), math.ceil(left_bottom.y)
+        self.w, self.h = math.ceil(right_top.x)-x, math.ceil(right_top.y)-y
+        local buffer
         if (COMMON.CONSTANTS.PLATFORM_IS_WEB) then
             local wait = true
             screenshot.html5(x, y, self.w, self.h, function(_, base64)
                 base64 = string.sub(base64, 23)
                 local img_data = dec64(base64)
-                self.buffer, self.w, self.h = png.decode_rgba(img_data, false)
+                buffer, self.w, self.h = png.decode_rgba(img_data, false)
                 wait = false
             end)
             while (wait) do coroutine.yield() end
         else
-            self.buffer, self.w, self.h = screenshot.buffer(x,y, self.w, self.h)
+            buffer, self.w, self.h = screenshot.buffer(x,y, self.w, self.h)
         end
+
         local buffer_info = {
-            buffer = self.buffer,
+            buffer = buffer,
             width = self.w,
             height = self.h,
             channels = 4
         }
+        if(self.buffer)then
+            drawpixels.buffer_destroy(self.buffer)
+        end
+        self.buffer = buffer
+
+
         self.free_pixels, self.fill_pixels = drawpixels.check_fill(buffer_info)
         self.total_pixels = self.total_pixels or (self.fill_pixels + self.free_pixels)
         self.percent = self.fill_pixels / self.total_pixels
@@ -76,6 +88,9 @@ end
 
 function Matcher:final()
     self.working = false
+    if(self.buffer)then
+        drawpixels.buffer_destroy(self.buffer)
+    end
     self.buffer, self.w, self.h = nil, nil, nil
     self.free_pixels, self.fill_pixels, self.total_pixels = 0, 0, nil
     self.percent = 0
