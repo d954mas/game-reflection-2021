@@ -1,4 +1,5 @@
 local COMMON = require "libs.common"
+local ACTIONS = require "libs.actions.actions"
 local LevelMatcher = require "world.level_matcher"
 
 local FACTORY_REGION_URL = msg.url("game:/factories#factory_region")
@@ -12,6 +13,8 @@ local Lvl = COMMON.class("Level")
 ---@param config LevelConfig
 function Lvl:initialize(config)
     self.config = assert(config)
+    self.command_sequence = ACTIONS.Sequence()
+    self.command_sequence.drop_empty = false
 end
 
 function Lvl:_create_go(factory_url, position, scale, image)
@@ -35,7 +38,6 @@ function Lvl:load()
     COMMON.d("load regions", TAG)
     for _, region in ipairs(self.config.regions) do
         COMMON.d("region:" .. region.art)
-        pprint(region.position)
         local go_url = self:_create_go(FACTORY_REGION_URL, region.position, region.scale, COMMON.HASHES.hash(region.art))
         table.insert(self.go_regions, go_url)
         local sprite_url = msg.url(go_url.socket, go_url.path, "sprite_mask")
@@ -49,20 +51,38 @@ function Lvl:load()
         local sprite_url = msg.url(go_url.socket, go_url.path, "sprite")
         sprite.set_constant(sprite_url, "tint", vmath.vector4(1, 0, 0, 1))
     end
-
-    timer.delay(0.1,false,function ()
-        --wait one frame before all go created
-        self.matcher:init()
+    self.command_sequence:add_action(function()
+        coroutine.yield()--wait 1 frame
     end)
-    timer.delay(0.2,false,function ()
-        for _,figure in ipairs(self.go_figures)do
+    self.command_sequence:add_action(function()
+        self.matcher:init()
+        local commands = self.matcher.command_sequence
+        self.matcher.command_sequence = {}
+        local sequence = ACTIONS.Sequence()
+        for _, cmd in ipairs(commands) do
+            sequence:add_action(cmd)
+        end
+        sequence:update(0)
+        while (not sequence:is_empty()) do
+            local dt = coroutine.yield()
+            sequence:update(dt)
+        end
+    end)
+    self.command_sequence:add_action(function()
+        for _, figure in ipairs(self.go_figures) do
             go.delete(figure)
         end
     end)
 end
 
 function Lvl:update(dt)
-
+    if (#self.matcher.command_sequence > 0) then
+        for _, cmd in ipairs(self.matcher.command_sequence) do
+            self.command_sequence:add_action(cmd)
+        end
+        self.matcher.command_sequence = {}
+    end
+    self.command_sequence:update(dt)
 end
 
 function Lvl:unload()
@@ -73,6 +93,8 @@ function Lvl:unload()
         self.go_figures = nil
         self.matcher:final()
         self.matcher = nil
+        self.command_sequence = ACTIONS.Sequence()
+        self.command_sequence.drop_empty = false
     end
 end
 

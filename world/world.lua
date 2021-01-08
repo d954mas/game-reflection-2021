@@ -15,7 +15,7 @@ end
 ---@param lvl LevelConfig
 function M:level_load(lvl)
     self.lvl_config = assert(lvl, "lvl is nil")
-    assert(not self.lvl,"already have level")
+    assert(not self.lvl, "already have level")
     COMMON.i("LOAD LVL:" .. lvl.id .. "(" .. lvl.idx .. ")", TAG)
     self.lvl = Level(lvl)
     self.lvl:load(lvl)
@@ -36,7 +36,9 @@ end
 function M:update(dt)
     self.storage:update(dt)
     if (self.lvl) then
+        local ctx = COMMON.CONTEXT:set_context_top_by_name(COMMON.CONTEXT.NAMES.GAME)
         self.lvl:update(dt)
+        ctx:remove()
     end
 end
 

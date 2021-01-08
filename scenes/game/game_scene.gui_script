@@ -1,6 +1,7 @@
 local COMMON = require "libs.common"
 local GUI = require "libs_project.gui.gui"
 local SM = require "libs_project.sm"
+local WORLD = require "world.world"
 
 local Script = COMMON.new_n28s()
 
@@ -27,6 +28,9 @@ end
 function Script:init_gui()
     self.view.btn_back:set_input_listener(function()
         SM:back()
+    end)
+    self.view.btn_accept:set_input_listener(function()
+        WORLD.lvl.matcher:update_screenshot()
     end)
 end
 

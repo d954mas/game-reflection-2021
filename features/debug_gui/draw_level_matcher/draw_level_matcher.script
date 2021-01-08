@@ -6,6 +6,7 @@ local Script = COMMON.new_n28s()
 function Script:init()
     self.enabled = true
     self.resource_path = go.get("#model", "texture0")
+    self.scale = go.get_scale()
 end
 
 function Script:update(dt)
@@ -14,9 +15,11 @@ function Script:update(dt)
         self.enabled = enabled
         msg.post("#model", self.enabled and COMMON.HASHES.MSG.ENABLE or COMMON.HASHES.MSG.DISABLE)
     end
-    if(self.enabled)then
-        if(WORLD.lvl and WORLD.lvl.matcher and WORLD.lvl.matcher.buffer)then
+    if (self.enabled) then
+        if (WORLD.lvl and WORLD.lvl.matcher and WORLD.lvl.matcher.buffer) then
             local matcher = WORLD.lvl.matcher
+            self.scale.y = self.scale.x * matcher.h / matcher.w
+            go.set_scale(self.scale)
             resource.set_texture(self.resource_path, { type = resource.TEXTURE_TYPE_2D, width = matcher.w, height = matcher.h, format = resource.TEXTURE_FORMAT_RGBA }, matcher.buffer)
         end
     end
