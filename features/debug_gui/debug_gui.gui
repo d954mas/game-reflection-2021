@@ -2026,7 +2026,7 @@ nodes {
     w: 1.0
   }
   type: TYPE_TEMPLATE
-  id: "panel_game/checkbox_draw_level_buffer"
+  id: "panel_game/checkbox_draw_level_matcher"
   parent: "panel_game"
   layer: "below"
   inherit_alpha: true
@@ -2068,12 +2068,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "dirtylarry/transparent1px"
-  id: "panel_game/checkbox_draw_level_buffer/root"
+  id: "panel_game/checkbox_draw_level_matcher/root"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "panel_game/checkbox_draw_level_buffer"
+  parent: "panel_game/checkbox_draw_level_matcher"
   layer: "below"
   inherit_alpha: true
   slice9 {
@@ -2123,12 +2123,12 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "dirtylarry/checkbox_normal"
-  id: "panel_game/checkbox_draw_level_buffer/root/box"
+  id: "panel_game/checkbox_draw_level_matcher/root/box"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "panel_game/checkbox_draw_level_buffer/root"
+  parent: "panel_game/checkbox_draw_level_matcher/root"
   layer: "below"
   inherit_alpha: true
   slice9 {
@@ -2177,9 +2177,9 @@ nodes {
   }
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
-  text: "DRAW LEVEL BUFFER"
+  text: "DRAW LEVEL MATCHER"
   font: "roboto_bold"
-  id: "panel_game/checkbox_draw_level_buffer/root/label"
+  id: "panel_game/checkbox_draw_level_matcher/root/label"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_W
@@ -2197,7 +2197,7 @@ nodes {
   }
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
-  parent: "panel_game/checkbox_draw_level_buffer/root"
+  parent: "panel_game/checkbox_draw_level_matcher/root"
   layer: "text"
   inherit_alpha: true
   alpha: 1.0

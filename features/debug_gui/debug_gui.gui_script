@@ -26,7 +26,7 @@ function Script:bind_vh()
 				root = gui.get_node("panel_game"),
 				btn_activate = GUI.ButtonIconTest("btn_game"),
 				childs = {
-					checkbox_draw_level_buffer = GUI.CheckboxWithLabel("panel_game/checkbox_draw_level_buffer"),
+					checkbox_draw_level_matcher = GUI.CheckboxWithLabel("panel_game/checkbox_draw_level_matcher"),
 				},
 				config = {}
 			}
@@ -57,9 +57,9 @@ function Script:init_gui()
 		self:panel_toggle(self.views.panels.game)
 	end)
 
-	self.views.panels.game.childs.checkbox_draw_level_buffer:set_checked(WORLD.storage.data.debug.draw_level_buffer)
-	self.views.panels.game.childs.checkbox_draw_level_buffer:set_input_listener(function()
-		WORLD.storage.data.debug.draw_level_buffer = self.views.panels.game.childs.checkbox_draw_level_buffer.checked
+	self.views.panels.game.childs.checkbox_draw_level_matcher:set_checked(WORLD.storage.data.debug.draw_level_matcher)
+	self.views.panels.game.childs.checkbox_draw_level_matcher:set_input_listener(function()
+		WORLD.storage.data.debug.draw_level_matcher = self.views.panels.game.childs.checkbox_draw_level_matcher.checked
 		WORLD.storage:changed()
 	end)
 	self:panel_hide_all()

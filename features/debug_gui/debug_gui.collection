@@ -1,4 +1,24 @@
 name: "default"
+instances {
+  id: "draw_level_matcher"
+  prototype: "/features/debug_gui/draw_level_matcher/draw_level_matcher.go"
+  position {
+    x: -150.0
+    y: -200.0
+    z: 0.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale3 {
+    x: 10000.0
+    y: 10000.0
+    z: 1.0
+  }
+}
 scale_along_z: 0
 embedded_instances {
   id: "go"

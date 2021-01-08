@@ -68,7 +68,7 @@ function Storage:_init_storage()
     COMMON.i("init new", TAG)
     self.data = {
         debug = {
-            draw_level_buffer = false,
+            draw_level_matcher = false,
         },
         version = Storage.VERSION
     }

@@ -65,6 +65,7 @@ end
 function Render:init_predicates()
 	self.predicates = {
 		tile = render.predicate({ "tile" }),
+		model = render.predicate({ "model" }),
 		mask = render.predicate({ "mask" }),
 		tile_game = render.predicate({ "tile_game" }),
 		bg = render.predicate({ "bg" }),
@@ -130,6 +131,7 @@ function Render:render_sprites()
 	render.enable_state(render.STATE_BLEND)
 	render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
 
+	render.draw(self.predicates.model)
 	render.draw(self.predicates.tile)
 	render.draw(self.predicates.particle)
 	render.draw_debug3d()
