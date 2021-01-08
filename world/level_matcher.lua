@@ -1,7 +1,24 @@
 local COMMON = require "libs.common"
 local ACTIONS = require "libs.actions.actions"
+local CAMERAS = require "libs_project.cameras"
 
 local Matcher = COMMON.class("matcher")
+
+local dec64_b = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+local dec64 = function(data)
+    data = string.gsub(data, '[^' .. dec64_b .. '=]', '')
+    return (data:gsub('.', function(x)
+        if (x == '=') then return '' end
+        local r, f = '', (dec64_b:find(x) - 1)
+        for i = 6, 1, -1 do r = r .. (f % 2 ^ i - f % 2 ^ (i - 1) > 0 and '1' or '0') end
+        return r;
+    end)        :gsub('%d%d%d?%d?%d?%d?%d?%d?', function(x)
+        if (#x ~= 8) then return '' end
+        local c = 0
+        for i = 1, 8 do c = c + (x:sub(i, i) == '1' and 2 ^ (8 - i) or 0) end
+        return string.char(c)
+    end))
+end
 
 function Matcher:initialize()
     self.free_pixels = 0
@@ -28,7 +45,21 @@ function Matcher:update_screenshot()
     table.insert(self.command_sequence, ACTIONS.Function { fun = function()
         local time = os.clock()
         self.working = true
-        self.buffer, self.w, self.h = screenshot.buffer(0)
+        self.w, self.h = CAMERAS.current.viewport.width, CAMERAS.current.viewport.height
+        if (COMMON.CONSTANTS.PLATFORM_IS_WEB) then
+            local wait = true
+          --  screenshot.html5(CAMERAS.current.viewport.x, CAMERAS.current.viewport.y, self.w, self.h, function(_, base64)
+            screenshot.html5(function(_, base64)
+                base64 = string.sub(base64, 23)
+                local img_data = dec64(base64)
+                self.buffer, self.w, self.h = png.decode_rgba(img_data, false)
+
+                wait = false
+            end)
+            while (wait) do coroutine.yield() end
+        else
+            self.buffer, self.w, self.h = screenshot.buffer(CAMERAS.current.viewport.x, CAMERAS.current.viewport.y, self.w, self.h)
+        end
         local buffer_info = {
             buffer = self.buffer,
             width = self.w,
