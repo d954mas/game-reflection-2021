@@ -45,20 +45,19 @@ function Matcher:update_screenshot()
     table.insert(self.command_sequence, ACTIONS.Function { fun = function()
         local time = os.clock()
         self.working = true
+        local x,y = CAMERAS.current.viewport.x, CAMERAS.current.viewport.y
         self.w, self.h = CAMERAS.current.viewport.width, CAMERAS.current.viewport.height
         if (COMMON.CONSTANTS.PLATFORM_IS_WEB) then
             local wait = true
-          --  screenshot.html5(CAMERAS.current.viewport.x, CAMERAS.current.viewport.y, self.w, self.h, function(_, base64)
-            screenshot.html5(function(_, base64)
+            screenshot.html5(x, y, self.w, self.h, function(_, base64)
                 base64 = string.sub(base64, 23)
                 local img_data = dec64(base64)
                 self.buffer, self.w, self.h = png.decode_rgba(img_data, false)
-
                 wait = false
             end)
             while (wait) do coroutine.yield() end
         else
-            self.buffer, self.w, self.h = screenshot.buffer(CAMERAS.current.viewport.x, CAMERAS.current.viewport.y, self.w, self.h)
+            self.buffer, self.w, self.h = screenshot.buffer(x,y, self.w, self.h)
         end
         local buffer_info = {
             buffer = self.buffer,
