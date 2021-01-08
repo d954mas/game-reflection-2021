@@ -1,0 +1,37 @@
+local COMMON = require "libs.common"
+local GUI = require "libs_project.gui.gui"
+local SM = require "libs_project.sm"
+local LEVELS = require "assets.levels.levels"
+
+local Script = COMMON.new_n28s()
+
+function Script:bind_vh()
+	self.view = {
+		btn_play = GUI.Button("btn_play"),
+	}
+end
+
+function Script:init_gui()
+	self.view.btn_play:set_input_listener(function()
+		SM:show(SM.SCENES.GAME,{level = LEVELS.levels[1].id})
+	end)
+
+end
+
+function Script:init()
+	self:bind_vh()
+	self:init_gui()
+	COMMON.input_acquire()
+end
+
+function Script:update(dt) end
+
+function Script:final()
+	COMMON.input_release()
+end
+
+function Script:on_input(action_id, action)
+	if (self.view.btn_play:on_input(action_id, action)) then return true end
+end
+
+COMMON.N28S.register(Script())

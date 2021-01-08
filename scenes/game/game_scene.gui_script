@@ -1,0 +1,56 @@
+local COMMON = require "libs.common"
+local GUI = require "libs_project.gui.gui"
+local SM = require "libs_project.sm"
+
+local Script = COMMON.new_n28s()
+
+function Script:bind_vh()
+    self.vh = {
+        lbl_percent = gui.get_node("lbl_percent"),
+        stars = {
+            gui.get_node("star1"),
+            gui.get_node("star2"),
+            gui.get_node("star3")
+        }
+    }
+    self.view = {
+        btn_back = GUI.ButtonIconTest("btn_back"),
+        btn_restart = GUI.ButtonIconTest("btn_restart"),
+        btn_accept = GUI.Button("btn_accept"),
+        btn_cancel = GUI.Button("btn_cancel"),
+        btn_mirror = GUI.Button("btn_mirror"),
+        btn_left = GUI.ButtonIconTest("btn_left"),
+        btn_right = GUI.ButtonIconTest("btn_right"),
+    }
+end
+
+function Script:init_gui()
+    self.view.btn_back:set_input_listener(function()
+        SM:back()
+    end)
+end
+
+function Script:init()
+    self:bind_vh()
+    self:init_gui()
+    COMMON.input_acquire()
+end
+
+function Script:update(dt) end
+
+function Script:final()
+    COMMON.input_release()
+end
+
+function Script:on_input(action_id, action)
+    if (self.view.btn_back:on_input(action_id, action)) then return true end
+    if (self.view.btn_restart:on_input(action_id, action)) then return true end
+    if (self.view.btn_accept:on_input(action_id, action)) then return true end
+    if (self.view.btn_cancel:on_input(action_id, action)) then return true end
+    if (self.view.btn_left:on_input(action_id, action)) then return true end
+    if (self.view.btn_mirror:on_input(action_id, action)) then return true end
+    if (self.view.btn_right:on_input(action_id, action)) then return true end
+
+end
+
+COMMON.N28S.register(Script())

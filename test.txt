@@ -1,0 +1,92 @@
+Checking assets\levels\level.lua                  OK
+Checking assets\levels\level_1.lua                OK
+Checking assets\levels\level_2.lua                OK
+Checking assets\levels\level_3.lua                OK
+Checking assets\levels\level_4.lua                OK
+Checking assets\levels\level_5.lua                OK
+Checking assets\levels\level_6.lua                OK
+Checking assets\levels\levels.lua                 OK
+Checking assets\levels\region.lua                 OK
+Checking assets\localization\localization.lua     OK
+Checking debug\debug_info.lua                     3 warnings
+
+    debug\debug_info.lua:1:7: unused variable 'COMMON'
+    debug\debug_info.lua:2:7: unused variable 'JSON'
+    debug\debug_info.lua:15:1: line contains only whitespace
+
+Checking debug\view\scene_debug_view.lua          OK
+Checking go_scripts\gui_follow_go\gui_follow_go_go_script.lua OK
+Checking go_scripts\gui_follow_go\gui_follow_go_gui_script.lua OK
+Checking googleanalytics\ga.lua                   OK
+Checking googleanalytics\tracker.lua              6 warnings
+
+    googleanalytics\tracker.lua:18:16: unused function 'url_decode'
+    googleanalytics\tracker.lua:26:16: unused function 'get_uuid'
+    googleanalytics\tracker.lua:27:14: unused variable 'err'
+    googleanalytics\tracker.lua:119:141: line is too long (163 > 140)
+    googleanalytics\tracker.lua:132:141: line is too long (191 > 140)
+    googleanalytics\tracker.lua:152:141: line is too long (177 > 140)
+
+Checking libs\actions\action.lua                  OK
+Checking libs\actions\actions.lua                 OK
+Checking libs\actions\function_action.lua         OK
+Checking libs\actions\parallel_action.lua         OK
+Checking libs\actions\sequence_action.lua         OK
+Checking libs\actions\shake_action.lua            OK
+Checking libs\actions\tween_action.lua            OK
+Checking libs\actions\tween_action_go.lua         OK
+Checking libs\actions\tween_action_gui.lua        OK
+Checking libs\actions\tween_action_table.lua      OK
+Checking libs\actions\wait_action.lua             OK
+Checking libs\animation.lua                       OK
+Checking libs\common.lua                          OK
+Checking libs\constants.lua                       OK
+Checking libs\contexts_manager.lua                OK
+Checking libs\coroutine.lua                       OK
+Checking libs\event_bus.lua                       OK
+Checking libs\events.lua                          OK
+Checking libs\features.lua                        OK
+Checking libs\google_analytics.lua                OK
+Checking libs\hashes.lua                          OK
+Checking libs\input_receiver.lua                  OK
+Checking libs\json.lua                            OK
+Checking libs\lume.lua                            OK
+Checking libs\middleclass.lua                     OK
+Checking libs\msg_receiver.lua                    OK
+Checking libs\n28s.lua                            OK
+Checking libs\perlin.lua                          OK
+Checking libs\sm\enums.lua                        OK
+Checking libs\sm\scene.lua                        OK
+Checking libs\sm\scene_loader.lua                 OK
+Checking libs\sm\scene_manager.lua                OK
+Checking libs\sm\scene_stack.lua                  OK
+Checking libs\sm\scene_with_ga.lua                OK
+Checking libs\sounds.lua                          OK
+Checking libs\text_settings.lua                   OK
+Checking libs\thread.lua                          OK
+Checking libs\thread_manager.lua                  OK
+Checking libs\tween.lua                           OK
+Checking libs_project\cameras.lua                 OK
+Checking libs_project\contexts_manager.lua        OK
+Checking libs_project\gui\button.lua              OK
+Checking libs_project\gui\button_icon_text.lua    OK
+Checking libs_project\gui\button_scale.lua        OK
+Checking libs_project\gui\checkbox_with_label.lua OK
+Checking libs_project\gui\gui.lua                 OK
+Checking libs_project\gui\richtext_lbl.lua        OK
+Checking libs_project\gui\tick_label.lua          OK
+Checking libs_project\scripts\base_gui_script.lua OK
+Checking libs_project\sm.lua                      OK
+Checking libs_project\utils.lua                   OK
+Checking rendercam\rendercam_camera.lua           3 warnings
+
+    rendercam\rendercam_camera.lua:3:7: unused variable 'HASHES'
+    rendercam\rendercam_camera.lua:4:7: unused variable 'CHECKS'
+    rendercam\rendercam_camera.lua:162:141: line is too long (212 > 140)
+
+Checking scenes\game\game_scene.lua               OK
+Checking scenes\main_menu\main_menu_scene.lua     OK
+Checking world\storage.lua                        OK
+Checking world\world.lua                          OK
+
+Total: 12 warnings / 0 errors in 72 files
