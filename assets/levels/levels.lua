@@ -21,6 +21,8 @@ local function addLevel(lvl)
     table.insert(M.levels, lvl)
     assert(not M.level_by_id[lvl.id], "level with id:" .. lvl.id .. " already exist. Idx:" .. lvl.idx)
     M.level_by_id[lvl.id] = lvl
+    assert(#lvl.regions == 1, "only 1 region is support")
+    assert(#lvl.figures >= 1, "need >= 1 figures")
 end
 
 for _, level in ipairs(levels)do
