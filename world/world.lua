@@ -1,5 +1,6 @@
 local COMMON = require "libs.common"
 local Storage = require "world.storage"
+local Level = require "world.level"
 
 local TAG = "WORLD"
 ---@class World:Observable
@@ -11,13 +12,13 @@ function M:level_unload()
         self.lvl = nil
     end
 end
----@param lvl Level
+---@param lvl LevelConfig
 function M:level_load(lvl)
-    assert(lvl)
-    assert(self.lvl)
-    COMMON.i("LOAD LVL:" .. lvl, TAG)
-    self.lvl = lvl
-    self.lvl:load()
+    assert(lvl, "lvl is nil")
+    assert(not self.lvl,"already have level")
+    COMMON.i("LOAD LVL:" .. lvl.id .. "(" .. lvl.idx .. ")", TAG)
+    self.lvl = Level(lvl)
+    self.lvl:load(lvl)
 end
 
 function M:level_reload()

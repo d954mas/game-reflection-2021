@@ -6,6 +6,7 @@ local Manager = CLASS.class("ContextManagerProject", ContextManager)
 
 Manager.NAMES = {
 	MAIN = "MAIN",
+	GAME = "GAME",
 	DEBUG_GUI = "DEBUG_GUI",
 }
 

@@ -20,6 +20,7 @@ local function addLevel(lvl)
     lvl.idx = #M.levels + 1
     table.insert(M.levels, lvl)
     assert(not M.level_by_id[lvl.id], "level with id:" .. lvl.id .. " already exist. Idx:" .. lvl.idx)
+    M.level_by_id[lvl.id] = lvl
 end
 
 for _, level in ipairs(levels)do
@@ -27,8 +28,8 @@ for _, level in ipairs(levels)do
 end
 
 function M.get_by_id(id)
-    assert(id)
-    return assert(M.level_by_id[id])
+    assert(id, "id is nil")
+    return assert(M.level_by_id[id], "no level with id:" .. tostring(id))
 end
 
 return M
