@@ -9,7 +9,7 @@ function Cameras:initialize()
 end
 
 function Cameras:init()
-	self.map_camera = Camera("map", {
+	self.game_camera = Camera("game", {
 		orthographic = true,
 		near_z = -1,
 		far_z = 1,
@@ -17,25 +17,25 @@ function Cameras:init()
 		fov = 1,
 		ortho_scale = 1,
 		fixed_aspect_ratio = false ,
-		aspect_ratio = vmath.vector3(1280, 680, 0),
+		aspect_ratio = vmath.vector3(540, 960, 0),
 		use_view_area = true,
-		view_area = vmath.vector3(1280, 680,0),
-		scale_mode = COMMON.CONSTANTS.SBERBANK and Camera.SCALEMODE.FIXEDWIDTH or Camera.SCALEMODE.FIXEDWIDTH
+		view_area = vmath.vector3(540, 960,0),
+		scale_mode =  Camera.SCALEMODE.FIXEDWIDTH
 	})
 
 	self.subscription = COMMON.EVENT_BUS:subscribe(COMMON.EVENTS.WINDOW_RESIZED):subscribe(function()
 		self:window_resized()
 	end)
 
-	self.map_camera:set_position(vmath.vector3(1280/2,680/2,0))
+	--self.game_camera:set_position(vmath.vector3(540/2,960/2,0))
 
-	self.current = self.map_camera
+	self.current = self.game_camera
 	self:window_resized()
 end
 
 function Cameras:update(dt)
-	if (self.map_camera) then
-		self.map_camera:update(dt)
+	if (self.game_camera) then
+		self.game_camera:update(dt)
 	end
 end
 
@@ -44,7 +44,7 @@ function Cameras:set_current(camera)
 end
 
 function Cameras:window_resized()
-	self.map_camera:recalculate_viewport()
+	self.game_camera:recalculate_viewport()
 end
 
 function Cameras:dispose()

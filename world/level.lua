@@ -3,6 +3,7 @@ local COMMON = require "libs.common"
 local FACTORY_REGION_URL = msg.url("game:/factories#factory_region")
 local FACTORY_EMPTY_URL = msg.url("game:/factories#factory_empty")
 local FACTORY_FIGURE_URL = msg.url("game:/factories#factory_figure")
+local TAG = "Level"
 
 ---@class Level
 local Lvl = COMMON.class("Level")
@@ -29,13 +30,18 @@ function Lvl:load()
     self.go_root = self:_create_go(FACTORY_EMPTY_URL)
     self.go_regions = {}
     self.go_figures = {}
+    COMMON.d("load regions",TAG)
     for _, region in ipairs(self.config.regions) do
+        COMMON.d("region:" .. region.art)
+        pprint(region.position)
         local go_url = self:_create_go(FACTORY_REGION_URL,region.position,region.scale,COMMON.HASHES.hash(region.art))
         table.insert(self.go_regions,go_url)
         local sprite_url = msg.url(go_url.socket,go_url.path,"sprite_mask")
         sprite.play_flipbook(sprite_url,hash(region.art))
     end
+    COMMON.d("load figures",TAG)
     for _, region in ipairs(self.config.figures) do
+        COMMON.d("figure:" .. region.art)
         local go_url = self:_create_go(FACTORY_FIGURE_URL,vmath.vector3(region.position.x,region.position.y,0.01),region.scale,COMMON.HASHES.hash(region.art))
         table.insert(self.go_figures,go_url)
         local sprite_url = msg.url(go_url.socket,go_url.path,"sprite")

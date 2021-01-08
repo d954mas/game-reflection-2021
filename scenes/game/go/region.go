@@ -23,7 +23,7 @@ embedded_components {
   type: "sprite"
   data: "tile_set: \"/assets/images/regions/regions.atlas\"\n"
   "default_animation: \"region_1\"\n"
-  "material: \"/builtins/materials/sprite.material\"\n"
+  "material: \"/assets/materials/sprite_game.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
   ""
   position {

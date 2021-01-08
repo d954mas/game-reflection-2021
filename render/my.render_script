@@ -7,7 +7,7 @@ local TAG = "Render"
 local Render = COMMON.new_n28s()
 --region init
 function Render:init()
-	self.clear_color = vmath.vector4(1, 1, 1, 0)
+	self.clear_color = vmath.vector4(0, 0, 0, 0)
 	--самый первый размер это размер игры. Иначе камеры плохо отрабатывыют в html  билде
 	self.screen_size = {
 		w = CONSTANTS.HTML5 and render.get_width() or render.get_window_width(),
@@ -65,6 +65,8 @@ end
 function Render:init_predicates()
 	self.predicates = {
 		tile = render.predicate({ "tile" }),
+		mask = render.predicate({ "mask" }),
+		tile_game = render.predicate({ "tile_game" }),
 		bg = render.predicate({ "bg" }),
 		gui = render.predicate({ "gui" }),
 		text = render.predicate({ "text" }),
@@ -138,11 +140,61 @@ end
 function Render:render_clear()
 	render.set_depth_mask(true)
 	render.set_stencil_mask(0xff)
+
 	render.clear(self.clear)
+end
+
+function Render:render_game()
+	render.set_viewport(CAMERAS.current.viewport.x, CAMERAS.current.viewport.y,
+			CAMERAS.current.viewport.width, CAMERAS.current.viewport.height)
+	render.set_view(CAMERAS.current:get_view())
+	render.set_projection(CAMERAS.current:get_proj())
+
+	render.enable_state(render.STATE_BLEND)
+	render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
+	render.disable_state(render.STATE_CULL_FACE)
+
+	--render.draw(self.tile2_pred)
+
+	render.set_depth_mask(false)
+	render.disable_state(render.STATE_DEPTH_TEST)
+	render.disable_state(render.STATE_STENCIL_TEST)
+	render.enable_state(render.STATE_BLEND)
+	render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
+	render.disable_state(render.STATE_CULL_FACE)
+
+
+
+	-- 1. We need to disable color drawing while rendering the mask
+	render.set_color_mask(false, false, false, false)
+
+	-- 2. Enable stencil test and setup stencil mask parameters
+	render.enable_state(render.STATE_STENCIL_TEST)
+	render.set_stencil_func(render.COMPARE_FUNC_ALWAYS, 1, 255)
+	render.set_stencil_op(render.STENCIL_OP_KEEP, render.STENCIL_OP_KEEP, render.STENCIL_OP_REPLACE)
+	render.set_stencil_mask(255)
+
+	-- 3. Draw the mask
+	render.draw(self.predicates.mask)
+
+	-- 4. Update the stencil function to only let pixel pass that are equal to the mask result
+	render.set_stencil_func(render.COMPARE_FUNC_EQUAL, 1, 255)
+
+	-- 5. Re-enable color drawing
+	render.set_color_mask(true, true, true, true)
+
+	-- 6. Continue as rendering usual! :)
+	render.enable_state(render.STATE_BLEND)
+	render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
+	render.disable_state(render.STATE_CULL_FACE)
+
+	render.draw(self.predicates.tile_game)
+	render.disable_state(render.STATE_STENCIL_TEST)
 end
 
 function Render:update(dt)
 	self:render_clear()
+	self:render_game()
 	render.set_viewport(CAMERAS.current.viewport.x, CAMERAS.current.viewport.y,
 			CAMERAS.current.viewport.width, CAMERAS.current.viewport.height)
 

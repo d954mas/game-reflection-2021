@@ -14,7 +14,7 @@ function M:level_unload()
 end
 ---@param lvl LevelConfig
 function M:level_load(lvl)
-    assert(lvl, "lvl is nil")
+    self.lvl_config = assert(lvl, "lvl is nil")
     assert(not self.lvl,"already have level")
     COMMON.i("LOAD LVL:" .. lvl.id .. "(" .. lvl.idx .. ")", TAG)
     self.lvl = Level(lvl)
@@ -24,7 +24,7 @@ end
 function M:level_reload()
     assert(self.lvl)
     self.lvl:unload()
-    self.lvl:load()
+    self.lvl:load(self.lvl_config)
 end
 
 function M:initialize()
