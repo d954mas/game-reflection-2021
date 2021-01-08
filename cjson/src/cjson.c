@@ -1487,7 +1487,7 @@ static int lua_cjson_new_old(lua_State *l)
     };
 
     /* Initialise number conversions */
-    fpconv_init();
+   // fpconv_init();
 
     /* Test if array metatables are in registry */
     lua_pushlightuserdata(l, json_lightudata_mask(&json_empty_array));
