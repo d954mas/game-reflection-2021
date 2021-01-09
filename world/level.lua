@@ -68,11 +68,15 @@ function Lvl:load()
             sequence:update(dt)
         end
     end)
+    self.command_sequence:add_action(function ()
+        go.set_position(vmath.vector3(0,0,0),"game:/level_view")
+    end)
     self.command_sequence:add_action(function()
         for _, figure in ipairs(self.go_figures) do
             go.delete(figure)
         end
     end)
+
 end
 
 function Lvl:update(dt)
