@@ -3,22 +3,22 @@ local WORLD = require "world.world"
 
 local Script = COMMON.new_n28s()
 
-
 function Script:init()
-	COMMON.input_acquire()
-    COMMON.CONTEXT:register(COMMON.CONTEXT.NAMES.GAME,self)
+    COMMON.input_acquire()
+    COMMON.input_acquire("game:/gui#gui")
+    COMMON.CONTEXT:register(COMMON.CONTEXT.NAMES.GAME, self)
 end
 
 function Script:update(dt) end
 
 function Script:final()
-	COMMON.input_release()
+    COMMON.input_release()
     COMMON.CONTEXT:unregister(COMMON.CONTEXT.NAMES.GAME)
 end
 
 function Script:on_input(action_id, action)
-    if(WORLD.lvl)then
-        WORLD.lvl:on_input(action_id,action)
+    if (WORLD.lvl) then
+        return WORLD.lvl:on_input(action_id, action)
     end
 end
 

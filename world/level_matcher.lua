@@ -45,6 +45,7 @@ function Matcher:update_screenshot()
     table.insert(self.command_sequence, ACTIONS.Function { fun = function()
         local time = os.clock()
         self.working = true
+        coroutine.yield()--wait for input view is hide
         local x,y = CAMERAS.current.viewport.x, CAMERAS.current.viewport.y
         self.w, self.h = CAMERAS.current.viewport.width, CAMERAS.current.viewport.height
         local left_bottom = CAMERAS.current:world_to_screen(vmath.vector3(-540/2,0-512/2,0))
@@ -81,6 +82,7 @@ function Matcher:update_screenshot()
         self.total_pixels = self.total_pixels or (self.fill_pixels + self.free_pixels)
         self.percent = self.fill_pixels / self.total_pixels
         self.working = false
+
         COMMON.i("screenshot time:" .. (os.clock() - time))
     end })
 

@@ -30,12 +30,18 @@ function View:initialize(world)
 end
 
 function View:hide()
+    self.taking_screenshot = false
     self.show = false
     self.positions = {
         start = vmath.vector3(0, 0, 0),
         finish = vmath.vector3(0, 0, 0),
         touch = nil
     }
+    self:update_position()
+end
+
+function View:hide_for_screenshot()
+    self.taking_screenshot = true
     self:update_position()
 end
 
@@ -47,6 +53,7 @@ function View:on_input(action_id, action)
     if action_id == COMMON.HASHES.INPUT.TOUCH then
         local touch_pos = CAMERA.current:screen_to_world_2d(action.screen_x, action.screen_y)
         if action.pressed then
+            self.input_pressed = true
             if self.show then
                 local point_a = vmath.vector3(self.positions.start.x, self.positions.start.y, 0)
                 local point_b = vmath.vector3(self.positions.finish.x, self.positions.finish.y, 0)
@@ -75,22 +82,24 @@ function View:on_input(action_id, action)
             end
         end
 
+        if (self.input_pressed) then
+            --двигаем точку стартк
+            if self.positions.touch then
+                local dx = touch_pos.x - self.positions.touch.x
+                local dy = touch_pos.y - self.positions.touch.y
+                self.positions.touch = touch_pos
 
-        --двигаем точку стартк
-        if self.positions.touch then
-            local dx = touch_pos.x - self.positions.touch.x
-            local dy = touch_pos.y - self.positions.touch.y
-            self.positions.touch = touch_pos
-
-            self.positions.start.x = self.positions.start.x + dx
-            self.positions.start.y = self.positions.start.y + dy
-        else
-            --двигаем точку конца
-            self.positions.finish.x, self.positions.finish.y = CAMERA.current:screen_to_world_2d(action.screen_x, action.screen_y, false, nil, true)
+                self.positions.start.x = self.positions.start.x + dx
+                self.positions.start.y = self.positions.start.y + dy
+            else
+                --двигаем точку конца
+                self.positions.finish.x, self.positions.finish.y = CAMERA.current:screen_to_world_2d(action.screen_x, action.screen_y, false, nil, true)
+            end
         end
 
-        if action.released then
+        if self.input_pressed and action.released then
             self.positions.touch = nil
+            self.input_pressed = false
         end
 
     end
@@ -101,13 +110,14 @@ function View:update(dt)
 end
 
 function View:update_position()
-    if(not self.world.lvl.matcher or not self.world.lvl.matcher.w)then return end
+    if (not self.world.lvl.matcher or not self.world.lvl.matcher.w) then return end
     local p_w = self.world.lvl.matcher.w
     local p_h = self.world.lvl.matcher.h
-    model.set_constant(self.vh.model,"screen",vmath.vector4(p_w,p_h,0,0))
+    model.set_constant(self.vh.model, "screen", vmath.vector4(p_w, p_h, 0, 0))
     if (not self.show) then
         go.set_position(vmath.vector3(0, 0, -1000), self.vh.top.root)
         go.set_position(vmath.vector3(0, 0, -1000), self.vh.bottom.root)
+        model.set_constant(self.vh.model, "line", vmath.vector4(0, 0, 0, 0))
     else
 
         local start_pos = vmath.vector3(self.positions.start.x, self.positions.start.y, 0)
@@ -122,7 +132,7 @@ function View:update_position()
         local a = point_a.y - point_b.y
         local b = point_b.x - point_a.x
         local c = point_a.x * point_b.y - point_b.x * point_a.y
-        model.set_constant(self.vh.model,"line",vmath.vector4(a,b,c,0))
+        model.set_constant(self.vh.model, "line", vmath.vector4(a, b, c, 0))
 
         --pprint(point_a)
         --pprint(point_b)
@@ -145,12 +155,17 @@ function View:update_position()
         --  local p2a = vmath.vector3(540 / 2, (-540 / 2 * a - c) / b, 0)
         --pprint(p1)
         -- pprint(p2)
-        msg.post("@render:", "draw_line", { start_point = p1, end_point = p2, color = vmath.vector4(0, 1, 0, 0.66) })
-        local v = vmath.vector3()
-        v.x,v.y,v.z = self.positions.start.x, self.positions.start.y, 0.1
-        go.set_position(v, self.vh.top.root)
-        v.x,v.y,v.z = self.positions.finish.x, self.positions.finish.y, 0.1
-        go.set_position(v, self.vh.bottom.root)
+        if (not self.taking_screenshot) then
+            msg.post("@render:", "draw_line", { start_point = p1, end_point = p2, color = vmath.vector4(0, 1, 0, 0.66) })
+            local v = vmath.vector3()
+            v.x, v.y, v.z = self.positions.start.x, self.positions.start.y, 0.1
+            go.set_position(v, self.vh.top.root)
+            v.x, v.y, v.z = self.positions.finish.x, self.positions.finish.y, 0.1
+            go.set_position(v, self.vh.bottom.root)
+        else
+            go.set_position(vmath.vector3(0, 0, -1000), self.vh.top.root)
+            go.set_position(vmath.vector3(0, 0, -1000), self.vh.bottom.root)
+        end
     end
 end
 

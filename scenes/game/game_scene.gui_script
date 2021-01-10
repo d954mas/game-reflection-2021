@@ -30,7 +30,18 @@ function Script:init_gui()
         SM:back()
     end)
     self.view.btn_accept:set_input_listener(function()
+        local ctx = COMMON.CONTEXT:set_context_top_by_name(COMMON.CONTEXT.NAMES.GAME)
+        WORLD.lvl.views.line_view:hide_for_screenshot()
         WORLD.lvl.matcher:update_screenshot()
+        table.insert(WORLD.lvl.matcher.command_sequence,function()
+            WORLD.lvl.views.line_view:hide()
+        end)
+        ctx:remove()
+    end)
+    self.view.btn_cancel:set_input_listener(function()
+        local ctx = COMMON.CONTEXT:set_context_top_by_name(COMMON.CONTEXT.NAMES.GAME)
+        WORLD.lvl.views.line_view:hide()
+        ctx:remove()
     end)
 end
 
@@ -54,7 +65,6 @@ function Script:on_input(action_id, action)
     if (self.view.btn_left:on_input(action_id, action)) then return true end
     if (self.view.btn_mirror:on_input(action_id, action)) then return true end
     if (self.view.btn_right:on_input(action_id, action)) then return true end
-
 end
 
 COMMON.N28S.register(Script())
