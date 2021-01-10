@@ -107,6 +107,9 @@ function Matcher:update_screenshot()
             img_data = screenshot.png(x, y, self.w, self.h)
         end
 
+        if(#self.history>50) then
+            table.remove(self.history,1)
+        end
         table.insert(self.history, img_data)
         self:buffer_from_img_data(img_data)
 
