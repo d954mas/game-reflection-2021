@@ -124,6 +124,7 @@ function View:update_position()
     if (not self.world.lvl.matcher or not self.world.lvl.matcher.w) then return end
     local p_w = self.world.lvl.matcher.w
     local p_h = self.world.lvl.matcher.h
+
     model.set_constant(self.vh.model, "screen", vmath.vector4(p_w, p_h, 0, 0))
 
     if (not self.show) then
@@ -172,6 +173,7 @@ function View:update_position()
         -- pprint(p2)
         if (not self.taking_screenshot) then
             msg.post("@render:", "draw_line", { start_point = p1, end_point = p2, color = vmath.vector4(0, 1, 0, 0.66) })
+            msg.post("@render:", "draw_line", { start_point = self.positions.start, end_point = self.positions.finish, color = vmath.vector4(1, 1, 0, 0.66) })
             local v = vmath.vector3()
             v.x, v.y, v.z = self.positions.start.x, self.positions.start.y, 0.1
             go.set_position(v, self.vh.top.root)

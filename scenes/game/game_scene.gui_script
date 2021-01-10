@@ -10,9 +10,9 @@ function Script:bind_vh()
     self.vh = {
         lbl_percent = gui.get_node("lbl_percent"),
         stars = {
-            gui.get_node("star1"),
-            gui.get_node("star2"),
-            gui.get_node("star3")
+            {root = gui.get_node("star1"), lbl = gui.get_node("star1/lbl")},
+            {root = gui.get_node("star2"), lbl = gui.get_node("star2/lbl")},
+            {root = gui.get_node("star3"), lbl = gui.get_node("star3/lbl")},
         }
     }
     self.view = {
@@ -27,6 +27,7 @@ function Script:bind_vh()
 end
 
 function Script:init_gui()
+    self.percent = 0
     self.view.btn_back:set_input_listener(function()
         SM:back()
     end)
@@ -53,15 +54,15 @@ function Script:init_gui()
     self.view.btn_right:set_input_listener(function()
         local next_id = WORLD.lvl.config.idx + 1
         local level = LEVELS.levels[next_id]
-        if(level)then
-            SM:show(SM.SCENES.GAME,{level = level.id},{reload = true})
+        if (level) then
+            SM:show(SM.SCENES.GAME, { level = level.id }, { reload = true })
         end
     end)
     self.view.btn_left:set_input_listener(function()
         local next_id = WORLD.lvl.config.idx - 1
         local level = LEVELS.levels[next_id]
-        if(level)then
-            SM:show(SM.SCENES.GAME,{level = level.id},{reload = true})
+        if (level) then
+            SM:show(SM.SCENES.GAME, { level = level.id }, { reload = true })
         end
     end)
 end
@@ -72,7 +73,29 @@ function Script:init()
     COMMON.input_acquire()
 end
 
-function Script:update(dt) end
+function Script:update_percent()
+    if not  WORLD.lvl then return end
+    local percent = WORLD.lvl.matcher.percent
+    if(self.percent == 0)then
+        for i,star in ipairs(self.vh.stars)do
+            gui.set_text(star.lbl,WORLD.lvl.config.targets[i]*100 .. "%")
+        end
+    end
+    if(self.percent~= percent)then
+        self.percent = percent
+        for i,star in ipairs(self.vh.stars)do
+            local target = WORLD.lvl.config.targets[i]
+            gui.set_color(star.root,self.percent>target
+            and vmath.vector4(0,1,0,1) or vmath.vector4(1))
+        end
+
+        gui.set_text(self.vh.lbl_percent,math.floor(self.percent*1000)/10 .. "%")
+    end
+end
+
+function Script:update(dt)
+    self:update_percent()
+end
 
 function Script:final()
     COMMON.input_release()

@@ -23,7 +23,6 @@ end
 function Matcher:initialize()
     self.free_pixels = 0
     self.fill_pixels = 0
-    self.total_pixels = nil
     self.percent = 0
     self.command_sequence = {  }
     self.working = false
@@ -74,7 +73,13 @@ function Matcher:update_screenshot()
             screenshot.html5(x, y, self.w, self.h, function(_, base64)
                 base64 = string.sub(base64, 23)
                 local img_data = dec64(base64)
+                pprint("********************")
+                print(self.w)
+                print(self.h)
                 buffer, self.w, self.h = png.decode_rgba(img_data, false)
+                print(self.w)
+                print(self.h)
+                pprint("********************")
                 wait = false
             end)
             while (wait) do coroutine.yield() end
@@ -95,8 +100,7 @@ function Matcher:update_screenshot()
 
 
         self.free_pixels, self.fill_pixels = drawpixels.check_fill(buffer_info)
-        self.total_pixels = self.total_pixels or (self.fill_pixels + self.free_pixels)
-        self.percent = self.fill_pixels / self.total_pixels
+        self.percent = self.fill_pixels / (self.fill_pixels + self.free_pixels)
         self.working = false
 
         COMMON.i("screenshot time:" .. (os.clock() - time))
@@ -110,7 +114,7 @@ function Matcher:final()
         drawpixels.buffer_destroy(self.buffer)
     end
     self.buffer, self.w, self.h = nil, nil, nil
-    self.free_pixels, self.fill_pixels, self.total_pixels = 0, 0, nil
+    self.free_pixels, self.fill_pixels = 0, 0
     self.percent = 0
     self.command_sequence = {}
 end
