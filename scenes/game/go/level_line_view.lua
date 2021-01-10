@@ -6,16 +6,19 @@ local View = COMMON.class("LevelLineView")
 function View:bind_vh()
     self.vh = {
         top = { root = msg.url("game:/line_top"), sprite = msg.url("game:/line_top#sprite") },
-        bottom = { root = msg.url("game:/line_bottom") }
+        bottom = { root = msg.url("game:/line_bottom") },
+        model = msg.url("game:/level_view#model")
     }
 end
 
-
 function View:init()
     sprite.set_constant(self.vh.top.sprite, "tint", vmath.vector4(0, 0, 1, 1))
-    self.start_pos = nil
-    self.next_pos = nil
-    self.touch_pos = nil
+    self.positions = {
+        start = vmath.vector3(0, 0, 0),
+        finish = vmath.vector3(0, 0, 0),
+        touch = vmath.vector3(0, 0, 0),
+    }
+    self.show = false
 end
 
 ---@param world World
@@ -27,8 +30,13 @@ function View:initialize(world)
 end
 
 function View:hide()
-    go.set_position(vmath.vector3(10000), self.vh.top.root)
-    go.set_position(vmath.vector3(10000), self.vh.bottom.root)
+    self.show = false
+    self.positions = {
+        start = vmath.vector3(0, 0, 0),
+        finish = vmath.vector3(0, 0, 0),
+        touch = nil
+    }
+    self:update_position()
 end
 
 function View:final()
@@ -39,69 +47,82 @@ function View:on_input(action_id, action)
     if action_id == COMMON.HASHES.INPUT.TOUCH then
         local touch_pos = CAMERA.current:screen_to_world_2d(action.screen_x, action.screen_y)
         if action.pressed then
-            if self.start_pos then
-                local point_a = vmath.vector3(self.start_pos.x,self.start_pos.y,0)
-                local point_b = vmath.vector3(self.next_pos.x,self.next_pos.y,0)
+            if self.show then
+                local point_a = vmath.vector3(self.positions.start.x, self.positions.start.y, 0)
+                local point_b = vmath.vector3(self.positions.finish.x, self.positions.finish.y, 0)
 
                 --Уравнение прямой. Выводим по 2м точкам
                 local a = point_a.y - point_b.y
                 local b = point_b.x - point_a.x
                 local c = point_a.x * point_b.y - point_b.x * point_a.y
-                local d = a * touch_pos.x + b* touch_pos.y + c
+                local d = a * touch_pos.x + b * touch_pos.y + c
 
                 --тап далеко от старта, двигаем стартовый тап
                 if math.abs(d) > 200000 then
-                    self.start_pos = touch_pos
+                    self.positions.start.x = touch_pos.x
+                    self.positions.start.y = touch_pos.y
                 end
-                local dist = math.sqrt((touch_pos.x - self.start_pos.x)^2 + (touch_pos.y - self.start_pos.y)^2)
+
+                local dist = math.sqrt((touch_pos.x - self.positions.start.x) ^ 2 + (touch_pos.y - self.positions.start.y) ^ 2)
                 --тап рядом со стартовой точкой
                 if dist < 40 then
-                    self.touch_pos = touch_pos
+                    self.positions.touch = touch_pos
                 end
             else
-                self.start_pos = touch_pos
+                self.show = true
+                self.positions.start.x = touch_pos.x
+                self.positions.start.y = touch_pos.y
             end
         end
 
 
         --двигаем точку стартк
-        if self.touch_pos then
-            local dx = touch_pos.x - self.touch_pos.x
-            local dy = touch_pos.y - self.touch_pos.y
-            self.touch_pos = touch_pos
-            self.start_pos.x = self.start_pos.x + dx
-            self.start_pos.y = self.start_pos.y + dy
+        if self.positions.touch then
+            local dx = touch_pos.x - self.positions.touch.x
+            local dy = touch_pos.y - self.positions.touch.y
+            self.positions.touch = touch_pos
+
+            self.positions.start.x = self.positions.start.x + dx
+            self.positions.start.y = self.positions.start.y + dy
         else
             --двигаем точку конца
-            self.next_pos = CAMERA.current:screen_to_world_2d(action.screen_x, action.screen_y)
+            self.positions.finish.x, self.positions.finish.y = CAMERA.current:screen_to_world_2d(action.screen_x, action.screen_y, false, nil, true)
         end
 
         if action.released then
-            self.touch_pos = nil
+            self.positions.touch = nil
         end
-        self:update_position()
+
     end
 end
 
+function View:update(dt)
+    self:update_position()
+end
+
 function View:update_position()
-    if self.next_pos then
-        local p_w = self.world.lvl.matcher.w
-        local p_h = self.world.lvl.matcher.h
-        local start_pos= vmath.vector3(self.start_pos.x,self.start_pos.y,0)
-        local end_pos = vmath.vector3(self.next_pos.x,self.next_pos.y,0)
-        --размеры экрана
-        model.set_constant("test_model#model","screen",vmath.vector4(p_w,p_h,0,0))
+    if(not self.world.lvl.matcher or not self.world.lvl.matcher.w)then return end
+    local p_w = self.world.lvl.matcher.w
+    local p_h = self.world.lvl.matcher.h
+    model.set_constant(self.vh.model,"screen",vmath.vector4(p_w,p_h,0,0))
+    if (not self.show) then
+        go.set_position(vmath.vector3(0, 0, -1000), self.vh.top.root)
+        go.set_position(vmath.vector3(0, 0, -1000), self.vh.bottom.root)
+    else
+
+        local start_pos = vmath.vector3(self.positions.start.x, self.positions.start.y, 0)
+        local end_pos = vmath.vector3(self.positions.finish.x, self.positions.finish.y, 0)
 
         -- pprint(start_pos)
         -- pprint(self.start_pos)
-        local point_a = vmath.vector3(self.start_pos.x+p_w/2,self.start_pos.y+p_h/2,0)
-        local point_b = vmath.vector3(self.next_pos.x+p_w/2,self.next_pos.y+p_h/2,0)
+        local point_a = vmath.vector3(self.positions.start.x + p_w / 2, self.positions.start.y + p_h / 2, 0)
+        local point_b = vmath.vector3(self.positions.finish.x + p_w / 2, self.positions.finish.y + p_h / 2, 0)
         --  pprint(point_a)
         --   pprint(point_b)
         local a = point_a.y - point_b.y
         local b = point_b.x - point_a.x
         local c = point_a.x * point_b.y - point_b.x * point_a.y
-        model.set_constant("test_model#model","line",vmath.vector4(a,b,c,0))
+        model.set_constant(self.vh.model,"line",vmath.vector4(a,b,c,0))
 
         --pprint(point_a)
         --pprint(point_b)
@@ -109,22 +130,27 @@ function View:update_position()
         b = end_pos.x - start_pos.x
         c = start_pos.x * end_pos.y - end_pos.x * start_pos.y
 
+        -- print("a:" .. a .. " b:" .. b .. " c:" .. c)
 
+        if (b == 0) then return end
 
-        local p1 = vmath.vector3(-540/2,(540/2 * a-c)/b,0)
-        local p2 = vmath.vector3(540/2,(-540/2 * a-c)/b,0)
+        local p1 = vmath.vector3(-540 / 2, (540 / 2 * a - c) / b, 0)
+        local p2 = vmath.vector3(540 / 2, (-540 / 2 * a - c) / b, 0)
 
-        local a = point_a.y - point_b.y
-        local b = point_b.x - point_a.x
-        local c = point_a.x * point_b.y - point_b.x * point_a.y
-        local p1a = vmath.vector3(-540/2,(540/2 * a-c)/b,0)
-        local p2a = vmath.vector3(540/2,(-540/2 * a-c)/b,0)
+        --a = point_a.y - point_b.y
+        -- b = point_b.x - point_a.x
+        -- c = point_a.x * point_b.y - point_b.x * point_a.y
+
+        -- local p1a = vmath.vector3(-540 / 2, (540 / 2 * a - c) / b, 0)
+        --  local p2a = vmath.vector3(540 / 2, (-540 / 2 * a - c) / b, 0)
         --pprint(p1)
         -- pprint(p2)
-        msg.post("@render:", "draw_line", { start_point = p1, end_point = p2, color = vmath.vector4(0,1,0,0.66) } )
-        -- msg.post("@render:", "draw_line", { start_point = p1a, end_point = p2a, color = vmath.vector4(1,1,0,0.3) } )
-        go.set_position(self.start_pos,self.vh.top.root)
-        go.set_position(self.next_pos,self.vh.bottom.root)
+        msg.post("@render:", "draw_line", { start_point = p1, end_point = p2, color = vmath.vector4(0, 1, 0, 0.66) })
+        local v = vmath.vector3()
+        v.x,v.y,v.z = self.positions.start.x, self.positions.start.y, 0.1
+        go.set_position(v, self.vh.top.root)
+        v.x,v.y,v.z = self.positions.finish.x, self.positions.finish.y, 0.1
+        go.set_position(v, self.vh.bottom.root)
     end
 end
 

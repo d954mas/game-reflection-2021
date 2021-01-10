@@ -17,7 +17,7 @@ embedded_components {
   id: "model"
   type: "model"
   data: "mesh: \"/assets/models/quad.dae\"\n"
-  "material: \"/assets/materials/model.material\"\n"
+  "material: \"/assets/materials/model_mirror.material\"\n"
   "textures: \"/scenes/game/go/level_view/level_view_texture.png\"\n"
   "skeleton: \"\"\n"
   "animations: \"\"\n"

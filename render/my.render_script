@@ -66,6 +66,7 @@ function Render:init_predicates()
 	self.predicates = {
 		tile = render.predicate({ "tile" }),
 		model = render.predicate({ "model" }),
+		model_game = render.predicate({ "model_game" }),
 		mask = render.predicate({ "mask" }),
 		tile_game = render.predicate({ "tile_game" }),
 		tile_game_top = render.predicate({ "tile_game_top" }),
@@ -135,6 +136,7 @@ function Render:render_sprites()
 	render.draw(self.predicates.model)
 	render.draw(self.predicates.tile)
 	render.draw(self.predicates.particle)
+	render.draw(self.predicates.tile_game_top)
 	render.draw_debug3d()
 end
 
@@ -192,7 +194,7 @@ function Render:render_game()
 	render.disable_state(render.STATE_CULL_FACE)
 
 	render.draw(self.predicates.tile_game)
-	render.draw(self.predicates.tile_game_top)
+	render.draw(self.predicates.model_game)
 	render.disable_state(render.STATE_STENCIL_TEST)
 end
 

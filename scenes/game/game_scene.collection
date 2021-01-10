@@ -187,7 +187,7 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "line_bottom"
+  id: "line_top"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
@@ -197,8 +197,8 @@ embedded_instances {
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
   "  position {\n"
-  "    x: -6.0\n"
-  "    y: 10.0\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
   "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
@@ -210,8 +210,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 1038.0
-    y: 1175.0
+    x: 984.0
+    y: 1183.0
     z: 0.01
   }
   rotation {
@@ -227,7 +227,7 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "line_top"
+  id: "line_bottom"
   data: "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
@@ -237,8 +237,8 @@ embedded_instances {
   "blend_mode: BLEND_MODE_ALPHA\\n"
   "\"\n"
   "  position {\n"
-  "    x: -6.0\n"
-  "    y: 2.0\n"
+  "    x: 0.0\n"
+  "    y: 0.0\n"
   "    z: 0.0\n"
   "  }\n"
   "  rotation {\n"
@@ -250,8 +250,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: 984.0
-    y: 1183.0
+    x: 1038.0
+    y: 1175.0
     z: 0.01
   }
   rotation {

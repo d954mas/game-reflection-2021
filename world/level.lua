@@ -92,6 +92,9 @@ function Lvl:update(dt)
         end
         self.matcher.command_sequence = {}
     end
+    if (self.views) then
+        self.views.line_view:update(dt)
+    end
     self.command_sequence:update(dt)
 end
 
