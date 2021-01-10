@@ -29,7 +29,35 @@ function Matcher:initialize()
 end
 
 function Matcher:init()
+    self.history = {}
     self:update_screenshot()
+end
+
+function Matcher:buffer_changed()
+    local buffer_info = {
+        buffer = self.buffer,
+        width = self.w,
+        height = self.h,
+        channels = 4
+    }
+    self.free_pixels, self.fill_pixels = drawpixels.check_fill(buffer_info)
+    self.percent = self.fill_pixels / (self.fill_pixels + self.free_pixels)
+end
+
+function Matcher:revert()
+    if (#self.history > 1) then
+        table.remove(self.history) --remove current
+        local png = self.history[#self.history]
+        self:buffer_from_img_data(png)
+    end
+end
+
+function Matcher:buffer_from_img_data(img_data)
+    if (self.buffer) then
+        drawpixels.buffer_destroy(self.buffer)
+    end
+    self.buffer, self.w, self.h = png.decode_rgba(img_data, false)
+    self:buffer_changed()
 end
 
 function Matcher:update_screenshot()
@@ -45,62 +73,43 @@ function Matcher:update_screenshot()
         local time = os.clock()
         self.working = true
         coroutine.yield()--wait for input view is hide
-        local x,y = CAMERAS.current.viewport.x,CAMERAS.current.viewport.y
-
+        local x, y = CAMERAS.current.viewport.x, CAMERAS.current.viewport.y
 
         self.w, self.h = CAMERAS.current.viewport.width, CAMERAS.current.viewport.height
-        local left_bottom = CAMERAS.current:world_to_screen(vmath.vector3(-540/2,0-540/2,0))
-        local right_top = CAMERAS.current:world_to_screen(vmath.vector3(540/2,540/2,0))
+        local left_bottom = CAMERAS.current:world_to_screen(vmath.vector3(-540 / 2, 0 - 540 / 2, 0))
+        local right_top = CAMERAS.current:world_to_screen(vmath.vector3(540 / 2, 540 / 2, 0))
 
-        x,y = COMMON.LUME.round(left_bottom.x), COMMON.LUME.round(left_bottom.y)
+        x, y = COMMON.LUME.round(left_bottom.x), COMMON.LUME.round(left_bottom.y)
         --должны быть четными иначе начинает уезжать вверх
         --if(x % 2 == 1)then x = x -1 end
-     --   if(y % 2 == 1)then y = y - 1 end
+        --   if(y % 2 == 1)then y = y - 1 end
 
 
-        self.w, self.h = COMMON.LUME.round(right_top.x)-x, COMMON.LUME.round(right_top.y)-y
+        self.w, self.h = COMMON.LUME.round(right_top.x) - x, COMMON.LUME.round(right_top.y) - y
 
 
         --должны быть четными иначе начинает уезжать вверх
         --if(self.w % 2 == 1)then self.w = self.w +1 end
-       -- if(self.h % 2 == 1)then self.h = self.h +1 end
+        -- if(self.h % 2 == 1)then self.h = self.h +1 end
 
-        print("x:" .. x .. " y:" .. y .. "w:".. self.w .. " h:" .. self.h)
+        print("x:" .. x .. " y:" .. y .. "w:" .. self.w .. " h:" .. self.h)
 
-        local buffer
+        local img_data
         if (COMMON.CONSTANTS.PLATFORM_IS_WEB) then
             local wait = true
             screenshot.html5(x, y, self.w, self.h, function(_, base64)
                 base64 = string.sub(base64, 23)
-                local img_data = dec64(base64)
-                pprint("********************")
-                print(self.w)
-                print(self.h)
-                buffer, self.w, self.h = png.decode_rgba(img_data, false)
-                print(self.w)
-                print(self.h)
-                pprint("********************")
+                img_data = dec64(base64)
                 wait = false
             end)
             while (wait) do coroutine.yield() end
         else
-            buffer, self.w, self.h = screenshot.buffer(x,y, self.w, self.h)
+            img_data = screenshot.png(x, y, self.w, self.h)
         end
 
-        local buffer_info = {
-            buffer = buffer,
-            width = self.w,
-            height = self.h,
-            channels = 4
-        }
-        if(self.buffer)then
-            drawpixels.buffer_destroy(self.buffer)
-        end
-        self.buffer = buffer
+        table.insert(self.history, img_data)
+        self:buffer_from_img_data(img_data)
 
-
-        self.free_pixels, self.fill_pixels = drawpixels.check_fill(buffer_info)
-        self.percent = self.fill_pixels / (self.fill_pixels + self.free_pixels)
         self.working = false
 
         COMMON.i("screenshot time:" .. (os.clock() - time))
@@ -110,9 +119,10 @@ end
 
 function Matcher:final()
     self.working = false
-    if(self.buffer)then
+    if (self.buffer) then
         drawpixels.buffer_destroy(self.buffer)
     end
+    self.history = {}
     self.buffer, self.w, self.h = nil, nil, nil
     self.free_pixels, self.fill_pixels = 0, 0
     self.percent = 0

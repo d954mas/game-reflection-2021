@@ -23,6 +23,7 @@ function Script:bind_vh()
         btn_mirror = GUI.Button("btn_mirror"),
         btn_left = GUI.ButtonIconTest("btn_left"),
         btn_right = GUI.ButtonIconTest("btn_right"),
+        btn_revert_turn = GUI.Button("btn_revert_turn"),
     }
 end
 
@@ -64,6 +65,12 @@ function Script:init_gui()
         if (level) then
             SM:show(SM.SCENES.GAME, { level = level.id }, { reload = true })
         end
+    end)
+    self.view.btn_revert_turn:set_input_listener(function()
+        local ctx = COMMON.CONTEXT:set_context_top_by_name(COMMON.CONTEXT.NAMES.GAME)
+        WORLD.lvl.views.line_view:hide()
+        ctx:remove()
+        WORLD.lvl.matcher:revert()
     end)
 end
 
@@ -108,7 +115,7 @@ function Script:on_input(action_id, action)
     if (self.view.btn_cancel:on_input(action_id, action)) then return true end
     if (self.view.btn_left:on_input(action_id, action)) then return true end
     if (self.view.btn_mirror:on_input(action_id, action)) then return true end
-    if (self.view.btn_right:on_input(action_id, action)) then return true end
+    if (self.view.btn_revert_turn:on_input(action_id, action)) then return true end
 end
 
 COMMON.N28S.register(Script())
