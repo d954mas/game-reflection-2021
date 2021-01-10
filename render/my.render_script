@@ -67,6 +67,7 @@ function Render:init_predicates()
 		tile = render.predicate({ "tile" }),
 		model = render.predicate({ "model" }),
 		model_game = render.predicate({ "model_game" }),
+		model_game_mirror = render.predicate({ "model_game_mirror" }),
 		mask = render.predicate({ "mask" }),
 		tile_game = render.predicate({ "tile_game" }),
 		tile_game_top = render.predicate({ "tile_game_top" }),
@@ -195,6 +196,7 @@ function Render:render_game()
 
 	render.draw(self.predicates.tile_game)
 	render.draw(self.predicates.model_game)
+	render.draw(self.predicates.model_game_mirror)
 	render.disable_state(render.STATE_STENCIL_TEST)
 end
 

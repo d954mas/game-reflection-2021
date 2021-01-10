@@ -3,6 +3,11 @@ local CAMERA = require "libs_project.cameras"
 
 local View = COMMON.class("LevelLineView")
 
+local COLOR_CURRENT = vmath.vector4(1,0,0,1)
+local COLOR_NEW = vmath.vector4(0,1,0,1)
+local COLOR_REMOVED = vmath.vector4(0.4,0.4,0.4,1)
+local COLOR_WHITE = vmath.vector4(1,1,1,1)
+
 function View:bind_vh()
     self.vh = {
         top = { root = msg.url("game:/line_top"), sprite = msg.url("game:/line_top#sprite") },
@@ -120,10 +125,14 @@ function View:update_position()
     local p_w = self.world.lvl.matcher.w
     local p_h = self.world.lvl.matcher.h
     model.set_constant(self.vh.model, "screen", vmath.vector4(p_w, p_h, 0, 0))
+
     if (not self.show) then
         go.set_position(vmath.vector3(0, 0, -1000), self.vh.top.root)
         go.set_position(vmath.vector3(0, 0, -1000), self.vh.bottom.root)
         model.set_constant(self.vh.model, "line", vmath.vector4(0, 0, 0, 0))
+        model.set_constant(self.vh.model,"color_current",COLOR_CURRENT)
+        model.set_constant(self.vh.model,"color_new",COLOR_NEW)
+        model.set_constant(self.vh.model,"color_removed",COLOR_REMOVED)
     else
 
         local start_pos = vmath.vector3(self.positions.start.x, self.positions.start.y, 0)
@@ -168,7 +177,13 @@ function View:update_position()
             go.set_position(v, self.vh.top.root)
             v.x, v.y, v.z = self.positions.finish.x, self.positions.finish.y, 0.1
             go.set_position(v, self.vh.bottom.root)
+            model.set_constant(self.vh.model,"color_current",COLOR_CURRENT)
+            model.set_constant(self.vh.model,"color_new",COLOR_NEW)
+            model.set_constant(self.vh.model,"color_removed",COLOR_REMOVED)
         else
+            model.set_constant(self.vh.model,"color_current",COLOR_CURRENT)
+            model.set_constant(self.vh.model,"color_new",COLOR_CURRENT)
+            model.set_constant(self.vh.model,"color_removed",COLOR_WHITE)
             go.set_position(vmath.vector3(0, 0, -1000), self.vh.top.root)
             go.set_position(vmath.vector3(0, 0, -1000), self.vh.bottom.root)
         end

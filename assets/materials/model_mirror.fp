@@ -7,6 +7,11 @@ uniform highp sampler2D tex0;
 uniform lowp vec4 tint;
 uniform highp vec4 line;
 uniform highp vec4 screen;
+
+uniform highp vec4 color_current;
+uniform highp vec4 color_new;
+uniform highp vec4 color_removed;
+
 void main()
 {
     // Pre-multiply alpha since all runtime textures already are
@@ -28,24 +33,28 @@ void main()
             highp float calc_2 = (a*a + b*b);
             highp float x = x0 - (2.0 * a * calc_1)/calc_2;
             highp float y = y0 - (2.0 * b * calc_1)/calc_2;
-            color = texture2D(tex0, vec2(x/screen.x,y/screen.y)) * tint_pm;
-            if (color.r == 1.0 && color.g == 0.0 && color.b == 0.0) {
-                gl_FragColor =  vec4(color.rgb, tint.w);
+             highp vec4 color_flip = texture2D(tex0, vec2(x/screen.x,y/screen.y)) * tint_pm;
+            if (color_flip.r == color_current.r && color_flip.g == color_current.g && color_flip.b == color_current.b) {
+                gl_FragColor =  vec4(color_new.rgb, tint.w);
             }else{
-                gl_FragColor =  vec4(vec3(1), tint.w);
+                 if (color.r == color_current.r && color.g == color_current.g && color.b == color_current.b) {
+                    gl_FragColor =  vec4(color_removed.rgb, tint.w);;
+                 }else{
+                    discard;
+                }
             }
            //gl_FragColor =  vec4(vec3(0,0,1), 0.5);
         }else{
-           if (color.r == 1.0 && color.g == 0.0 && color.b == 0.0 ) {
-                gl_FragColor =  color;
+            if (color.r == color_current.r && color.g == color_current.g && color.b == color_current.b) {
+                 gl_FragColor =  vec4(color_current.rgb, tint.w);;
             }else{
                discard;
             }
            // gl_FragColor =  vec4(vec3(0,1,0), 0.5);
         }
    }else{
-        if (color.r == 1.0 && color.g == 0.0 && color.b == 0.0 ) {
-            gl_FragColor =  color;
+          if (color.r == color_current.r && color.g == color_current.g && color.b == color_current.b) {
+            gl_FragColor =  vec4(color_current.rgb, tint.w);
         }else{
            discard;
         }

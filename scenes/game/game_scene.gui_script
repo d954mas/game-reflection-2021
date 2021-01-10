@@ -2,6 +2,7 @@ local COMMON = require "libs.common"
 local GUI = require "libs_project.gui.gui"
 local SM = require "libs_project.sm"
 local WORLD = require "world.world"
+local LEVELS = require "assets.levels.levels"
 
 local Script = COMMON.new_n28s()
 
@@ -48,6 +49,20 @@ function Script:init_gui()
     end)
     self.view.btn_mirror:set_input_listener(function()
         WORLD.lvl.views.line_view:flip()
+    end)
+    self.view.btn_right:set_input_listener(function()
+        local next_id = WORLD.lvl.config.idx + 1
+        local level = LEVELS.levels[next_id]
+        if(level)then
+            SM:show(SM.SCENES.GAME,{level = level.id},{reload = true})
+        end
+    end)
+    self.view.btn_left:set_input_listener(function()
+        local next_id = WORLD.lvl.config.idx - 1
+        local level = LEVELS.levels[next_id]
+        if(level)then
+            SM:show(SM.SCENES.GAME,{level = level.id},{reload = true})
+        end
     end)
 end
 
