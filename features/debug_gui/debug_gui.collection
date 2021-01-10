@@ -3,8 +3,8 @@ instances {
   id: "draw_level_matcher"
   prototype: "/features/debug_gui/draw_level_matcher/draw_level_matcher.go"
   position {
-    x: -150.0
-    y: -200.0
+    x: 0.0
+    y: -400.0
     z: 0.0
   }
   rotation {
@@ -14,7 +14,7 @@ instances {
     w: 1.0
   }
   scale3 {
-    x: 10000.0
+    x: 5000.0
     y: 10000.0
     z: 1.0
   }
