@@ -45,6 +45,12 @@ function View:hide_for_screenshot()
     self:update_position()
 end
 
+function View:flip()
+    local pos = self.positions.start
+    self.positions.start = self.positions.finish
+    self.positions.finish = pos
+end
+
 function View:final()
     self:hide()
 end

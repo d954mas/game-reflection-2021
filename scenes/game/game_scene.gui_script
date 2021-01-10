@@ -43,6 +43,9 @@ function Script:init_gui()
         WORLD.lvl.views.line_view:hide()
         ctx:remove()
     end)
+    self.view.btn_mirror:set_input_listener(function()
+        WORLD.lvl.views.line_view:flip()
+    end)
 end
 
 function Script:init()
