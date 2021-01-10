@@ -122,10 +122,10 @@ end
 
 function View:update_position()
     if (not self.world.lvl.matcher or not self.world.lvl.matcher.w) then return end
-    local p_w = self.world.lvl.matcher.w
-    local p_h = self.world.lvl.matcher.h
+    local p_w = 540--self.world.lvl.matcher.w
+    local p_h = 540--self.world.lvl.matcher.h
 
-    model.set_constant(self.vh.model, "screen", vmath.vector4(p_w, p_h, 0, 0))
+    model.set_constant(self.vh.model, "screen", vmath.vector4(540, 540, 0, 0))
 
     if (not self.show) then
         go.set_position(vmath.vector3(0, 0, -1000), self.vh.top.root)
