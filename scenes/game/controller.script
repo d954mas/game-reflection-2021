@@ -1,6 +1,5 @@
 local COMMON = require "libs.common"
-local GUI = require "libs_project.gui.gui"
-local SM = require "libs_project.sm"
+local WORLD = require "world.world"
 
 local Script = COMMON.new_n28s()
 
@@ -18,7 +17,9 @@ function Script:final()
 end
 
 function Script:on_input(action_id, action)
-
+    if(WORLD.lvl)then
+        WORLD.lvl:on_input(action_id,action)
+    end
 end
 
 COMMON.N28S.register(Script())

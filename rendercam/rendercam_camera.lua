@@ -1,6 +1,11 @@
 local COMMON = require "libs.common"
 local PERLIN = require "libs.perlin"
 
+-- Vectors used in calculations for public transform functions
+local nv = vmath.vector4(0, 0, -1, 1)
+local fv = vmath.vector4(0, 0, 1, 1)
+local pv = vmath.vector4(0, 0, 0, 1)
+
 PERLIN.init()
 
 ---@class Camera
@@ -417,6 +422,46 @@ function Camera:calculate_gui_adjust_data(winX, winY, configX, configY)
 	adj.sx = sx;
 	adj.sy = sy
 	-- distorts to fit window, offsets always zero
+end
+
+function Camera:screen_to_viewport(x, y, delta)
+	if delta then
+		x = x / self.viewport.scale.x
+		y = y / self.viewport.scale.y
+	else
+		x = (x - self.viewport.x) / self.viewport.scale.x
+		y = (y - self.viewport.y) / self.viewport.scale.y
+	end
+	return x, y
+end
+
+function Camera:screen_to_world_2d(x, y, delta, worldz, raw)
+	worldz = worldz or self.world_z
+
+	if self.fixed_aspect_ratio then
+		x, y = self:screen_to_viewport(x, y, delta)
+	end
+
+	local m = not delta and vmath.inv(self.proj * self.view) or vmath.inv(self.proj)
+
+	-- Remap coordinates to range -1 to 1
+	local x1 = (x - COMMON.RENDER.screen_size.w * 0.5) / COMMON.RENDER.screen_size.w * 2
+	local y1 = (y - COMMON.RENDER.screen_size.h * 0.5) / COMMON.RENDER.screen_size.h * 2
+
+	if delta then x1 = x1 + 1;  y1 = y1 + 1 end
+
+	nv.x, nv.y = x1, y1
+	fv.x, fv.y = x1, y1
+	local np = m * nv
+	local fp = m * fv
+	np = np * (1/np.w)
+	fp = fp * (1/fp.w)
+
+	local t = ( worldz - self.abs_near_z) / (self.abs_far_z - self.abs_near_z) -- normalize desired Z to 0-1 from abs_nearZ to abs_farZ
+	local worldpos = vmath.lerp(t, np, fp)
+
+	if raw then return worldpos.x, worldpos.y, worldpos.z
+	else return vmath.vector3(worldpos.x, worldpos.y, worldpos.z) end -- convert vector4 to vector3
 end
 
 return Camera

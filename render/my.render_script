@@ -68,6 +68,7 @@ function Render:init_predicates()
 		model = render.predicate({ "model" }),
 		mask = render.predicate({ "mask" }),
 		tile_game = render.predicate({ "tile_game" }),
+		tile_game_top = render.predicate({ "tile_game_top" }),
 		bg = render.predicate({ "bg" }),
 		gui = render.predicate({ "gui" }),
 		text = render.predicate({ "text" }),
@@ -191,6 +192,7 @@ function Render:render_game()
 	render.disable_state(render.STATE_CULL_FACE)
 
 	render.draw(self.predicates.tile_game)
+	render.draw(self.predicates.tile_game_top)
 	render.disable_state(render.STATE_STENCIL_TEST)
 end
 

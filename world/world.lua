@@ -17,7 +17,7 @@ function M:level_load(lvl)
     self.lvl_config = assert(lvl, "lvl is nil")
     assert(not self.lvl, "already have level")
     COMMON.i("LOAD LVL:" .. lvl.id .. "(" .. lvl.idx .. ")", TAG)
-    self.lvl = Level(lvl)
+    self.lvl = Level(self,lvl)
     self.lvl:load(lvl)
 end
 

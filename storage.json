@@ -1,7 +1,7 @@
 {
      "debug": {
-          "draw_level_buffer": true,
-          "draw_level_matcher": true
+          "draw_level_matcher": true,
+          "draw_level_buffer": true
      },
      "version": 3
 }

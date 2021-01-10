@@ -1,6 +1,7 @@
 local COMMON = require "libs.common"
 local ACTIONS = require "libs.actions.actions"
 local LevelMatcher = require "world.level_matcher"
+local LineView = require "scenes.game.go.level_line_view"
 
 local FACTORY_REGION_URL = msg.url("game:/factories#factory_region")
 local FACTORY_EMPTY_URL = msg.url("game:/factories#factory_empty")
@@ -10,8 +11,10 @@ local TAG = "Level"
 ---@class Level
 local Lvl = COMMON.class("Level")
 
+---@param world World
 ---@param config LevelConfig
-function Lvl:initialize(config)
+function Lvl:initialize(world,config)
+    self.world = assert(world)
     self.config = assert(config)
     self.command_sequence = ACTIONS.Sequence()
     self.command_sequence.drop_empty = false
@@ -35,6 +38,9 @@ function Lvl:load()
     self.go_root = self:_create_go(FACTORY_EMPTY_URL)
     self.go_regions = {}
     self.go_figures = {}
+    self.views = {
+        line_view = LineView(self.world)
+    }
     COMMON.d("load regions", TAG)
     for _, region in ipairs(self.config.regions) do
         COMMON.d("region:" .. region.art)
@@ -68,8 +74,8 @@ function Lvl:load()
             sequence:update(dt)
         end
     end)
-    self.command_sequence:add_action(function ()
-        go.set_position(vmath.vector3(0,0,0),"game:/level_view")
+    self.command_sequence:add_action(function()
+        go.set_position(vmath.vector3(0, 0, 0), "game:/level_view")
     end)
     self.command_sequence:add_action(function()
         for _, figure in ipairs(self.go_figures) do
@@ -99,6 +105,14 @@ function Lvl:unload()
         self.matcher = nil
         self.command_sequence = ACTIONS.Sequence()
         self.command_sequence.drop_empty = false
+        self.views.line_view:final()
+        self.views = nil
+    end
+end
+
+function Lvl:on_input(action_id, action)
+    if (self.views) then
+        self.views.line_view:on_input(action_id, action)
     end
 end
 
