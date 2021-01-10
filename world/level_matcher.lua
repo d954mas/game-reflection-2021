@@ -47,11 +47,28 @@ function Matcher:update_screenshot()
         self.working = true
         coroutine.yield()--wait for input view is hide
         local x,y = CAMERAS.current.viewport.x, CAMERAS.current.viewport.y
+
+
         self.w, self.h = CAMERAS.current.viewport.width, CAMERAS.current.viewport.height
         local left_bottom = CAMERAS.current:world_to_screen(vmath.vector3(-540/2,0-512/2,0))
         local right_top = CAMERAS.current:world_to_screen(vmath.vector3(540/2,512/2,0))
-        x,y = math.ceil(left_bottom.x), math.ceil(left_bottom.y)
-        self.w, self.h = math.ceil(right_top.x)-x, math.ceil(right_top.y)-y
+
+        x,y = COMMON.LUME.round(left_bottom.x), COMMON.LUME.round(left_bottom.y)
+        --должны быть четными иначе начинает уезжать вверх
+        --if(x % 2 == 1)then x = x -1 end
+        --if(y % 2 == 1)then y = y - 1 end
+
+
+
+        self.w, self.h = COMMON.LUME.round(right_top.x)-x, COMMON.LUME.round(right_top.y)-y
+
+
+        --должны быть четными иначе начинает уезжать вверх
+        --if(self.w % 2 == 1)then self.w = self.w +1 end
+        --if(self.h % 2 == 1)then self.h = self.h +1 end
+
+        print("x:" .. x .. " y:" .. y .. "w:".. self.w .. " h:" .. self.h)
+
         local buffer
         if (COMMON.CONSTANTS.PLATFORM_IS_WEB) then
             local wait = true
