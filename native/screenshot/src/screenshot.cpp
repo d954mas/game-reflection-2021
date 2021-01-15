@@ -64,7 +64,8 @@ static int Pixels(lua_State* L) {
 	return 3;
 }
 
-void getPng(unsigned char* out, size_t* outsize, unsigned int x, unsigned int y, unsigned int w, unsigned int h){
+void getPng(unsigned char** out, size_t* outsize, unsigned int x, unsigned int y, unsigned int w, unsigned int h){
+
     GLubyte* pixels = ReadPixels(x, y, w, h);
     unsigned int *p = (unsigned int*)pixels;
 
@@ -83,7 +84,6 @@ void getPng(unsigned char* out, size_t* outsize, unsigned int x, unsigned int y,
     // encode to png
     lodepng_encode_memory(out, outsize, pixels, w, h, LCT_RGBA, 8);
     delete pixels;
-    return out;
 }
 
 static int Png(lua_State* L) {
@@ -107,8 +107,8 @@ static int Png(lua_State* L) {
 
     unsigned char* out = 0;
     size_t outsize = 0;
-    getPng(out,&outsize);
 
+    getPng(&out,&outsize,x,y,w,h);
 	// Put the pixel data onto the stack
 	lua_pushlstring(L, (char*)out, outsize);
 	lua_pushnumber(L, w);
@@ -206,12 +206,12 @@ static void UnregisterCallbackPostRender(lua_State* L){
 }
 
 static dmExtension::Result PostRenderScreenshot(dmExtension::Params* params){
-    if(cbk.m_Callback != LUA_NOREF){
-        lua_State* L = cbk.m_L;
+	if(cbkPostRender.m_Callback != LUA_NOREF){
+		lua_State* L = cbkPostRender.m_L;
         int top = lua_gettop(L);
-        lua_rawgeti(L, LUA_REGISTRYINDEX, cbk.m_Callback);
+		lua_rawgeti(L, LUA_REGISTRYINDEX, cbkPostRender.m_Callback);
         //[-1] - callback
-        lua_rawgeti(L, LUA_REGISTRYINDEX, cbk.m_Self);
+		lua_rawgeti(L, LUA_REGISTRYINDEX, cbkPostRender.m_Self);
         //[-1] - self
         //[-2] - callback
         lua_pushvalue(L, -1);
@@ -228,11 +228,23 @@ static dmExtension::Result PostRenderScreenshot(dmExtension::Params* params){
             lua_pop(L, 2);
             assert(top == lua_gettop(L));
         } else {
-            lua_pushstring(L, base64image);
-            int ret = lua_pcall(L, 2, 0, 0);
+            unsigned char* out = 0;
+            size_t outsize = 0;
+
+            getPng(&out,&outsize,cbkPostRender.x,cbkPostRender.y,cbkPostRender.w,cbkPostRender.h);
+
+            lua_pushlstring(L, (char*)out, outsize);
+			lua_pushnumber(L, cbkPostRender.w);
+			lua_pushnumber(L, cbkPostRender.h);
+
+            // Assert that there is callback + self + vars
+            assert(top +2 + 3 == lua_gettop(L));
+
+
+            int ret = lua_pcall(L, 4, 0, 0);
             if(ret != 0) {
                 dmLogError("Error running callback: %s", lua_tostring(L, -1));
-                lua_pop(L, 1);
+                lua_pop(L, 5);
             }
             UnregisterCallbackPostRender(L);
         }
@@ -379,6 +391,7 @@ static const luaL_reg Module_methods[] = {
 	{"pixels", Pixels},
 	{"png", Png},
 	{"buffer", Buffer},
+	{"callback", Callback},
 #endif
 	{0, 0}
 };

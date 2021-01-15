@@ -104,6 +104,12 @@ function Matcher:update_screenshot()
             end)
             while (wait) do coroutine.yield() end
         else
+            local wait = true
+            screenshot.callback(x, y, self.w, self.h, function(_, png)
+                print("PNG:" .. png);
+                wait = false
+            end)
+            while (wait) do coroutine.yield() end
             img_data = screenshot.png(x, y, self.w, self.h)
         end
 
