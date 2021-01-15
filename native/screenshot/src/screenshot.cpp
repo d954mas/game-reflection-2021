@@ -194,16 +194,51 @@ struct ScreenshotPostRenderLuaListener {
 	unsigned int h;
 };
 
-static ScreenshotLuaListener cbkPostRender;
+static ScreenshotPostRenderLuaListener cbkPostRender;
 
-static void UnregisterCallbackPostRender(lua_State* L)
-{
+static void UnregisterCallbackPostRender(lua_State* L){
 	if(cbkPostRender.m_Callback != LUA_NOREF)
 	{
 		dmScript::Unref(cbkPostRender.m_L, LUA_REGISTRYINDEX, cbkPostRender.m_Callback);
 		dmScript::Unref(cbkPostRender.m_L, LUA_REGISTRYINDEX, cbkPostRender.m_Self);
 		cbkPostRender.m_Callback = LUA_NOREF;
 	}
+}
+
+static dmExtension::Result PostRenderScreenshot(dmExtension::Params* params){
+    if(cbk.m_Callback != LUA_NOREF){
+        lua_State* L = cbk.m_L;
+        int top = lua_gettop(L);
+        lua_rawgeti(L, LUA_REGISTRYINDEX, cbk.m_Callback);
+        //[-1] - callback
+        lua_rawgeti(L, LUA_REGISTRYINDEX, cbk.m_Self);
+        //[-1] - self
+        //[-2] - callback
+        lua_pushvalue(L, -1);
+        //[-1] - self
+        //[-2] - self
+        //[-3] - callback
+        dmScript::SetInstance(L);
+        //[-1] - self
+        //[-2] - callback
+
+        if (!dmScript::IsInstanceValid(L)) {
+            UnregisterCallbackPostRender(L);
+            dmLogError("Could not run Screenshot postRenderCallback because the instance has been deleted.");
+            lua_pop(L, 2);
+            assert(top == lua_gettop(L));
+        } else {
+            lua_pushstring(L, base64image);
+            int ret = lua_pcall(L, 2, 0, 0);
+            if(ret != 0) {
+                dmLogError("Error running callback: %s", lua_tostring(L, -1));
+                lua_pop(L, 1);
+            }
+            UnregisterCallbackPostRender(L);
+        }
+        assert(top == lua_gettop(L));
+    }
+    return dmExtension::RESULT_OK;
 }
 
 static int Callback(lua_State* L) {
@@ -348,42 +383,7 @@ static const luaL_reg Module_methods[] = {
 	{0, 0}
 };
 
-static dmExtension::Result PostRenderScreenshot(dmExtension::Params* params)
-{
-    if(cbk.m_Callback != LUA_NOREF)
-        lua_State* L = cbk.m_L;
-        int top = lua_gettop(L);
-        lua_rawgeti(L, LUA_REGISTRYINDEX, cbk.m_Callback);
-        //[-1] - callback
-        lua_rawgeti(L, LUA_REGISTRYINDEX, cbk.m_Self);
-        //[-1] - self
-        //[-2] - callback
-        lua_pushvalue(L, -1);
-        //[-1] - self
-        //[-2] - self
-        //[-3] - callback
-        dmScript::SetInstance(L);
-        //[-1] - self
-        //[-2] - callback
 
-        if (!dmScript::IsInstanceValid(L)) {
-            UnregisterCallbackPostRender(L);
-            dmLogError("Could not run Screenshot postRenderCallback because the instance has been deleted.");
-            lua_pop(L, 2);
-            assert(top == lua_gettop(L));
-        } else {
-            lua_pushstring(L, base64image);
-            int ret = lua_pcall(L, 2, 0, 0);
-            if(ret != 0) {
-                dmLogError("Error running callback: %s", lua_tostring(L, -1));
-                lua_pop(L, 1);
-            }
-            UnregisterCallbackPostRender(L);
-        }
-        assert(top == lua_gettop(L));
-    }
-    return dmExtension::RESULT_OK;
-}
 
 static void LuaInit(lua_State* L) {
 		int top = lua_gettop(L);
@@ -396,7 +396,10 @@ static void LuaInit(lua_State* L) {
 }
 
 dmExtension::Result AppInitializeScreenshotExtension(dmExtension::AppParams* params) {
+        #if !(defined(__EMSCRIPTEN__))
         dmExtension::RegisterCallback(dmExtension::CALLBACK_POST_RENDER, PostRenderScreenshot );
+        #endif
+
 		return dmExtension::RESULT_OK;
 }
 
