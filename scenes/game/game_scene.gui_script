@@ -114,6 +114,7 @@ function Script:on_input(action_id, action)
     if (self.view.btn_accept:on_input(action_id, action)) then return true end
     if (self.view.btn_cancel:on_input(action_id, action)) then return true end
     if (self.view.btn_left:on_input(action_id, action)) then return true end
+    if (self.view.btn_right:on_input(action_id, action)) then return true end
     if (self.view.btn_mirror:on_input(action_id, action)) then return true end
     if (self.view.btn_revert_turn:on_input(action_id, action)) then return true end
 end
