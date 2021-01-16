@@ -16,7 +16,7 @@ background_color {
 nodes {
   position {
     x: 270.0
-    y: 887.0
+    y: 960.0
     z: 0.0
     w: 1.0
   }
@@ -50,7 +50,7 @@ nodes {
   id: "top"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_TOP
-  pivot: PIVOT_CENTER
+  pivot: PIVOT_N
   adjust_mode: ADJUST_MODE_FIT
   layer: "below"
   inherit_alpha: true
@@ -70,7 +70,62 @@ nodes {
 nodes {
   position {
     x: 0.0
+    y: -73.0
+    z: 0.0
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
     y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 1.0
+    y: 1.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  type: TYPE_BOX
+  blend_mode: BLEND_MODE_ALPHA
+  texture: "gui/empty"
+  id: "top/center"
+  xanchor: XANCHOR_NONE
+  yanchor: YANCHOR_NONE
+  pivot: PIVOT_CENTER
+  adjust_mode: ADJUST_MODE_FIT
+  parent: "top"
+  layer: "below"
+  inherit_alpha: true
+  slice9 {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 0.0
+  }
+  clipping_mode: CLIPPING_MODE_NONE
+  clipping_visible: true
+  clipping_inverted: false
+  alpha: 1.0
+  template_node_child: false
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 0.0
+    y: -88.0
     z: 0.0
     w: 1.0
   }
@@ -82,6 +137,61 @@ nodes {
   }
   scale {
     x: 0.5
+    y: 0.5
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 1142.0
+    y: 304.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  type: TYPE_BOX
+  blend_mode: BLEND_MODE_ALPHA
+  texture: "gui/bg_top_progress"
+  id: "top/stars/bg"
+  xanchor: XANCHOR_NONE
+  yanchor: YANCHOR_NONE
+  pivot: PIVOT_CENTER
+  adjust_mode: ADJUST_MODE_FIT
+  parent: "top/center"
+  layer: "below"
+  inherit_alpha: true
+  slice9 {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 0.0
+  }
+  clipping_mode: CLIPPING_MODE_NONE
+  clipping_visible: true
+  clipping_inverted: false
+  alpha: 1.0
+  template_node_child: false
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.0
     y: 0.5
     z: 1.0
     w: 1.0
@@ -106,7 +216,7 @@ nodes {
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "top"
+  parent: "top/center"
   layer: "below"
   inherit_alpha: true
   slice9 {
@@ -157,11 +267,11 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/empty"
   id: "btn_back"
-  xanchor: XANCHOR_NONE
+  xanchor: XANCHOR_LEFT
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "top"
+  parent: "top/center"
   layer: "below"
   inherit_alpha: true
   slice9 {
@@ -267,11 +377,11 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/empty"
   id: "btn_restart"
-  xanchor: XANCHOR_NONE
+  xanchor: XANCHOR_RIGHT
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "top"
+  parent: "top/center"
   layer: "below"
   inherit_alpha: true
   slice9 {
@@ -344,70 +454,8 @@ nodes {
 }
 nodes {
   position {
-    x: 161.0
-    y: 887.0
-    z: 0.0
-    w: 1.0
-  }
-  rotation {
     x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  scale {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-    w: 1.0
-  }
-  size {
-    x: 200.0
-    y: 100.0
-    z: 0.0
-    w: 1.0
-  }
-  color {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-    w: 1.0
-  }
-  type: TYPE_TEXT
-  blend_mode: BLEND_MODE_ALPHA
-  text: "25%"
-  font: "roboto_bold"
-  id: "lbl_percent"
-  xanchor: XANCHOR_NONE
-  yanchor: YANCHOR_NONE
-  pivot: PIVOT_W
-  outline {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 1.0
-  }
-  shadow {
-    x: 1.0
-    y: 1.0
-    z: 1.0
-    w: 1.0
-  }
-  adjust_mode: ADJUST_MODE_FIT
-  line_break: false
-  layer: "text"
-  inherit_alpha: true
-  alpha: 1.0
-  outline_alpha: 1.0
-  shadow_alpha: 1.0
-  template_node_child: false
-  text_leading: 1.0
-  text_tracking: 0.0
-}
-nodes {
-  position {
-    x: 118.0
-    y: 764.0
+    y: -114.0
     z: 0.0
     w: 1.0
   }
@@ -438,12 +486,13 @@ nodes {
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/empty"
-  id: "stars"
+  id: "top/stars"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  layer: ""
+  parent: "top/center"
+  layer: "below"
   inherit_alpha: true
   slice9 {
     x: 0.0
@@ -497,8 +546,8 @@ nodes {
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "stars"
-  layer: ""
+  parent: "top/stars"
+  layer: "below"
   inherit_alpha: true
   slice9 {
     x: 0.0
@@ -567,7 +616,7 @@ nodes {
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
   parent: "star1"
-  layer: ""
+  layer: "text"
   inherit_alpha: true
   alpha: 1.0
   outline_alpha: 0.0
@@ -615,8 +664,8 @@ nodes {
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "stars"
-  layer: ""
+  parent: "top/stars"
+  layer: "below"
   inherit_alpha: true
   slice9 {
     x: 0.0
@@ -685,7 +734,7 @@ nodes {
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
   parent: "star2"
-  layer: ""
+  layer: "text"
   inherit_alpha: true
   alpha: 1.0
   outline_alpha: 0.0
@@ -733,8 +782,8 @@ nodes {
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "stars"
-  layer: ""
+  parent: "top/stars"
+  layer: "below"
   inherit_alpha: true
   slice9 {
     x: 0.0
@@ -803,10 +852,73 @@ nodes {
   adjust_mode: ADJUST_MODE_FIT
   line_break: false
   parent: "star3"
-  layer: ""
+  layer: "text"
   inherit_alpha: true
   alpha: 1.0
   outline_alpha: 0.0
+  shadow_alpha: 1.0
+  template_node_child: false
+  text_leading: 1.0
+  text_tracking: 0.0
+}
+nodes {
+  position {
+    x: 161.0
+    y: 887.0
+    z: 0.0
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  type: TYPE_TEXT
+  blend_mode: BLEND_MODE_ALPHA
+  text: "25%"
+  font: "roboto_bold"
+  id: "lbl_percent"
+  xanchor: XANCHOR_NONE
+  yanchor: YANCHOR_NONE
+  pivot: PIVOT_W
+  outline {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  shadow {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  adjust_mode: ADJUST_MODE_FIT
+  line_break: false
+  parent: "top/center"
+  layer: "text"
+  inherit_alpha: true
+  alpha: 1.0
+  outline_alpha: 1.0
   shadow_alpha: 1.0
   template_node_child: false
   text_leading: 1.0
@@ -845,7 +957,7 @@ nodes {
   }
   type: TYPE_TEMPLATE
   id: "btn_left"
-  layer: ""
+  layer: "below"
   inherit_alpha: true
   alpha: 1.0
   template: "/assets/templates/debug_button_round_text.gui"
@@ -1114,7 +1226,7 @@ nodes {
   }
   type: TYPE_TEMPLATE
   id: "btn_right"
-  layer: ""
+  layer: "below"
   inherit_alpha: true
   alpha: 1.0
   template: "/assets/templates/debug_button_round_text.gui"
@@ -1353,7 +1465,7 @@ nodes {
 nodes {
   position {
     x: 269.0
-    y: 73.0
+    y: 0.0
     z: 0.0
     w: 1.0
   }
@@ -1387,7 +1499,7 @@ nodes {
   id: "bottom"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_BOTTOM
-  pivot: PIVOT_CENTER
+  pivot: PIVOT_S
   adjust_mode: ADJUST_MODE_FIT
   layer: "below"
   inherit_alpha: true
@@ -1407,6 +1519,61 @@ nodes {
 nodes {
   position {
     x: 0.0
+    y: 73.0
+    z: 0.0
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 1.0
+    y: 1.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  type: TYPE_BOX
+  blend_mode: BLEND_MODE_ALPHA
+  texture: "gui/empty"
+  id: "bottom/center"
+  xanchor: XANCHOR_NONE
+  yanchor: YANCHOR_NONE
+  pivot: PIVOT_CENTER
+  adjust_mode: ADJUST_MODE_FIT
+  parent: "bottom"
+  layer: "below"
+  inherit_alpha: true
+  slice9 {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 0.0
+  }
+  clipping_mode: CLIPPING_MODE_NONE
+  clipping_visible: true
+  clipping_inverted: false
+  alpha: 1.0
+  template_node_child: false
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 0.0
     y: 0.0
     z: 0.0
     w: 1.0
@@ -1418,7 +1585,7 @@ nodes {
     w: 1.0
   }
   scale {
-    x: 0.5
+    x: 1.0
     y: 0.5
     z: 1.0
     w: 1.0
@@ -1443,7 +1610,7 @@ nodes {
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
-  parent: "bottom"
+  parent: "bottom/center"
   layer: "below"
   inherit_alpha: true
   slice9 {
@@ -1497,8 +1664,8 @@ nodes {
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_FIT
-  parent: "bottom"
+  adjust_mode: ADJUST_MODE_STRETCH
+  parent: "bottom/center"
   layer: "below"
   inherit_alpha: true
   slice9 {
@@ -1659,7 +1826,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/empty"
   id: "btn_cancel"
-  xanchor: XANCHOR_NONE
+  xanchor: XANCHOR_LEFT
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
@@ -1769,7 +1936,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/empty"
   id: "btn_flip"
-  xanchor: XANCHOR_NONE
+  xanchor: XANCHOR_RIGHT
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
@@ -1882,8 +2049,8 @@ nodes {
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
-  adjust_mode: ADJUST_MODE_FIT
-  parent: "bottom"
+  adjust_mode: ADJUST_MODE_STRETCH
+  parent: "bottom/center"
   layer: "below"
   inherit_alpha: true
   slice9 {
@@ -1934,7 +2101,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/empty"
   id: "btn_revert_left"
-  xanchor: XANCHOR_NONE
+  xanchor: XANCHOR_LEFT
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT
@@ -2044,7 +2211,7 @@ nodes {
   blend_mode: BLEND_MODE_ALPHA
   texture: "gui/empty"
   id: "btn_revert_right"
-  xanchor: XANCHOR_NONE
+  xanchor: XANCHOR_RIGHT
   yanchor: YANCHOR_NONE
   pivot: PIVOT_CENTER
   adjust_mode: ADJUST_MODE_FIT

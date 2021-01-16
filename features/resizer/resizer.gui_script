@@ -51,6 +51,10 @@ function Script:change_size(idx)
 	COMMON.i(string.format("change size to:%s scaled:%dx%d",size.tag,size[1]*RESOLUTION_SCALE,size[2]*RESOLUTION_SCALE),TAG)
 end
 
+function Script:update()
+	COMMON.INPUT.acquire()
+end
+
 function Script:on_input(action_id, action)
 	if action_id == COMMON.HASHES.INPUT.RIGHT_CLICK and action.released and
 			gui.pick_node(self.resize_node, action.x, action.y) then
