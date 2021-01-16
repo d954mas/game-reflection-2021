@@ -10,20 +10,25 @@ function Script:bind_vh()
     self.vh = {
         lbl_percent = gui.get_node("lbl_percent"),
         stars = {
-            {root = gui.get_node("star1"), lbl = gui.get_node("star1/lbl")},
-            {root = gui.get_node("star2"), lbl = gui.get_node("star2/lbl")},
-            {root = gui.get_node("star3"), lbl = gui.get_node("star3/lbl")},
-        }
+            { root = gui.get_node("star1"), lbl = gui.get_node("star1/lbl") },
+            { root = gui.get_node("star2"), lbl = gui.get_node("star2/lbl") },
+            { root = gui.get_node("star3"), lbl = gui.get_node("star3/lbl") },
+        },
+        bottom_active = gui.get_node("bottom/active"),
+        bottom_passive = gui.get_node("bottom/passive"),
+        bottom = gui.get_node("bottom"),
+        top = gui.get_node("top"),
     }
     self.view = {
-        btn_back = GUI.ButtonIconTest("btn_back"),
-        btn_restart = GUI.ButtonIconTest("btn_restart"),
-        btn_accept = GUI.Button("btn_accept"),
-        btn_cancel = GUI.Button("btn_cancel"),
-        btn_mirror = GUI.Button("btn_mirror"),
+        btn_back = GUI.ButtonBase("btn_back"),
+        btn_restart = GUI.ButtonBase("btn_restart"),
+        btn_accept = GUI.ButtonBase("btn_accept"),
+        btn_cancel = GUI.ButtonBase("btn_cancel"),
+        btn_flip = GUI.ButtonBase("btn_flip"),
         btn_left = GUI.ButtonIconTest("btn_left"),
         btn_right = GUI.ButtonIconTest("btn_right"),
-        btn_revert_turn = GUI.Button("btn_revert_turn"),
+        btn_revert_left = GUI.ButtonBase("btn_revert_left"),
+        btn_revert_right = GUI.ButtonBase("btn_revert_right"),
     }
 end
 
@@ -49,7 +54,7 @@ function Script:init_gui()
         WORLD.lvl.views.line_view:hide()
         ctx:remove()
     end)
-    self.view.btn_mirror:set_input_listener(function()
+    self.view.btn_flip:set_input_listener(function()
         WORLD.lvl.views.line_view:flip()
     end)
     self.view.btn_right:set_input_listener(function()
@@ -66,11 +71,17 @@ function Script:init_gui()
             SM:show(SM.SCENES.GAME, { level = level.id }, { reload = true })
         end
     end)
-    self.view.btn_revert_turn:set_input_listener(function()
+    self.view.btn_revert_left:set_input_listener(function()
         local ctx = COMMON.CONTEXT:set_context_top_by_name(COMMON.CONTEXT.NAMES.GAME)
         WORLD.lvl.views.line_view:hide()
         ctx:remove()
         WORLD.lvl.matcher:revert()
+    end)
+    self.view.btn_revert_right:set_input_listener(function()
+        local ctx = COMMON.CONTEXT:set_context_top_by_name(COMMON.CONTEXT.NAMES.GAME)
+        WORLD.lvl.views.line_view:hide()
+        ctx:remove()
+        WORLD.lvl.matcher:revert_revert()
     end)
 end
 
@@ -81,27 +92,38 @@ function Script:init()
 end
 
 function Script:update_percent()
-    if not  WORLD.lvl then return end
+    if not WORLD.lvl then return end
     local percent = WORLD.lvl.matcher.percent
-    if(self.percent == 0)then
-        for i,star in ipairs(self.vh.stars)do
-            gui.set_text(star.lbl,WORLD.lvl.config.targets[i]*100 .. "%")
+    if (self.percent == 0) then
+        for i, star in ipairs(self.vh.stars) do
+            gui.set_text(star.lbl, WORLD.lvl.config.targets[i] * 100 .. "%")
         end
     end
-    if(self.percent~= percent)then
+    if (self.percent ~= percent) then
         self.percent = percent
-        for i,star in ipairs(self.vh.stars)do
+        for i, star in ipairs(self.vh.stars) do
             local target = WORLD.lvl.config.targets[i]
-            gui.set_color(star.root,self.percent>target
-            and vmath.vector4(0,1,0,1) or vmath.vector4(1))
+            gui.set_color(star.root, self.percent > target
+                    and vmath.vector4(0, 1, 0, 1) or vmath.vector4(1))
         end
 
-        gui.set_text(self.vh.lbl_percent,math.floor(self.percent*1000)/10 .. "%")
+        gui.set_text(self.vh.lbl_percent, math.floor(self.percent * 1000) / 10 .. "%")
     end
 end
 
 function Script:update(dt)
     self:update_percent()
+    local loaded = WORLD.lvl and WORLD.lvl.views.line_view and WORLD.lvl.matcher and WORLD.lvl.matcher.history
+    if (loaded and  WORLD.lvl.views.line_view.show) then
+        gui.set_enabled(self.vh.bottom_active, true)
+        gui.set_enabled(self.vh.bottom_passive, false)
+    else
+        gui.set_enabled(self.vh.bottom_active, false)
+        gui.set_enabled(self.vh.bottom_passive, true)
+    end
+
+    self.view.btn_revert_left:set_ignore_input(not loaded or (#WORLD.lvl.matcher.history <= 1))
+    self.view.btn_revert_right:set_ignore_input(not loaded or (#WORLD.lvl.matcher.history_revert == 0))
 end
 
 function Script:final()
@@ -115,8 +137,11 @@ function Script:on_input(action_id, action)
     if (self.view.btn_cancel:on_input(action_id, action)) then return true end
     if (self.view.btn_left:on_input(action_id, action)) then return true end
     if (self.view.btn_right:on_input(action_id, action)) then return true end
-    if (self.view.btn_mirror:on_input(action_id, action)) then return true end
-    if (self.view.btn_revert_turn:on_input(action_id, action)) then return true end
+    if (self.view.btn_flip:on_input(action_id, action)) then return true end
+    if (self.view.btn_revert_left:on_input(action_id, action)) then return true end
+    if (self.view.btn_revert_right:on_input(action_id, action)) then return true end
+    if(gui.pick_node(self.vh.top,action.x,action.y))then return true end
+    if(gui.pick_node(self.vh.bottom,action.x,action.y))then return true end
 end
 
 COMMON.N28S.register(Script())

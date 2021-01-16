@@ -1,6 +1,7 @@
 local COMMON = require "libs.common"
 local GOOEY = require "gooey.gooey"
 
+---@class BtnScale
 local Btn = COMMON.class("ButtonScale")
 
 function Btn:initialize(root_name, path)

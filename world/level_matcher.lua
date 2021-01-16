@@ -30,6 +30,7 @@ end
 
 function Matcher:init()
     self.history = {}
+    self.history_revert = {}
     self:update_screenshot()
 end
 
@@ -46,8 +47,17 @@ end
 
 function Matcher:revert()
     if (#self.history > 1) then
-        table.remove(self.history) --remove current
+        local current = table.remove(self.history) --remove current
+        table.insert(self.history_revert,current)
         local png = self.history[#self.history]
+        self:buffer_from_img_data(png)
+    end
+end
+
+function Matcher:revert_revert()
+    if (#self.history_revert > 0) then
+        local png = table.remove(self.history_revert, 1) --remove current
+        table.insert(self.history,png)
         self:buffer_from_img_data(png)
     end
 end
@@ -106,17 +116,17 @@ function Matcher:update_screenshot()
         else
             local wait = true
             screenshot.callback(x, y, self.w, self.h, function(_, png)
-                print("PNG:" .. png);
                 wait = false
+                img_data = png
             end)
             while (wait) do coroutine.yield() end
-            img_data = screenshot.png(x, y, self.w, self.h)
         end
 
-        if(#self.history>50) then
-            table.remove(self.history,1)
+        if (#self.history > 50) then
+            table.remove(self.history, 1)
         end
         table.insert(self.history, img_data)
+        self.history_revert = {}
         self:buffer_from_img_data(img_data)
 
         self.working = false
@@ -132,6 +142,7 @@ function Matcher:final()
         drawpixels.buffer_destroy(self.buffer)
     end
     self.history = {}
+    self.history_revert = {}
     self.buffer, self.w, self.h = nil, nil, nil
     self.free_pixels, self.fill_pixels = 0, 0
     self.percent = 0

@@ -1,5 +1,6 @@
 local M = {}
 M.Button = require "libs_project.gui.button"
+M.ButtonBase = require "libs_project.gui.button_base"
 M.ButtonIconTest = require "libs_project.gui.button_icon_text"
 M.ButtonScale = require "libs_project.gui.button_scale"
 M.RichtextLbl = require "libs_project.gui.richtext_lbl"
