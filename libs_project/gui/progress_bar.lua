@@ -61,6 +61,7 @@ function Bar:gui_update()
     if self.vh.lbl then
         gui.set_text(self.vh.lbl, self:lbl_format_value())
     end
+   
     local size = vmath.vector3(self.progress_width_max * self.animation.value / self.value_max, gui.get_size(self.vh.progress).y, 0)
     if (size.x == 0) then
         if (not self.progress_disabled) then
@@ -91,14 +92,18 @@ function Bar:set_enabled(enabled)
     gui.set_enabled(self.vh.root, enabled)
 end
 
-function Bar:set_value(value)
+function Bar:set_value(value,force)
     if self.animation.tween then
         self.animation.tween:force_finish()
         self.animation.tween = nil
     end
-    self.animation.tween = ACTIONS.TweenGui { object = self.animation, property = "value", from = { value = self.value }, to = { value = value }, time = self.animation_config.time,
+    self.animation.tween = ACTIONS.TweenTable { object = self.animation, property = "value", from = { value = self.value }, to = { value = value }, time = self.animation_config.time,
                                            easing = self.animation_config.easing }
     self.value = COMMON.LUME.clamp(value, 0, self.value_max)
+    if(force)then
+        self.animation.tween:force_finish()
+        self:gui_update()
+    end
 end
 
 function Bar:animation_pulse()

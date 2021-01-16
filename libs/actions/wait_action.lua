@@ -4,7 +4,7 @@ local BaseAction = require "libs.actions.action"
 ---@class WaitAction:Action
 local Action = COMMON.class("WaitAction",BaseAction)
 
-function Action:config_check()
+function Action:config_check(config)
 	assert(self.config.time, "need time")
 end
 

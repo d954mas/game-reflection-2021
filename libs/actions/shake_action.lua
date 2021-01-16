@@ -4,9 +4,9 @@ local TweenAction = require "libs.actions.tween_action"
 ---@class ShakeAction:SequenceAction
 local Action = COMMON.class("ShakeAction", TweenAction)
 
-function Action:config_check()
+function Action:config_check(config)
     assert(self.config.magnitude)
-    TweenAction.config_check(self)
+    TweenAction.config_check(self,config)
 end
 
 function Action:initialize(config)

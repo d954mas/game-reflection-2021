@@ -33,7 +33,7 @@ function Action:initialize(config)
 end
 
 function Action:config_check(config)
-	checks("?", {
+	checks("?",{
 		delay = "?number",
 		to = "?",
 		from = "?",
@@ -116,8 +116,8 @@ function Action:config_table_to_value(data)
 		return self.quaternion
 	end
 
-	if self.config.object[self.config.property] then
-		return data
+	if data[self.config.property] then
+		return data[self.config.property]
 	end
 
 	if data[1] then

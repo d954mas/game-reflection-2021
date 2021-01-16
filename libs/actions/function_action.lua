@@ -4,7 +4,7 @@ local BaseAction = require "libs.actions.action"
 ---@class FunctionAction:Action
 local Action = COMMON.class("FunctionAction", BaseAction)
 
-function Action:config_check()
+function Action:config_check(config)
     assert(self.config.fun, "need function")
 end
 

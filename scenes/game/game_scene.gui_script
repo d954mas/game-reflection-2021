@@ -29,7 +29,9 @@ function Script:bind_vh()
         btn_right = GUI.ButtonIconTest("btn_right"),
         btn_revert_left = GUI.ButtonBase("btn_revert_left"),
         btn_revert_right = GUI.ButtonBase("btn_revert_right"),
+        progress_level = GUI.ProgressBar("progress_level"),
     }
+    self.view.progress_level:set_value_max(1)
 end
 
 function Script:init_gui()
@@ -98,6 +100,7 @@ function Script:update_percent()
         for i, star in ipairs(self.vh.stars) do
             gui.set_text(star.lbl, WORLD.lvl.config.targets[i] * 100 .. "%")
         end
+        self.view.progress_level:set_value(0,true)
     end
     if (self.percent ~= percent) then
         self.percent = percent
@@ -106,12 +109,16 @@ function Script:update_percent()
             gui.set_color(star.root, self.percent > target
                     and vmath.vector4(0, 1, 0, 1) or vmath.vector4(1))
         end
-
+        self.view.progress_level:set_value(self.percent)
         gui.set_text(self.vh.lbl_percent, math.floor(self.percent * 1000) / 10 .. "%")
+
+        self.percent_was_init = true
     end
 end
 
 function Script:update(dt)
+    self.view.progress_level:update(dt)
+
     self:update_percent()
     local loaded = WORLD.lvl and WORLD.lvl.views.line_view and WORLD.lvl.matcher and WORLD.lvl.matcher.history
     if (loaded and  WORLD.lvl.views.line_view.show) then

@@ -11,13 +11,13 @@ function Action:initialize(config)
 	Thread.initialize(self,function (dt)
 		self:act(dt)
 	end)
-	self:config_check()
+	self:config_check(self.config)
 	if self.config.script_context or self.__use_current_context then
 		self:context_use(self.config.script_context)
 	end
 end
 
-function Action:config_check() end
+function Action:config_check(config) end
 
 function Action:act(dt)
 
