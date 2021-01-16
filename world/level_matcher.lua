@@ -83,6 +83,7 @@ function Matcher:update_screenshot()
         local time = os.clock()
         self.working = true
         coroutine.yield()--wait for input view is hide
+        coroutine.yield()--wait for input view is hide
         local x, y = CAMERAS.current.viewport.x, CAMERAS.current.viewport.y
 
         self.w, self.h = CAMERAS.current.viewport.width, CAMERAS.current.viewport.height
