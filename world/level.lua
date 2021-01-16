@@ -35,7 +35,7 @@ end
 
 function Lvl:load()
     self.matcher = LevelMatcher()
-    self.go_root = self:_create_go(FACTORY_EMPTY_URL)
+    self.go_root = msg.url("game:/level_center")
     self.go_regions = {}
     self.go_figures = {}
     self.views = {
@@ -58,6 +58,10 @@ function Lvl:load()
         sprite.set_constant(sprite_url, "tint", vmath.vector4(1, 0, 0, 1))
     end
     self.command_sequence:add_action(function()
+        coroutine.yield()--wait 1 frame
+        coroutine.yield()--wait 1 frame
+        coroutine.yield()--wait 1 frame
+        coroutine.yield()--wait 1 frame
         coroutine.yield()--wait 1 frame
     end)
     self.command_sequence:add_action(function()

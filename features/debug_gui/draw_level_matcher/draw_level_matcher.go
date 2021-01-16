@@ -17,7 +17,7 @@ embedded_components {
   id: "model"
   type: "model"
   data: "mesh: \"/assets/models/quad.dae\"\n"
-  "material: \"/assets/materials/model.material\"\n"
+  "material: \"/assets/materials/model_top.material\"\n"
   "textures: \"/features/debug_gui/draw_level_matcher/draw_level_matcher_texture.png\"\n"
   "skeleton: \"\"\n"
   "animations: \"\"\n"

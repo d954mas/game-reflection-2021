@@ -65,6 +65,7 @@ end
 function Render:init_predicates()
 	self.predicates = {
 		tile = render.predicate({ "tile" }),
+		tile_top = render.predicate({ "tile_top" }),
 		model = render.predicate({ "model" }),
 		model_game = render.predicate({ "model_game" }),
 		model_game_mirror = render.predicate({ "model_game_mirror" }),
@@ -141,6 +142,21 @@ function Render:render_sprites()
 	render.draw_debug3d()
 end
 
+function Render:render_tile_top()
+	render.set_view(CAMERAS.current:get_view())
+	render.set_projection(CAMERAS.current:get_proj())
+
+	render.set_depth_mask(false)
+	render.disable_state(render.STATE_DEPTH_TEST)
+	render.disable_state(render.STATE_STENCIL_TEST)
+	render.disable_state(render.STATE_CULL_FACE)
+	render.enable_state(render.STATE_BLEND)
+	render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
+
+	render.draw(self.predicates.tile_top)
+	render.draw_debug3d()
+end
+
 --endregion
 
 function Render:render_clear()
@@ -208,6 +224,7 @@ function Render:update(dt)
 
 	self:render_sprites()
 	self:render_gui()
+	self:render_tile_top()
 
 end
 

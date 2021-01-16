@@ -127,8 +127,8 @@ function Script:init()
 end
 
 function Script:update(dt)
+	self.input.acquire()--make debug always on top of input stack
 	if self.show then
-		self.input.acquire()--make debug always on top of input stack
 		gui.set_text(self.vh.lbl_game_speed, string.format("Speed:%.2f", COMMON.GLOBAL.speed_game))
 		gui.set_text(self.vh.lbl_cpu, "Cpu:" .. string.format("%.2f", profiler.get_cpu_usage()))
 		gui.set_text(self.vh.lbl_memory, "Mem:" .. string.format("%.2f Mb", profiler.get_memory_usage() / 1024 / 1024))

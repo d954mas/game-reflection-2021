@@ -87,8 +87,9 @@ function Matcher:update_screenshot()
         local x, y = CAMERAS.current.viewport.x, CAMERAS.current.viewport.y
 
         self.w, self.h = CAMERAS.current.viewport.width, CAMERAS.current.viewport.height
-        local left_bottom = CAMERAS.current:world_to_screen(vmath.vector3(-540 / 2, 0 - 540 / 2, 0))
-        local right_top = CAMERAS.current:world_to_screen(vmath.vector3(540 / 2, 540 / 2, 0))
+        local dy = -50
+        local left_bottom = CAMERAS.current:world_to_screen(vmath.vector3(-540 / 2, dy - 540 / 2, 0))
+        local right_top = CAMERAS.current:world_to_screen(vmath.vector3(540 / 2, dy + 540 / 2, 0))
 
         x, y = COMMON.LUME.round(left_bottom.x), COMMON.LUME.round(left_bottom.y)
         --должны быть четными иначе начинает уезжать вверх
