@@ -1,5 +1,6 @@
 local COMMON = require "libs.common"
 local WORLD = require "world.world"
+local CAMERAS = require "libs_project.cameras"
 
 local Script = COMMON.new_n28s()
 
@@ -21,6 +22,21 @@ function Script:update(dt)
             self.scale.y = self.scale.x * matcher.h / matcher.w
             go.set_scale(self.scale)
             resource.set_texture(self.resource_path, { type = resource.TEXTURE_TYPE_2D, width = matcher.w, height = matcher.h, format = resource.TEXTURE_FORMAT_RGBA }, matcher.buffer)
+
+            local center = CAMERAS.current:world_to_screen(vmath.vector3(0, COMMON.CONSTANTS.level_view_dy, 0))
+            local d_center = center.y-math.floor(center.y) --fixed center of view is not integer in pixels
+            local dy = CAMERAS.current:screen_to_world_2d(0,1,true)
+            pprint(d_center)
+            if(d_center<0.001)then
+                go.set_position(vmath.vector3(0,0,0))
+            elseif(d_center<0.5)then
+               -- go.set_position(vmath.vector3(0,-dy.y,0))
+            else
+                go.set_position(vmath.vector3(0,-dy.y,0))
+            end
+
+           -- print("size:" .. matcher.w .. "x" .. matcher.h)
+           -- print("center:" .. center.y)
         end
     end
 

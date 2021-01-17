@@ -1,5 +1,6 @@
 local COMMON = require "libs.common"
 local WORLD = require "world.world"
+local CAMERAS = require "libs_project.cameras"
 
 local Script = COMMON.new_n28s()
 

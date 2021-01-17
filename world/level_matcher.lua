@@ -48,7 +48,7 @@ end
 function Matcher:revert()
     if (#self.history > 1) then
         local current = table.remove(self.history) --remove current
-        table.insert(self.history_revert,current)
+        table.insert(self.history_revert, current)
         local png = self.history[#self.history]
         self:buffer_from_img_data(png)
     end
@@ -57,7 +57,7 @@ end
 function Matcher:revert_revert()
     if (#self.history_revert > 0) then
         local png = table.remove(self.history_revert, 1) --remove current
-        table.insert(self.history,png)
+        table.insert(self.history, png)
         self:buffer_from_img_data(png)
     end
 end
@@ -87,7 +87,7 @@ function Matcher:update_screenshot()
         local x, y = CAMERAS.current.viewport.x, CAMERAS.current.viewport.y
 
         self.w, self.h = CAMERAS.current.viewport.width, CAMERAS.current.viewport.height
-        local dy = -50
+        local dy = COMMON.CONSTANTS.level_view_dy
         local left_bottom = CAMERAS.current:world_to_screen(vmath.vector3(-540 / 2, dy - 540 / 2, 0))
         local right_top = CAMERAS.current:world_to_screen(vmath.vector3(540 / 2, dy + 540 / 2, 0))
 

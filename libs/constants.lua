@@ -26,4 +26,6 @@ M.GAME_SIZE = {
     HEIGHT = 960
 }
 
+M.level_view_dy = - 50
+
 return M

@@ -13,8 +13,16 @@ var LibScreenshot = {
 				hidden_canvas.height = h;
 
 				var context = hidden_canvas.getContext('2d');
-				//context.drawImage(canvas, 0,0);
-				context.drawImage(canvas, x, y, w, h, 0, 0, w, h);
+				var sx = x;
+				var sy = canvas.height - (y + h);
+				var sw = w;
+				var sh = h;
+
+				var dx = 0;
+				var dy = 0;
+				var dw = w;
+				var dh = h;
+				context.drawImage(canvas, sx, sy, sw, sh, dx, dy, dw, dh);
 
 				image = hidden_canvas.toDataURL("image/png");
 
@@ -27,7 +35,7 @@ var LibScreenshot = {
 			window.requestAnimationFrame = requestAnimationFrameSub;
 			var bs64_img = allocate(intArrayFromString(image), "i8", ALLOC_NORMAL);
 			setTimeout(function() {
-				dynCall("vi", callback, [bs64_img]);
+				{{{ makeDynCall("vii", "callback") }}} (bs64_img);
 				Module._free(bs64_img);
 			}, 0);
 		}
