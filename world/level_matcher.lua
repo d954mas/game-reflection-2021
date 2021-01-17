@@ -91,7 +91,7 @@ function Matcher:update_screenshot()
         local left_bottom = CAMERAS.current:world_to_screen(vmath.vector3(-540 / 2, dy - 540 / 2, 0))
         local right_top = CAMERAS.current:world_to_screen(vmath.vector3(540 / 2, dy + 540 / 2, 0))
 
-        x, y = math.floor(left_bottom.x), math.floor(left_bottom.y)
+        x, y = 0, math.floor(left_bottom.y)
 
         self.extra_bottom = left_bottom.y - math.floor(left_bottom.y)
         print("bottome:" .. self.extra_bottom)
@@ -100,7 +100,7 @@ function Matcher:update_screenshot()
         --   if(y % 2 == 1)then y = y - 1 end
 
 
-        self.w, self.h = math.ceil(right_top.x) - x, math.ceil(right_top.x) - x
+        self.w, self.h = CAMERAS.current.viewport.width, CAMERAS.current.viewport.width
 
 
 
