@@ -91,13 +91,18 @@ function Matcher:update_screenshot()
         local left_bottom = CAMERAS.current:world_to_screen(vmath.vector3(-540 / 2, dy - 540 / 2, 0))
         local right_top = CAMERAS.current:world_to_screen(vmath.vector3(540 / 2, dy + 540 / 2, 0))
 
-        x, y = COMMON.LUME.round(left_bottom.x), COMMON.LUME.round(left_bottom.y)
+        x, y = math.floor(left_bottom.x), math.floor(left_bottom.y)
+
+        self.extra_bottom = left_bottom.y - math.floor(left_bottom.y)
+        print("bottome:" .. self.extra_bottom)
         --должны быть четными иначе начинает уезжать вверх
         --if(x % 2 == 1)then x = x -1 end
         --   if(y % 2 == 1)then y = y - 1 end
 
 
-        self.w, self.h = COMMON.LUME.round(right_top.x) - x, COMMON.LUME.round(right_top.y) - y
+        self.w, self.h = math.ceil(right_top.x) - x, math.ceil(right_top.x) - x
+
+
 
 
         --должны быть четными иначе начинает уезжать вверх
