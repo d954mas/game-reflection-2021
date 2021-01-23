@@ -2,5 +2,25 @@
      "debug": {
           "draw_level_matcher": false
      },
-     "version": 3
+     "version": 4,
+     "levels": [
+          {
+               "stars": 0
+          },
+          {
+               "stars": 0
+          },
+          {
+               "stars": 0
+          },
+          {
+               "stars": 0
+          },
+          {
+               "stars": 0
+          },
+          {
+               "stars": 0
+          }
+     ]
 }
