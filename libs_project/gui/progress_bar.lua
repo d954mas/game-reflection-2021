@@ -61,7 +61,7 @@ function Bar:gui_update()
     if self.vh.lbl then
         gui.set_text(self.vh.lbl, self:lbl_format_value())
     end
-   
+
     local size = vmath.vector3(self.progress_width_max * self.animation.value / self.value_max, gui.get_size(self.vh.progress).y, 0)
     if (size.x == 0) then
         if (not self.progress_disabled) then
@@ -97,7 +97,8 @@ function Bar:set_value(value,force)
         self.animation.tween:force_finish()
         self.animation.tween = nil
     end
-    self.animation.tween = ACTIONS.TweenTable { object = self.animation, property = "value", from = { value = self.value }, to = { value = value }, time = self.animation_config.time,
+    self.animation.tween = ACTIONS.TweenTable { object = self.animation, property = "value", from = { value = self.value },
+                                                to = { value = value }, time = self.animation_config.time,
                                            easing = self.animation_config.easing }
     self.value = COMMON.LUME.clamp(value, 0, self.value_max)
     if(force)then
@@ -107,8 +108,10 @@ function Bar:set_value(value,force)
 end
 
 function Bar:animation_pulse()
-    local scale = ACTIONS.TweenGui { object = self.vh.root, property = "scale", v3 = true, from = vmath.vector3(1), to = vmath.vector3(1.15), time = 0.2 }
-    local scale2 = ACTIONS.TweenGui { object = self.vh.root, property = "scale", v3 = true, from = vmath.vector3(1.15), to = vmath.vector3(1), time = 0.2 }
+    local scale = ACTIONS.TweenGui { object = self.vh.root, property = "scale", v3 = true,
+                                     from = vmath.vector3(1), to = vmath.vector3(1.15), time = 0.2 }
+    local scale2 = ACTIONS.TweenGui { object = self.vh.root, property = "scale", v3 = true,
+                                      from = vmath.vector3(1.15), to = vmath.vector3(1), time = 0.2 }
     self.animation_pulse_sequence:add_action(scale)
     self.animation_pulse_sequence:add_action(scale2)
 end

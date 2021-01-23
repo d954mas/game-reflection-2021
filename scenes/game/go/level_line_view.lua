@@ -70,14 +70,14 @@ function View:on_input(action_id, action)
         if action.pressed then
             self.input_pressed = true
             if self.show then
-                local point_a = vmath.vector3(self.positions.start.x, self.positions.start.y, 0)
-                local point_b = vmath.vector3(self.positions.finish.x, self.positions.finish.y, 0)
+              --  local point_a = vmath.vector3(self.positions.start.x, self.positions.start.y, 0)
+              --  local point_b = vmath.vector3(self.positions.finish.x, self.positions.finish.y, 0)
 
                 --Уравнение прямой. Выводим по 2м точкам
-                local a = point_a.y - point_b.y
-                local b = point_b.x - point_a.x
-                local c = point_a.x * point_b.y - point_b.x * point_a.y
-                local d = a * touch_pos.x + b * touch_pos.y + c
+            --    local a = point_a.y - point_b.y
+              --  local b = point_b.x - point_a.x
+            --    local c = point_a.x * point_b.y - point_b.x * point_a.y
+             --   local d = a * touch_pos.x + b * touch_pos.y + c
 
                 local dist_start = math.sqrt((touch_pos.x - self.positions.start.x) ^ 2 + (touch_pos.y - self.positions.start.y) ^ 2)
                 local dist_end = math.sqrt((touch_pos.x - self.positions.finish.x) ^ 2 + (touch_pos.y - self.positions.finish.y) ^ 2)
@@ -187,8 +187,10 @@ function View:update_position()
 
         -- pprint(start_pos)
         -- pprint(self.start_pos)
-        local point_a = vmath.vector3(self.positions.start.x + p_w / 2, self.positions.start.y + p_h / 2-COMMON.CONSTANTS.level_view_dy, 0)
-        local point_b = vmath.vector3(self.positions.finish.x + p_w / 2, self.positions.finish.y + p_h / 2-COMMON.CONSTANTS.level_view_dy, 0)
+        local point_a = vmath.vector3(self.positions.start.x + p_w / 2,
+                self.positions.start.y + p_h / 2-COMMON.CONSTANTS.level_view_dy, 0)
+        local point_b = vmath.vector3(self.positions.finish.x + p_w / 2,
+                self.positions.finish.y + p_h / 2-COMMON.CONSTANTS.level_view_dy, 0)
         --  pprint(point_a)
         --   pprint(point_b)
         local a = point_a.y - point_b.y
@@ -219,7 +221,8 @@ function View:update_position()
         -- pprint(p2)
         if (not self.taking_screenshot) then
             msg.post("@render:", "draw_line", { start_point = p1, end_point = p2, color = vmath.vector4(0, 1, 0, 0.66) })
-            msg.post("@render:", "draw_line", { start_point = self.positions.start, end_point = self.positions.finish, color = vmath.vector4(1, 1, 0, 0.66) })
+            msg.post("@render:", "draw_line", { start_point = self.positions.start, end_point = self.positions.finish,
+                                                color = vmath.vector4(1, 1, 0, 0.66) })
             local v = vmath.vector3()
             v.x, v.y, v.z = self.positions.start.x, self.positions.start.y, 0.1
             go.set_position(v, self.vh.top.root)

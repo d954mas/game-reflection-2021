@@ -1,6 +1,5 @@
 local COMMON = require "libs.common"
 local WORLD = require "world.world"
-local CAMERAS = require "libs_project.cameras"
 
 local Script = COMMON.new_n28s()
 
@@ -21,7 +20,8 @@ function Script:update(dt)
             local matcher = WORLD.lvl.matcher
             self.scale.y = self.scale.x * matcher.h / matcher.w
             go.set_scale(self.scale)
-            resource.set_texture(self.resource_path, { type = resource.TEXTURE_TYPE_2D, width = matcher.w, height = matcher.h, format = resource.TEXTURE_FORMAT_RGBA }, matcher.buffer)
+            resource.set_texture(self.resource_path, { type = resource.TEXTURE_TYPE_2D, width = matcher.w,
+                                                       height = matcher.h, format = resource.TEXTURE_FORMAT_RGBA }, matcher.buffer)
         end
     end
 

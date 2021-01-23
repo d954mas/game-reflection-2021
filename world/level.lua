@@ -4,8 +4,8 @@ local LevelMatcher = require "world.level_matcher"
 local LineView = require "scenes.game.go.level_line_view"
 
 local FACTORY_REGION_URL = msg.url("game:/factories#factory_region")
-local FACTORY_REGION_BG_URL = msg.url("game:/factories#factory_region_bg")
-local FACTORY_EMPTY_URL = msg.url("game:/factories#factory_empty")
+--local FACTORY_REGION_BG_URL = msg.url("game:/factories#factory_region_bg")
+--local FACTORY_EMPTY_URL = msg.url("game:/factories#factory_empty")
 local FACTORY_FIGURE_URL = msg.url("game:/factories#factory_figure")
 local TAG = "Level"
 
@@ -51,14 +51,16 @@ function Lvl:load()
         sprite.play_flipbook(sprite_url, hash(region.art))
 
 
-    --    local go_url = self:_create_go(FACTORY_REGION_BG_URL, vmath.vector3(region.position.x, region.position.y, 0), region.scale, COMMON.HASHES.hash(region.art .. "_bg"))
+    --    local go_url = self:_create_go(FACTORY_REGION_BG_URL, vmath.vector3(region.position.x, region.position.y, 0),
+        --region.scale, COMMON.HASHES.hash(region.art .. "_bg"))
       -- local sprite_url = msg.url(go_url.socket, go_url.path, "sprite")
       --  sprite.set_constant(sprite_url, "tint", vmath.vector4(0.55, 0.55, 0.55, 1))
     end
     COMMON.d("load figures", TAG)
     for _, region in ipairs(self.config.figures) do
         COMMON.d("figure:" .. region.art)
-        local go_url = self:_create_go(FACTORY_FIGURE_URL, vmath.vector3(region.position.x, region.position.y, 0.01), region.scale, COMMON.HASHES.hash(region.art))
+        local go_url = self:_create_go(FACTORY_FIGURE_URL, vmath.vector3(region.position.x, region.position.y, 0.01),
+                region.scale, COMMON.HASHES.hash(region.art))
         table.insert(self.go_figures, go_url)
         local sprite_url = msg.url(go_url.socket, go_url.path, "sprite")
         sprite.set_constant(sprite_url, "tint", vmath.vector4(1, 0, 0, 1))

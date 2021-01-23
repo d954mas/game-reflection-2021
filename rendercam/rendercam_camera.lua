@@ -4,7 +4,7 @@ local PERLIN = require "libs.perlin"
 -- Vectors used in calculations for public transform functions
 local nv = vmath.vector4(0, 0, -1, 1)
 local fv = vmath.vector4(0, 0, 1, 1)
-local pv = vmath.vector4(0, 0, 0, 1)
+--local pv = vmath.vector4(0, 0, 0, 1)
 
 PERLIN.init()
 

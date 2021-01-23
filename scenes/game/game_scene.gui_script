@@ -101,17 +101,17 @@ function Script:update_percent()
     if (self.percent == 0) then
         local width = gui.get_size(gui.get_node("progress_level/bg")).x
         for i, star in ipairs(self.view.stars) do
-            local pos = WORLD.lvl.config.targets[i] * width - width/2
+            local pos = WORLD.lvl.config.targets[i] * width - width / 2
             star:percent_set(WORLD.lvl.config.targets[i] * 100)
             star:position_set_x(pos)
         end
-        self.view.progress_level:set_value(0,true)
+        self.view.progress_level:set_value(0, true)
     end
     if (self.percent ~= percent) then
         self.percent = percent
         for i, star in ipairs(self.view.stars) do
             local target = WORLD.lvl.config.targets[i]
-            if(self.percent > target)then
+            if (self.percent > target) then
                 star:activate()
             end
         end
@@ -127,7 +127,7 @@ function Script:update(dt)
 
     self:update_percent()
     local loaded = WORLD.lvl and WORLD.lvl.views.line_view and WORLD.lvl.matcher and WORLD.lvl.matcher.history
-    if (loaded and  WORLD.lvl.views.line_view.show) then
+    if (loaded and WORLD.lvl.views.line_view.show) then
         gui.set_enabled(self.vh.bottom_active, true)
         gui.set_enabled(self.vh.bottom_passive, false)
     else
@@ -144,8 +144,8 @@ function Script:final()
 end
 
 function Script:on_input(action_id, action)
-    if(WORLD.lvl and WORLD.lvl.views.line_view)then
-        if(WORLD.lvl.views.line_view.touched_point)then
+    if (WORLD.lvl and WORLD.lvl.views.line_view) then
+        if (WORLD.lvl.views.line_view.touched_point) then
             return false
         end
     end
@@ -158,8 +158,8 @@ function Script:on_input(action_id, action)
     if (self.view.btn_flip:on_input(action_id, action)) then return true end
     if (self.view.btn_revert_left:on_input(action_id, action)) then return true end
     if (self.view.btn_revert_right:on_input(action_id, action)) then return true end
-    if(gui.pick_node(self.vh.top,action.x,action.y))then return true end
-    if(gui.pick_node(self.vh.bottom,action.x,action.y))then return true end
+    if (gui.pick_node(self.vh.top, action.x, action.y)) then return true end
+    if (gui.pick_node(self.vh.bottom, action.x, action.y)) then return true end
 end
 
 COMMON.N28S.register(Script())

@@ -1,7 +1,5 @@
 local COMMON = require "libs.common"
 
-local TAG = "Command"
-
 ---@class Command
 local Command = COMMON.class("Command")
 

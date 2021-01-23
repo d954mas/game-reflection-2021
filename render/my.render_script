@@ -7,230 +7,232 @@ local TAG = "Render"
 local Render = COMMON.new_n28s()
 --region init
 function Render:init()
-	self.clear_color = vmath.vector4(0, 0, 0, 0)
-	--самый первый размер это размер игры. Иначе камеры плохо отрабатывыют в html  билде
-	self.screen_size = {
-		w = CONSTANTS.HTML5 and render.get_width() or render.get_window_width(),
-		h = CONSTANTS.HTML5 and render.get_height() or render.get_window_height(),
-	}
-	self.config_size = {
-		w = render.get_width(),
-		h = render.get_height()
-	}
-	self.size = {
-		w = render.get_width();
-		h = render.get_height()
-	}
+    self.clear_color = vmath.vector4(0, 0, 0, 0)
+    --самый первый размер это размер игры. Иначе камеры плохо отрабатывыют в html  билде
+    self.screen_size = {
+        w = CONSTANTS.HTML5 and render.get_width() or render.get_window_width(),
+        h = CONSTANTS.HTML5 and render.get_height() or render.get_window_height(),
+    }
+    self.config_size = {
+        w = render.get_width(),
+        h = render.get_height()
+    }
+    self.size = {
+        w = render.get_width();
+        h = render.get_height()
+    }
 
-	self:window_size_changed()
+    self:window_size_changed()
 
-	self:init_predicates()
-	self:init_render_targets()
-	self:init_buffers()
-	self:init_constants_buffers()
-	self:register_messages()
-	self.clear = { [render.BUFFER_COLOR_BIT] = self.clear_color, [render.BUFFER_DEPTH_BIT] = 1, [render.BUFFER_STENCIL_BIT] = 0 }
-	COMMON.RENDER = self
+    self:init_predicates()
+    self:init_render_targets()
+    self:init_buffers()
+    self:init_constants_buffers()
+    self:register_messages()
+    self.clear = { [render.BUFFER_COLOR_BIT] = self.clear_color, [render.BUFFER_DEPTH_BIT] = 1, [render.BUFFER_STENCIL_BIT] = 0 }
+    COMMON.RENDER = self
 end
 
 function Render:create_render_target(name, params)
-	-- render target buffer parameters
-	local color_params = { format = params.format or render.FORMAT_RGBA,
-						   width = assert(params.w),
-						   height = assert(params.h),
-						   min_filter = params.min_filter or render.FILTER_LINEAR,
-						   mag_filter = params.mag_filter or render.FILTER_LINEAR,
-						   u_wrap = params.u_wrap or render.WRAP_CLAMP_TO_EDGE,
-						   v_wrap = params.v_wrap or render.WRAP_CLAMP_TO_EDGE }
-	local depth_params = { format = render.FORMAT_DEPTH,
-						   width = params.w,
-						   height = params.h,
-						   u_wrap = params.u_wrap or render.WRAP_CLAMP_TO_EDGE,
-						   v_wrap = params.v_wrap or render.WRAP_CLAMP_TO_EDGE }
-	return {
-		target = render.render_target(assert(name), { [render.BUFFER_COLOR_BIT] = color_params, [render.BUFFER_DEPTH_BIT] = depth_params }),
-		w = params.w,
-		h = params.h
-	}
+    -- render target buffer parameters
+    local color_params = { format = params.format or render.FORMAT_RGBA,
+                           width = assert(params.w),
+                           height = assert(params.h),
+                           min_filter = params.min_filter or render.FILTER_LINEAR,
+                           mag_filter = params.mag_filter or render.FILTER_LINEAR,
+                           u_wrap = params.u_wrap or render.WRAP_CLAMP_TO_EDGE,
+                           v_wrap = params.v_wrap or render.WRAP_CLAMP_TO_EDGE }
+    local depth_params = { format = render.FORMAT_DEPTH,
+                           width = params.w,
+                           height = params.h,
+                           u_wrap = params.u_wrap or render.WRAP_CLAMP_TO_EDGE,
+                           v_wrap = params.v_wrap or render.WRAP_CLAMP_TO_EDGE }
+    return {
+        target = render.render_target(assert(name), { [render.BUFFER_COLOR_BIT] = color_params, [render.BUFFER_DEPTH_BIT] = depth_params }),
+        w = params.w,
+        h = params.h
+    }
 end
 
 function Render:init_render_targets()
-	self.targets = {}
+    self.targets = {}
 end
 
 function Render:init_buffers()
-	self.buffers = {}
+    self.buffers = {}
 end
 
 function Render:init_predicates()
-	self.predicates = {
-		tile = render.predicate({ "tile" }),
-		tile_bg = render.predicate({ "tile_bg" }),
-		tile_top = render.predicate({ "tile_top" }),
-		model = render.predicate({ "model" }),
-		model_game = render.predicate({ "model_game" }),
-		model_game_mirror = render.predicate({ "model_game_mirror" }),
-		mask = render.predicate({ "mask" }),
-		tile_game = render.predicate({ "tile_game" }),
-		tile_game_top = render.predicate({ "tile_game_top" }),
-		bg = render.predicate({ "bg" }),
-		gui = render.predicate({ "gui" }),
-		text = render.predicate({ "text" }),
-		particle = render.predicate({ "particle" }),
-	}
+    self.predicates = {
+        tile = render.predicate({ "tile" }),
+        tile_bg = render.predicate({ "tile_bg" }),
+        tile_top = render.predicate({ "tile_top" }),
+        model = render.predicate({ "model" }),
+        model_game = render.predicate({ "model_game" }),
+        model_game_mirror = render.predicate({ "model_game_mirror" }),
+        mask = render.predicate({ "mask" }),
+        tile_game = render.predicate({ "tile_game" }),
+        tile_game_top = render.predicate({ "tile_game_top" }),
+        bg = render.predicate({ "bg" }),
+        gui = render.predicate({ "gui" }),
+        text = render.predicate({ "text" }),
+        particle = render.predicate({ "particle" }),
+    }
 
 end
 
 function Render:init_constants_buffers()
-	self.constants_buffers = {
+    self.constants_buffers = {
 
-	}
+    }
 end
 
 function Render:register_messages()
-	self.msg_receiver = COMMON.MSG()
-	self.msg_receiver:add("window_resized", function(...)
-		local prev_w = self.screen_size.w
-		local prev_h = self.screen_size.h
-		self.screen_size.w = render.get_window_width()
-		self.screen_size.h = render.get_window_height()
-		if (prev_w ~= self.screen_size.w or prev_h ~= self.screen_size.h) then
-			self:window_size_changed()
-			COMMON.EVENT_BUS:event(COMMON.EVENTS.WINDOW_RESIZED, { width = self.screen_size.w, height = self.screen_size.h,
-																   prev_width = prev_w, prev_height = prev_h })
-		end
-	end)
+    self.msg_receiver = COMMON.MSG()
+    self.msg_receiver:add("window_resized", function(...)
+        local prev_w = self.screen_size.w
+        local prev_h = self.screen_size.h
+        self.screen_size.w = render.get_window_width()
+        self.screen_size.h = render.get_window_height()
+        if (prev_w ~= self.screen_size.w or prev_h ~= self.screen_size.h) then
+            self:window_size_changed()
+            COMMON.i("screen size changed. from " .. "w:" .. prev_w .. " h:" .. prev_h
+                    .. " to w:" .. self.screen_size.w .. " h:" .. self.screen_size.h, TAG)
+            COMMON.EVENT_BUS:event(COMMON.EVENTS.WINDOW_RESIZED, { width = self.screen_size.w, height = self.screen_size.h,
+                                                                   prev_width = prev_w, prev_height = prev_h })
+        end
+    end)
 end
 --endregion
 
 
 function Render:window_size_changed()
-	self.gui_proj = vmath.matrix4_orthographic(0, self.screen_size.w, 0, self.screen_size.h, -1, 1)
-	self.empty_view = vmath.matrix4()
+    self.gui_proj = vmath.matrix4_orthographic(0, self.screen_size.w, 0, self.screen_size.h, -1, 1)
+    self.empty_view = vmath.matrix4()
 end
 
 
 --region draw
 
 function Render:render_gui()
-	-- GUI Rendering
-	render.set_viewport(CAMERAS.current.viewport.x, CAMERAS.current.viewport.y,
-			CAMERAS.current.viewport.width, CAMERAS.current.viewport.height)
-	render.set_view(self.empty_view)
-	render.set_projection(CAMERAS.current and CAMERAS.current.gui_proj or self.gui_proj)
+    -- GUI Rendering
+    render.set_viewport(CAMERAS.current.viewport.x, CAMERAS.current.viewport.y,
+            CAMERAS.current.viewport.width, CAMERAS.current.viewport.height)
+    render.set_view(self.empty_view)
+    render.set_projection(CAMERAS.current and CAMERAS.current.gui_proj or self.gui_proj)
 
-	render.enable_state(render.STATE_STENCIL_TEST)
-	render.draw(self.predicates.gui)
-	render.draw(self.predicates.text)
-	render.disable_state(render.STATE_STENCIL_TEST)
+    render.enable_state(render.STATE_STENCIL_TEST)
+    render.draw(self.predicates.gui)
+    render.draw(self.predicates.text)
+    render.disable_state(render.STATE_STENCIL_TEST)
 end
 
 function Render:render_sprites()
-	render.set_view(CAMERAS.current:get_view())
-	render.set_projection(CAMERAS.current:get_proj())
+    render.set_view(CAMERAS.current:get_view())
+    render.set_projection(CAMERAS.current:get_proj())
 
-	render.set_depth_mask(false)
-	render.disable_state(render.STATE_DEPTH_TEST)
-	render.disable_state(render.STATE_STENCIL_TEST)
-	render.disable_state(render.STATE_CULL_FACE)
-	render.enable_state(render.STATE_BLEND)
-	render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
+    render.set_depth_mask(false)
+    render.disable_state(render.STATE_DEPTH_TEST)
+    render.disable_state(render.STATE_STENCIL_TEST)
+    render.disable_state(render.STATE_CULL_FACE)
+    render.enable_state(render.STATE_BLEND)
+    render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
 
-	render.draw(self.predicates.model)
-	render.draw(self.predicates.tile)
-	render.draw(self.predicates.particle)
-	render.draw(self.predicates.tile_game_top)
-	render.draw_debug3d()
+    render.draw(self.predicates.model)
+    render.draw(self.predicates.tile)
+    render.draw(self.predicates.particle)
+    render.draw(self.predicates.tile_game_top)
+    render.draw_debug3d()
 end
 
 function Render:render_tile_top()
-	render.set_view(CAMERAS.current:get_view())
-	render.set_projection(CAMERAS.current:get_proj())
+    render.set_view(CAMERAS.current:get_view())
+    render.set_projection(CAMERAS.current:get_proj())
 
-	render.set_depth_mask(false)
-	render.disable_state(render.STATE_DEPTH_TEST)
-	render.disable_state(render.STATE_STENCIL_TEST)
-	render.disable_state(render.STATE_CULL_FACE)
-	render.enable_state(render.STATE_BLEND)
-	render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
+    render.set_depth_mask(false)
+    render.disable_state(render.STATE_DEPTH_TEST)
+    render.disable_state(render.STATE_STENCIL_TEST)
+    render.disable_state(render.STATE_CULL_FACE)
+    render.enable_state(render.STATE_BLEND)
+    render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
 
-	render.draw(self.predicates.tile_top)
-	render.draw_debug3d()
+    render.draw(self.predicates.tile_top)
+    render.draw_debug3d()
 end
 
 --endregion
 
 function Render:render_clear()
-	render.set_depth_mask(true)
-	render.set_stencil_mask(0xff)
+    render.set_depth_mask(true)
+    render.set_stencil_mask(0xff)
 
-	render.clear(self.clear)
+    render.clear(self.clear)
 end
 
 function Render:render_game()
-	render.set_viewport(CAMERAS.current.viewport.x, CAMERAS.current.viewport.y,
-			CAMERAS.current.viewport.width, CAMERAS.current.viewport.height)
-	render.set_view(CAMERAS.current:get_view())
-	render.set_projection(CAMERAS.current:get_proj())
+    render.set_viewport(CAMERAS.current.viewport.x, CAMERAS.current.viewport.y,
+            CAMERAS.current.viewport.width, CAMERAS.current.viewport.height)
+    render.set_view(CAMERAS.current:get_view())
+    render.set_projection(CAMERAS.current:get_proj())
 
-	render.enable_state(render.STATE_BLEND)
-	render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
-	render.disable_state(render.STATE_CULL_FACE)
+    render.enable_state(render.STATE_BLEND)
+    render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
+    render.disable_state(render.STATE_CULL_FACE)
 
-	render.draw(self.predicates.tile_bg)
+    render.draw(self.predicates.tile_bg)
 
-	render.set_depth_mask(false)
-	render.disable_state(render.STATE_DEPTH_TEST)
-	render.disable_state(render.STATE_STENCIL_TEST)
-	render.enable_state(render.STATE_BLEND)
-	render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
-	render.disable_state(render.STATE_CULL_FACE)
+    render.set_depth_mask(false)
+    render.disable_state(render.STATE_DEPTH_TEST)
+    render.disable_state(render.STATE_STENCIL_TEST)
+    render.enable_state(render.STATE_BLEND)
+    render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
+    render.disable_state(render.STATE_CULL_FACE)
 
 
 
-	-- 1. We need to disable color drawing while rendering the mask
-	render.set_color_mask(false, false, false, false)
+    -- 1. We need to disable color drawing while rendering the mask
+    render.set_color_mask(false, false, false, false)
 
-	-- 2. Enable stencil test and setup stencil mask parameters
-	render.enable_state(render.STATE_STENCIL_TEST)
-	render.set_stencil_func(render.COMPARE_FUNC_ALWAYS, 1, 255)
-	render.set_stencil_op(render.STENCIL_OP_KEEP, render.STENCIL_OP_KEEP, render.STENCIL_OP_REPLACE)
-	render.set_stencil_mask(255)
+    -- 2. Enable stencil test and setup stencil mask parameters
+    render.enable_state(render.STATE_STENCIL_TEST)
+    render.set_stencil_func(render.COMPARE_FUNC_ALWAYS, 1, 255)
+    render.set_stencil_op(render.STENCIL_OP_KEEP, render.STENCIL_OP_KEEP, render.STENCIL_OP_REPLACE)
+    render.set_stencil_mask(255)
 
-	-- 3. Draw the mask
-	render.draw(self.predicates.mask)
+    -- 3. Draw the mask
+    render.draw(self.predicates.mask)
 
-	-- 4. Update the stencil function to only let pixel pass that are equal to the mask result
-	render.set_stencil_func(render.COMPARE_FUNC_EQUAL, 1, 255)
+    -- 4. Update the stencil function to only let pixel pass that are equal to the mask result
+    render.set_stencil_func(render.COMPARE_FUNC_EQUAL, 1, 255)
 
-	-- 5. Re-enable color drawing
-	render.set_color_mask(true, true, true, true)
+    -- 5. Re-enable color drawing
+    render.set_color_mask(true, true, true, true)
 
-	-- 6. Continue as rendering usual! :)
-	render.enable_state(render.STATE_BLEND)
-	render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
-	render.disable_state(render.STATE_CULL_FACE)
+    -- 6. Continue as rendering usual! :)
+    render.enable_state(render.STATE_BLEND)
+    render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
+    render.disable_state(render.STATE_CULL_FACE)
 
-	render.draw(self.predicates.tile_game)
-	render.draw(self.predicates.model_game)
-	render.draw(self.predicates.model_game_mirror)
-	render.disable_state(render.STATE_STENCIL_TEST)
+    render.draw(self.predicates.tile_game)
+    render.draw(self.predicates.model_game)
+    render.draw(self.predicates.model_game_mirror)
+    render.disable_state(render.STATE_STENCIL_TEST)
 end
 
 function Render:update(dt)
-	self:render_clear()
-	self:render_game()
-	render.set_viewport(CAMERAS.current.viewport.x, CAMERAS.current.viewport.y,
-			CAMERAS.current.viewport.width, CAMERAS.current.viewport.height)
+    self:render_clear()
+    self:render_game()
+    render.set_viewport(CAMERAS.current.viewport.x, CAMERAS.current.viewport.y,
+            CAMERAS.current.viewport.width, CAMERAS.current.viewport.height)
 
-	self:render_sprites()
-	self:render_gui()
-	self:render_tile_top()
+    self:render_sprites()
+    self:render_gui()
+    self:render_tile_top()
 
 end
 
 function Render:on_message(message_id, message)
-	self.msg_receiver:on_message(self, message_id, message)
+    self.msg_receiver:on_message(self, message_id, message)
 end
 
 COMMON.N28S.register(Render())

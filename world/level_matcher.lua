@@ -84,14 +84,13 @@ function Matcher:update_screenshot()
         self.working = true
         coroutine.yield()--wait for input view is hide
         coroutine.yield()--wait for input view is hide
-        local x, y = CAMERAS.current.viewport.x, CAMERAS.current.viewport.y
 
         self.w, self.h = CAMERAS.current.viewport.width, CAMERAS.current.viewport.height
         local dy = COMMON.CONSTANTS.level_view_dy
         local left_bottom = CAMERAS.current:world_to_screen(vmath.vector3(-540 / 2, dy - 540 / 2, 0))
-        local right_top = CAMERAS.current:world_to_screen(vmath.vector3(540 / 2, dy + 540 / 2, 0))
+      --  local right_top = CAMERAS.current:world_to_screen(vmath.vector3(540 / 2, dy + 540 / 2, 0))
 
-        x, y = 0, math.floor(left_bottom.y)
+        local x, y = 0, math.floor(left_bottom.y)
 
         self.extra_bottom = left_bottom.y - math.floor(left_bottom.y)
         print("bottome:" .. self.extra_bottom)

@@ -69,6 +69,9 @@ read_globals = {
   "lua_script_instance",
   "lottie_web",
   "checks",
+  "drawpixels",
+  "png",
+  "screenshot",
 }
 
 globals = {
