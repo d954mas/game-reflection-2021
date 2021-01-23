@@ -7,12 +7,12 @@ function Lvl:initialize(...)
     BaseLvl.initialize(self,"Lvl1")
     --bg
     self.regions = {
-        Region("region_1",0,0,2)
+        Region("region_1",0,0,1)
     }
 
     --red. Copy figures to fill regions
     self.figures = {
-        Region("rect",-100,-100,1)
+        Region("rect",-256,-256,5.12/2*1.001)
     }
 end
 

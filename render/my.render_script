@@ -65,6 +65,7 @@ end
 function Render:init_predicates()
 	self.predicates = {
 		tile = render.predicate({ "tile" }),
+		tile_bg = render.predicate({ "tile_bg" }),
 		tile_top = render.predicate({ "tile_top" }),
 		model = render.predicate({ "model" }),
 		model_game = render.predicate({ "model_game" }),
@@ -176,7 +177,7 @@ function Render:render_game()
 	render.set_blend_func(render.BLEND_SRC_ALPHA, render.BLEND_ONE_MINUS_SRC_ALPHA)
 	render.disable_state(render.STATE_CULL_FACE)
 
-	--render.draw(self.tile2_pred)
+	render.draw(self.predicates.tile_bg)
 
 	render.set_depth_mask(false)
 	render.disable_state(render.STATE_DEPTH_TEST)
