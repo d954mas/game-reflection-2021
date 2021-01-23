@@ -31,6 +31,7 @@ function M:initialize()
     ---@type Level
     self.lvl = nil
     self.storage = Storage()
+    self.commands = {}
 end
 
 function M:update(dt)
