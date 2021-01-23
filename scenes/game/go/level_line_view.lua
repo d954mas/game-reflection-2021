@@ -24,6 +24,7 @@ function View:init()
         touch = vmath.vector3(0, 0, 0),
     }
     self.show = false
+    self.touched_point = nil
 end
 
 ---@param world World
@@ -75,42 +76,79 @@ function View:on_input(action_id, action)
                 local c = point_a.x * point_b.y - point_b.x * point_a.y
                 local d = a * touch_pos.x + b * touch_pos.y + c
 
-                --тап далеко от старта, двигаем стартовый тап
-                if math.abs(d) > 200000 then
-                    self.positions.start.x = touch_pos.x
-                    self.positions.start.y = touch_pos.y
-                end
 
-                local dist = math.sqrt((touch_pos.x - self.positions.start.x) ^ 2 + (touch_pos.y - self.positions.start.y) ^ 2)
-                --тап рядом со стартовой точкой
-                if dist < 40 then
-                    self.positions.touch = touch_pos
+                local dist_start = math.sqrt((touch_pos.x - self.positions.start.x) ^ 2 + (touch_pos.y - self.positions.start.y) ^ 2)
+                local dist_end = math.sqrt((touch_pos.x - self.positions.finish.x) ^ 2 + (touch_pos.y - self.positions.finish.y) ^ 2)
+
+                self.positions.touch = touch_pos
+                if(dist_start<dist_end)then
+                    self.touched_point = "start"
+                    if(dist_start>50)then
+                        self.touched_point = nil
+                    end
+                else
+                    self.touched_point = "end"
+                    if(dist_end>50)then
+                        self.touched_point = nil
+                    end
                 end
             else
                 self.show = true
+                self.touched_point = "end"
+                self.positions.touch = touch_pos
                 self.positions.start.x = touch_pos.x
                 self.positions.start.y = touch_pos.y
+                self.positions.finish.x = touch_pos.x
+                self.positions.finish.y = touch_pos.y
             end
         end
 
         if (self.input_pressed) then
             --двигаем точку стартк
-            if self.positions.touch then
+            if  self.touched_point == "start" then
                 local dx = touch_pos.x - self.positions.touch.x
                 local dy = touch_pos.y - self.positions.touch.y
                 self.positions.touch = touch_pos
 
                 self.positions.start.x = self.positions.start.x + dx
                 self.positions.start.y = self.positions.start.y + dy
-            else
-                --двигаем точку конца
-                self.positions.finish.x, self.positions.finish.y = CAMERA.current:screen_to_world_2d(action.screen_x, action.screen_y, false, nil, true)
+            elseif self.touched_point == "end" then
+                local dx = touch_pos.x - self.positions.touch.x
+                local dy = touch_pos.y - self.positions.touch.y
+                self.positions.touch = touch_pos
+
+                self.positions.finish.x = self.positions.finish.x + dx
+                self.positions.finish.y = self.positions.finish.y + dy
             end
         end
 
         if self.input_pressed and action.released then
             self.positions.touch = nil
             self.input_pressed = false
+
+            if(self.touched_point)then
+                local stay_point
+                local move_point
+                if(self.touched_point == "start")then
+                    stay_point = self.positions.finish
+                    move_point = self.positions.start
+                elseif(self.touched_point == "end")then
+                    stay_point = self.positions.start
+                    move_point = self.positions.finish
+                end
+
+                local dist = vmath.length(move_point-stay_point)
+                if(dist < 100)then
+                    local dist_v = stay_point + (move_point-stay_point)/dist*100
+                    move_point.x = dist_v.x
+                    move_point.y = dist_v.y
+                end
+            end
+            self.touched_point = nil
+            --add min dist
+
+
+
         end
 
     end

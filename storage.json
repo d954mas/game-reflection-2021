@@ -1,6 +1,6 @@
 {
      "debug": {
-          "draw_level_matcher": true
+          "draw_level_matcher": false
      },
      "version": 3
 }
