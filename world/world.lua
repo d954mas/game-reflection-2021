@@ -19,6 +19,8 @@ function M:level_load(lvl)
     assert(not self.lvl, "already have level")
     COMMON.i("LOAD LVL:" .. lvl.id .. "(" .. lvl.idx .. ")", TAG)
     self.lvl = Level(self,lvl)
+    self.storage.data.level_current = lvl.idx
+    self.storage:save()
 end
 
 function M:level_show()

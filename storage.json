@@ -1,7 +1,7 @@
 {
      "debug": {
-          "can_play_any": false,
           "developer": true,
+          "can_play_any": false,
           "draw_level_matcher": false
      },
      "levels": [
@@ -25,5 +25,5 @@
           }
      ],
      "version": 5,
-     "level_current": 1
+     "level_current": 3
 }

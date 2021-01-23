@@ -7,6 +7,7 @@ local JSON = require "libs.json"
 local SM = require "libs_project.sm"
 local DEBUG_INFO = require "debug.debug_info"
 local SCENE_LOADER = require "libs.sm.scene_loader"
+local LEVELS = require "assets.levels.levels"
 
 local RUN_TEST = false
 local CAMERAS = require "libs_project.cameras"
@@ -63,14 +64,13 @@ function Script:init()
         end
     end)
 
-
     self:scenes_register()
     self:init_random()
     self:input_init()
     self:init_msg()
 
     if not RUN_TEST then
-        SM:show(SM.SCENES.MAIN_MENU)
+        SM:show(SM.SCENES.GAME, { level = LEVELS.get_by_idx(WORLD.storage.data.level_current).id })
     else
         self.test_runner = require("tests.tests") -- run tests
         self.test_runner.run()
