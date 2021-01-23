@@ -7,6 +7,7 @@ M.RichtextLbl = require "libs_project.gui.richtext_lbl"
 M.TickLbl = require "libs_project.gui.tick_label"
 M.CheckboxWithLabel = require "libs_project.gui.checkbox_with_label"
 M.ProgressBar = require "libs_project.gui.progress_bar"
+M.Star = require "libs_project.gui.star"
 
 
 function M.get_scaled_size(node)
