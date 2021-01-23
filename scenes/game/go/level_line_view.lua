@@ -3,10 +3,10 @@ local CAMERA = require "libs_project.cameras"
 
 local View = COMMON.class("LevelLineView")
 
-local COLOR_CURRENT = vmath.vector4(1,0,0,1)
-local COLOR_NEW = vmath.vector4(0,1,0,1)
-local COLOR_REMOVED = vmath.vector4(0.4,0.4,0.4,1)
-local COLOR_WHITE = vmath.vector4(1,1,1,1)
+local COLOR_CURRENT = vmath.vector4(1, 0, 0, 1)
+local COLOR_NEW = vmath.vector4(0, 1, 0, 1)
+local COLOR_REMOVED = vmath.vector4(0.4, 0.4, 0.4, 1)
+local COLOR_WHITE = vmath.vector4(1, 1, 1, 1)
 
 function View:bind_vh()
     self.vh = {
@@ -64,6 +64,9 @@ end
 function View:on_input(action_id, action)
     if action_id == COMMON.HASHES.INPUT.TOUCH then
         local touch_pos = CAMERA.current:screen_to_world_2d(action.screen_x, action.screen_y)
+
+        touch_pos.x = COMMON.LUME.clamp(touch_pos.x,-250,250)
+        touch_pos.y = COMMON.LUME.clamp(touch_pos.y,-310,220)
         if action.pressed then
             self.input_pressed = true
             if self.show then
@@ -76,19 +79,18 @@ function View:on_input(action_id, action)
                 local c = point_a.x * point_b.y - point_b.x * point_a.y
                 local d = a * touch_pos.x + b * touch_pos.y + c
 
-
                 local dist_start = math.sqrt((touch_pos.x - self.positions.start.x) ^ 2 + (touch_pos.y - self.positions.start.y) ^ 2)
                 local dist_end = math.sqrt((touch_pos.x - self.positions.finish.x) ^ 2 + (touch_pos.y - self.positions.finish.y) ^ 2)
 
                 self.positions.touch = touch_pos
-                if(dist_start<dist_end)then
+                if (dist_start < dist_end) then
                     self.touched_point = "start"
-                    if(dist_start>50)then
+                    if (dist_start > 80) then
                         self.touched_point = nil
                     end
                 else
                     self.touched_point = "end"
-                    if(dist_end>50)then
+                    if (dist_end > 80) then
                         self.touched_point = nil
                     end
                 end
@@ -105,7 +107,7 @@ function View:on_input(action_id, action)
 
         if (self.input_pressed) then
             --двигаем точку стартк
-            if  self.touched_point == "start" then
+            if self.touched_point == "start" then
                 local dx = touch_pos.x - self.positions.touch.x
                 local dy = touch_pos.y - self.positions.touch.y
                 self.positions.touch = touch_pos
@@ -126,27 +128,30 @@ function View:on_input(action_id, action)
             self.positions.touch = nil
             self.input_pressed = false
 
-            if(self.touched_point)then
+            if (self.touched_point) then
                 local stay_point
                 local move_point
-                if(self.touched_point == "start")then
+                if (self.touched_point == "start") then
                     stay_point = self.positions.finish
                     move_point = self.positions.start
-                elseif(self.touched_point == "end")then
+                elseif (self.touched_point == "end") then
                     stay_point = self.positions.start
                     move_point = self.positions.finish
                 end
 
-                local dist = vmath.length(move_point-stay_point)
-                if(dist < 100)then
-                    local dist_v = stay_point + (move_point-stay_point)/dist*100
-                    move_point.x = dist_v.x
-                    move_point.y = dist_v.y
+                local dist = vmath.length(move_point - stay_point)
+                if (dist < 100) then
+                    local dist_v = stay_point + (move_point - stay_point) / dist * 100
+
+                    if( dist_v.x >-250 and dist_v.x <250 and dist_v.y > -310 and dist_v.y < 220)then
+                        move_point.x = dist_v.x
+                        move_point.y = dist_v.y
+                    end
+
                 end
             end
             self.touched_point = nil
             --add min dist
-
 
 
         end
@@ -169,9 +174,9 @@ function View:update_position()
         go.set_position(vmath.vector3(0, 0, -1000), self.vh.top.root)
         go.set_position(vmath.vector3(0, 0, -1000), self.vh.bottom.root)
         model.set_constant(self.vh.model, "line", vmath.vector4(0, 0, 0, 0))
-        model.set_constant(self.vh.model,"color_current",COLOR_CURRENT)
-        model.set_constant(self.vh.model,"color_new",COLOR_NEW)
-        model.set_constant(self.vh.model,"color_removed",COLOR_REMOVED)
+        model.set_constant(self.vh.model, "color_current", COLOR_CURRENT)
+        model.set_constant(self.vh.model, "color_new", COLOR_NEW)
+        model.set_constant(self.vh.model, "color_removed", COLOR_REMOVED)
     else
 
         local start_pos = vmath.vector3(self.positions.start.x, self.positions.start.y, 0)
@@ -217,13 +222,13 @@ function View:update_position()
             go.set_position(v, self.vh.top.root)
             v.x, v.y, v.z = self.positions.finish.x, self.positions.finish.y, 0.1
             go.set_position(v, self.vh.bottom.root)
-            model.set_constant(self.vh.model,"color_current",COLOR_CURRENT)
-            model.set_constant(self.vh.model,"color_new",COLOR_NEW)
-            model.set_constant(self.vh.model,"color_removed",COLOR_REMOVED)
+            model.set_constant(self.vh.model, "color_current", COLOR_CURRENT)
+            model.set_constant(self.vh.model, "color_new", COLOR_NEW)
+            model.set_constant(self.vh.model, "color_removed", COLOR_REMOVED)
         else
-            model.set_constant(self.vh.model,"color_current",COLOR_CURRENT)
-            model.set_constant(self.vh.model,"color_new",COLOR_CURRENT)
-            model.set_constant(self.vh.model,"color_removed",COLOR_WHITE)
+            model.set_constant(self.vh.model, "color_current", COLOR_CURRENT)
+            model.set_constant(self.vh.model, "color_new", COLOR_CURRENT)
+            model.set_constant(self.vh.model, "color_removed", COLOR_WHITE)
             go.set_position(vmath.vector3(0, 0, -1000), self.vh.top.root)
             go.set_position(vmath.vector3(0, 0, -1000), self.vh.bottom.root)
         end

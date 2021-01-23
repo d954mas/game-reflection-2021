@@ -1,5 +1,4 @@
 local COMMON = require "libs.common"
-local JSON = require "libs_project.json"
 
 local TAG = "Command"
 

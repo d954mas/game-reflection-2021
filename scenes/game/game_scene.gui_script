@@ -144,6 +144,11 @@ function Script:final()
 end
 
 function Script:on_input(action_id, action)
+    if(WORLD.lvl and WORLD.lvl.views.line_view)then
+        if(WORLD.lvl.views.line_view.touched_point)then
+            return false
+        end
+    end
     if (self.view.btn_back:on_input(action_id, action)) then return true end
     if (self.view.btn_restart:on_input(action_id, action)) then return true end
     if (self.view.btn_accept:on_input(action_id, action)) then return true end
