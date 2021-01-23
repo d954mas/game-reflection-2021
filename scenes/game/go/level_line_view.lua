@@ -184,8 +184,8 @@ function View:update_position()
 
         -- pprint(start_pos)
         -- pprint(self.start_pos)
-        local point_a = vmath.vector3(self.positions.start.x + p_w / 2, self.positions.start.y + p_h / 2, 0)
-        local point_b = vmath.vector3(self.positions.finish.x + p_w / 2, self.positions.finish.y + p_h / 2, 0)
+        local point_a = vmath.vector3(self.positions.start.x + p_w / 2, self.positions.start.y + p_h / 2-COMMON.CONSTANTS.level_view_dy, 0)
+        local point_b = vmath.vector3(self.positions.finish.x + p_w / 2, self.positions.finish.y + p_h / 2-COMMON.CONSTANTS.level_view_dy, 0)
         --  pprint(point_a)
         --   pprint(point_b)
         local a = point_a.y - point_b.y
