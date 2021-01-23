@@ -56,7 +56,7 @@ end
 
 function Matcher:revert_revert()
     if (#self.history_revert > 0) then
-        local png = table.remove(self.history_revert, 1) --remove current
+        local png = table.remove(self.history_revert) --remove current
         table.insert(self.history, png)
         self:buffer_from_img_data(png)
     end
