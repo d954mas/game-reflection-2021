@@ -117,6 +117,7 @@ function Script:update_percent()
     end
     if (self.percent ~= percent) then
         self.percent = percent
+        WORLD:level_check_percent(self.percent)
         for i, star in ipairs(self.view.stars) do
             local target = WORLD.lvl.config.targets[i]
             if (self.percent > target) then

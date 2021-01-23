@@ -1,15 +1,15 @@
 {
      "debug": {
-          "developer": true,
           "can_play_any": false,
+          "developer": true,
           "draw_level_matcher": false
      },
      "levels": [
           {
-               "stars": 0
+               "stars": 1
           },
           {
-               "stars": 0
+               "stars": 2
           },
           {
                "stars": 0

@@ -55,6 +55,22 @@ function M:level_can_play(level)
     return level == 1 or self.storage.data.levels[level-1].stars > 0 or self.storage.data.debug.can_play_any
 end
 
+function M:level_check_percent(percent)
+    assert(self.lvl ~= nil)
+    local stars = 0
+    for i, star in ipairs(self.lvl.config.targets) do
+        local target = self.lvl.config.targets[i]
+        if (percent > target) then
+            stars = i;
+        end
+    end
+    local lvl_data = self.storage.data.levels[self.lvl.config.idx]
+    if(stars > lvl_data.stars) then
+        lvl_data.stars = stars;
+        self.storage:save()
+    end
+end
+
 function M:dispose()
     self:level_unload()
 end
