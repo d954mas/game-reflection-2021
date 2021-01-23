@@ -140,7 +140,7 @@ function View:on_input(action_id, action)
                 end
 
                 local dist = vmath.length(move_point - stay_point)
-                if (dist < 100) then
+                if (dist >0 and dist < 100) then
                     local dist_v = stay_point + (move_point - stay_point) / dist * 100
 
                     if( dist_v.x >-250 and dist_v.x <250 and dist_v.y > -310 and dist_v.y < 220)then
@@ -148,6 +148,9 @@ function View:on_input(action_id, action)
                         move_point.y = dist_v.y
                     end
 
+                end
+                if(dist == 0)then
+                    self:hide()
                 end
             end
             self.touched_point = nil

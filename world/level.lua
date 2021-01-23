@@ -67,6 +67,7 @@ function Lvl:load()
         coroutine.yield()--wait 1 frame
         coroutine.yield()--wait 1 frame
         coroutine.yield()--wait 1 frame
+        coroutine.yield()--wait 1 frame
     end)
     self.command_sequence:add_action(function()
         self.matcher:init()
