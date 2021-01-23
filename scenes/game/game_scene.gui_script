@@ -16,13 +16,13 @@ function Script:bind_vh()
         top = gui.get_node("top"),
     }
     self.view = {
-        btn_back = GUI.ButtonBase("btn_back"),
+        btn_menu = GUI.ButtonBase("btn_menu"),
         btn_restart = GUI.ButtonBase("btn_restart"),
         btn_accept = GUI.ButtonBase("btn_accept"),
         btn_cancel = GUI.ButtonBase("btn_cancel"),
         btn_flip = GUI.ButtonBase("btn_flip"),
-        btn_left = GUI.ButtonIconTest("btn_left"),
-        btn_right = GUI.ButtonIconTest("btn_right"),
+        btn_left = GUI.ButtonBase("btn_lvl_prev"),
+        btn_right = GUI.ButtonBase("btn_lvl_next"),
         btn_revert_left = GUI.ButtonBase("btn_revert_left"),
         btn_revert_right = GUI.ButtonBase("btn_revert_right"),
         progress_level = GUI.ProgressBar("progress_level"),
@@ -38,7 +38,7 @@ end
 
 function Script:init_gui()
     self.percent = 0
-    self.view.btn_back:set_input_listener(function()
+    self.view.btn_menu:set_input_listener(function()
         SM:back()
     end)
     self.view.btn_restart:set_input_listener(function()
@@ -87,7 +87,15 @@ function Script:init_gui()
         ctx:remove()
         WORLD.lvl.matcher:revert_revert()
     end)
+
+    self.view.btn_revert_left:set_ignore_input(true)
+    self.view.btn_revert_right:set_ignore_input(true)
+    self.view.btn_restart:set_ignore_input(true)
+    self.view.btn_left:set_ignore_input((WORLD.lvl.config.idx==1))
+    self.view.btn_right:set_ignore_input(not WORLD:level_can_play(WORLD.lvl.config.idx+1))
 end
+
+
 
 function Script:init()
     self:bind_vh()
@@ -96,7 +104,7 @@ function Script:init()
 end
 
 function Script:update_percent()
-    if not WORLD.lvl then return end
+    if not WORLD.lvl or not WORLD.lvl.matcher then return end
     local percent = WORLD.lvl.matcher.percent
     if (self.percent == 0) then
         local width = gui.get_size(gui.get_node("progress_level/bg")).x
@@ -126,7 +134,7 @@ function Script:update(dt)
     self.view.progress_level:update(dt)
 
     self:update_percent()
-    local loaded = WORLD.lvl and WORLD.lvl.views.line_view and WORLD.lvl.matcher and WORLD.lvl.matcher.history
+    local loaded = WORLD.lvl and WORLD.lvl.views and WORLD.lvl.views.line_view and WORLD.lvl.matcher and WORLD.lvl.matcher.history
     if (loaded and WORLD.lvl.views.line_view.show) then
         gui.set_enabled(self.vh.bottom_active, true)
         gui.set_enabled(self.vh.bottom_passive, false)
@@ -135,8 +143,14 @@ function Script:update(dt)
         gui.set_enabled(self.vh.bottom_passive, true)
     end
 
-    self.view.btn_revert_left:set_ignore_input(not loaded or (#WORLD.lvl.matcher.history <= 1))
-    self.view.btn_revert_right:set_ignore_input(not loaded or (#WORLD.lvl.matcher.history_revert == 0))
+
+    if(loaded)then
+        self.view.btn_revert_left:set_ignore_input((#WORLD.lvl.matcher.history <= 1))
+        self.view.btn_revert_right:set_ignore_input( (#WORLD.lvl.matcher.history_revert == 0))
+        self.view.btn_right:set_ignore_input(not WORLD:level_can_play(WORLD.lvl.config.idx+1))
+        self.view.btn_restart:set_ignore_input((#WORLD.lvl.matcher.history <= 1))
+    end
+
 end
 
 function Script:final()
@@ -149,7 +163,7 @@ function Script:on_input(action_id, action)
             return false
         end
     end
-    if (self.view.btn_back:on_input(action_id, action)) then return true end
+    if (self.view.btn_menu:on_input(action_id, action)) then return true end
     if (self.view.btn_restart:on_input(action_id, action)) then return true end
     if (self.view.btn_accept:on_input(action_id, action)) then return true end
     if (self.view.btn_cancel:on_input(action_id, action)) then return true end

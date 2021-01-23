@@ -1,8 +1,11 @@
 {
      "debug": {
+          "can_play_any": false,
+          "developer": true,
           "draw_level_matcher": false
      },
-     "version": 4,
+     "version": 5,
+     "level_current": 1,
      "levels": [
           {
                "stars": 0

@@ -1,6 +1,7 @@
 local COMMON = require "libs.common"
 local Storage = require "world.storage"
 local Level = require "world.level"
+local LEVELS = require "assets.levels.levels"
 
 local TAG = "WORLD"
 ---@class World:Observable
@@ -18,7 +19,10 @@ function M:level_load(lvl)
     assert(not self.lvl, "already have level")
     COMMON.i("LOAD LVL:" .. lvl.id .. "(" .. lvl.idx .. ")", TAG)
     self.lvl = Level(self,lvl)
-    self.lvl:load(lvl)
+end
+
+function M:level_show()
+    self.lvl:load(self.lvl_config)
 end
 
 function M:level_reload()
@@ -36,11 +40,19 @@ end
 
 function M:update(dt)
     self.storage:update(dt)
-    if (self.lvl) then
+    if (self.lvl and COMMON.CONTEXT:exist(COMMON.CONTEXT.NAMES.GAME)) then
         local ctx = COMMON.CONTEXT:set_context_top_by_name(COMMON.CONTEXT.NAMES.GAME)
         self.lvl:update(dt)
         ctx:remove()
     end
+end
+
+
+function M:level_can_play(level)
+    if(level < 0 or level > #LEVELS.levels)then
+        return false
+    end
+    return level == 1 or self.storage.data.levels[level-1].stars > 0 or self.storage.data.debug.can_play_any
 end
 
 function M:dispose()

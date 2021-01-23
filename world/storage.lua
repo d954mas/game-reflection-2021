@@ -7,7 +7,7 @@ local TAG = "Storage"
 
 local Storage = COMMON.class("Storage")
 
-Storage.VERSION = 4
+Storage.VERSION = 5
 Storage.AUTOSAVE = 30 --seconds
 Storage.CLEAR = CONSTANTS.IS_DEBUG and false --BE CAREFUL. Do not use in prod
 Storage.LOCAL = CONSTANTS.IS_DEBUG and true --BE CAREFUL. Do not use in prod
@@ -74,6 +74,8 @@ function Storage:_init_storage()
     self.data = {
         debug = {
             draw_level_matcher = false,
+            can_play_any = false,
+            developer = true,
         },
         level_current = 1;
         levels = {
@@ -96,22 +98,16 @@ function Storage:_check_levels()
             self.data.levels[i] = storage_level
         end
     end
-    pprint(self.data)
 end
 
 function Storage:_migration()
     if (self.data.version < Storage.VERSION) then
         COMMON.i(string.format("migrate from:%s to %s", self.data.version, Storage.VERSION), TAG)
-        -- 1->3
-        if (self.data.version < 3) then
+        -- 1->5
+        if (self.data.version < 5) then
             self:_init_storage()
         end
 
-        -- 3->4
-        if(self.data.version < 4) then
-            self.data.levels = {}
-            self:_check_levels()
-        end
 
 
         self:_check_levels()

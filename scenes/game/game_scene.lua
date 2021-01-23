@@ -10,11 +10,15 @@ function Scene:initialize()
     BaseScene.initialize(self, "GameScene", "/game_scene#collectionproxy")
 end
 
+function Scene:load_done()
+    WORLD:level_load(LEVELS.get_by_id(self._input.level))
+end
+
 function Scene:show_done()
     assert(self._input, "need input")
     assert(self._input.level, "need level")
     local ctx = COMMON.CONTEXT:set_context_top_by_name(COMMON.CONTEXT.NAMES.GAME)
-    WORLD:level_load(LEVELS.get_by_id(self._input.level))
+    WORLD:level_show()
     ctx:remove()
 end
 
