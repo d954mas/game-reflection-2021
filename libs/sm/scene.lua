@@ -57,8 +57,13 @@ end
 
 function Scene:unload_done() end
 
+function Scene:hide_before()
+
+end
+
 function Scene:hide()
 	assert(self._state == SCENE_ENUMS.STATES.PAUSED)
+	self:hide_before()
 	msg.post(self._url, COMMON.HASHES.MSG.DISABLE)
 	self:hide_done()
 	self._state = SCENE_ENUMS.STATES.HIDE

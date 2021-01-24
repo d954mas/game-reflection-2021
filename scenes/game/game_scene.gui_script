@@ -37,9 +37,10 @@ function Script:bind_vh()
 end
 
 function Script:init_gui()
+    gui.set_render_order(COMMON.CONSTANTS.GUI_ORDER.GAME)
     self.percent = 0
     self.view.btn_menu:set_input_listener(function()
-        SM:back()
+        SM:show(SM.MODALS.MAIN_MENU)
     end)
     self.view.btn_restart:set_input_listener(function()
         SM:reload(nil, true)

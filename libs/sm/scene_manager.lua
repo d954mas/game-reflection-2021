@@ -32,7 +32,7 @@ function M:is_working() return self.co end
 
 function M:update(dt)
     if self.co then
-        self.co = COMMON.coroutine_resume(self.co)
+        self.co = COMMON.coroutine_resume(self.co, dt)
     end
 
     local scenes_updated = {}
@@ -141,19 +141,25 @@ function M:_load_scene_f(scene)
     if scene._state == SCENE_ENUMS.STATES.UNLOADED then
         scene:load()
     end
+    local need_show_transition = false
     --wait next scene loaded
     while scene._state == SCENE_ENUMS.STATES.LOADING do coroutine.yield() end
     if scene._state == SCENE_ENUMS.STATES.HIDE then
         scene:show()
+        need_show_transition = true
     end
 
     if scene._state == SCENE_ENUMS.STATES.PAUSED then
         scene:resume()
-        --scene_transition(self, new_scene, new_scene.STATIC.TRANSITIONS.ON_SHOW)
+    end
+
+    if (need_show_transition) then
+        scene:transition(SCENE_ENUMS.TRANSITIONS.ON_SHOW)
     end
 end
 
 ---@param config SceneUnloadConfig
+---@param scene Scene
 function M:_unload_scene_f(scene, config)
     checks("?", "Scene", {
         new_scene = "?Scene",
@@ -163,7 +169,7 @@ function M:_unload_scene_f(scene, config)
     config = config or {}
 
     if scene._state == SCENE_ENUMS.STATES.RUNNING then
-        --if !config.skip_transition then scene_transition(self,scene,scene.STATIC.TRANSITIONS.ON_HIDE) end
+        if not config.skip_transition then scene:transition(SCENE_ENUMS.TRANSITIONS.ON_HIDE) end
         scene:pause()
     end
 

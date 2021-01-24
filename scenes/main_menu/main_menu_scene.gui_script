@@ -6,32 +6,52 @@ local LEVELS = require "assets.levels.levels"
 local Script = COMMON.new_n28s()
 
 function Script:bind_vh()
+	self.vh = {
+		root = gui.get_node("root")
+	}
 	self.view = {
-		btn_play = GUI.Button("btn_play"),
+		btn_lvl_next = GUI.ButtonBase("btn_lvl_next"),
+		btn_lvl_prev = GUI.ButtonBase("btn_lvl_prev"),
+		btn_exit = GUI.ButtonScale("btn_exit"),
 	}
 end
 
 function Script:init_gui()
-	self.view.btn_play:set_input_listener(function()
-		SM:show(SM.SCENES.GAME,{level = LEVELS.levels[1].id})
+	gui.set_render_order(COMMON.CONSTANTS.GUI_ORDER.MODAL_1)
+	self.view.btn_exit:set_input_listener(function()
+		SM:back()
 	end)
-
+	gui.set_color(self.vh.root,vmath.vector4(1,1,1,0))
 end
 
 function Script:init()
+	COMMON.CONTEXT:register(COMMON.CONTEXT.NAMES.MENU_GUI,self)
 	self:bind_vh()
 	self:init_gui()
 	COMMON.input_acquire()
 end
 
+function Script:show_gui()
+	gui.set_color(self.vh.root,vmath.vector4(1,1,1,0))
+	gui.animate(self.vh.root,"color",vmath.vector4(1,1,1,1),gui.EASING_INCUBIC,0.66,0,nil,gui.PLAYBACK_ONCE_FORWARD)
+end
+
+function Script:hide_gui()
+	gui.set_color(self.vh.root,vmath.vector4(1,1,1,1))
+	gui.animate(self.vh.root,"color",vmath.vector4(1,1,1,0),gui.EASING_INCUBIC,0.66,0,nil,gui.PLAYBACK_ONCE_FORWARD)
+end
+
 function Script:update(dt) end
 
 function Script:final()
+	COMMON.CONTEXT:unregister(COMMON.CONTEXT.NAMES.MENU_GUI,self)
 	COMMON.input_release()
 end
 
 function Script:on_input(action_id, action)
-	if (self.view.btn_play:on_input(action_id, action)) then return true end
+	if (self.view.btn_exit:on_input(action_id, action)) then return true end
+	if (self.view.btn_lvl_prev:on_input(action_id, action)) then return true end
+	if (self.view.btn_lvl_next:on_input(action_id, action)) then return true end
 end
 
 COMMON.N28S.register(Script())

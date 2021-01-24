@@ -9,12 +9,12 @@ local scenes = {
 }
 
 sm.SCENES = {
-    MAIN_MENU = "MainMenuScene",
+
     GAME = "GameScene"
 }
 
 sm.MODALS = {
-
+    MAIN_MENU = "MainMenuModalScene",
 }
 
 function sm:register_scenes()
