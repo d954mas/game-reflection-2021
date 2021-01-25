@@ -72,9 +72,10 @@ function M:level_check_percent(percent)
     end
 end
 
-function M:level_get_stars(idx)
-    local lvl_data = assert(self.storage.data.levels[idx])
-    return lvl_data.stars
+
+---@return LevelConfig
+function M:level_get_current()
+    return LEVELS.get_by_idx(self.storage.data.level_current)
 end
 
 function M:dispose()

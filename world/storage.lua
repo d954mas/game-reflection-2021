@@ -129,5 +129,12 @@ function Storage:save(force)
 
 end
 
+
+function Storage:level_get_stars(idx)
+    local lvl_data = assert(self.data.levels[idx])
+    return lvl_data.stars
+end
+
+
 return Storage
 

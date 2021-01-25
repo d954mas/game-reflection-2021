@@ -29,11 +29,13 @@ for _, level in ipairs(levels)do
     addLevel(level())
 end
 
+---@return LevelConfig
 function M.get_by_id(id)
     assert(id, "id is nil")
     return assert(M.level_by_id[id], "no level with id:" .. tostring(id))
 end
 
+---@return LevelConfig
 function M.get_by_idx(idx)
     assert(idx, "idx is nil")
     return assert(M.levels[idx], "no level with idx:" .. tostring(idx))
