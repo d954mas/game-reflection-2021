@@ -1,0 +1,1 @@
+mogrify  -format png -path icons -thumbnail 124x124 *.png

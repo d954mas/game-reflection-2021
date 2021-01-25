@@ -398,8 +398,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 128.0
-    y: 128.0
+    x: 124.0
+    y: 124.0
     z: 0.0
     w: 1.0
   }
@@ -411,7 +411,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "regions_icon/region_1_icon"
+  texture: "regions_icon/region_1"
   id: "levels_1/1/icon"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -768,8 +768,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 128.0
-    y: 128.0
+    x: 124.0
+    y: 124.0
     z: 0.0
     w: 1.0
   }
@@ -781,7 +781,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "regions_icon/region_1_icon"
+  texture: "regions_icon/region_1"
   id: "levels_1/2/icon"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -1138,8 +1138,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 128.0
-    y: 128.0
+    x: 124.0
+    y: 124.0
     z: 0.0
     w: 1.0
   }
@@ -1151,7 +1151,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "regions_icon/region_1_icon"
+  texture: "regions_icon/region_1"
   id: "levels_1/3/icon"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -1508,8 +1508,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 128.0
-    y: 128.0
+    x: 124.0
+    y: 124.0
     z: 0.0
     w: 1.0
   }
@@ -1521,7 +1521,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "regions_icon/region_1_icon"
+  texture: "regions_icon/region_1"
   id: "levels_1/4/icon"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -1878,8 +1878,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 128.0
-    y: 128.0
+    x: 124.0
+    y: 124.0
     z: 0.0
     w: 1.0
   }
@@ -1891,7 +1891,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "regions_icon/region_1_icon"
+  texture: "regions_icon/region_1"
   id: "levels_1/5/icon"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -2248,8 +2248,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 128.0
-    y: 128.0
+    x: 124.0
+    y: 124.0
     z: 0.0
     w: 1.0
   }
@@ -2261,7 +2261,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "regions_icon/region_1_icon"
+  texture: "regions_icon/region_1"
   id: "levels_1/6/icon"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE

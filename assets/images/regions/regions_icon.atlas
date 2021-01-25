@@ -1,6 +1,26 @@
 images {
-  image: "/assets/images/regions/region_1_icon.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+  image: "/assets/images/regions/icons/region_1.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_8
+}
+images {
+  image: "/assets/images/regions/icons/region_2.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_8
+}
+images {
+  image: "/assets/images/regions/icons/region_3.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_8
+}
+images {
+  image: "/assets/images/regions/icons/region_4.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_8
+}
+images {
+  image: "/assets/images/regions/icons/region_5.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_8
+}
+images {
+  image: "/assets/images/regions/icons/region_circle.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_8
 }
 margin: 0
 extrude_borders: 2
