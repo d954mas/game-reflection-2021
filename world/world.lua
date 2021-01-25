@@ -18,7 +18,7 @@ function M:level_load(lvl)
     self.lvl_config = assert(lvl, "lvl is nil")
     assert(not self.lvl, "already have level")
     COMMON.i("LOAD LVL:" .. lvl.id .. "(" .. lvl.idx .. ")", TAG)
-    self.lvl = Level(self,lvl)
+    self.lvl = Level(self, lvl)
     self.storage.data.level_current = lvl.idx
     self.storage:save()
 end
@@ -49,12 +49,11 @@ function M:update(dt)
     end
 end
 
-
 function M:level_can_play(level)
-    if(level < 0 or level > #LEVELS.levels)then
+    if (level < 0 or level > #LEVELS.levels) then
         return false
     end
-    return level == 1 or self.storage.data.levels[level-1].stars > 0 or self.storage.data.debug.can_play_any
+    return level == 1 or self.storage.data.levels[level - 1].stars > 0 or self.storage.data.debug.can_play_any
 end
 
 function M:level_check_percent(percent)
@@ -67,10 +66,15 @@ function M:level_check_percent(percent)
         end
     end
     local lvl_data = self.storage.data.levels[self.lvl.config.idx]
-    if(stars > lvl_data.stars) then
+    if (stars > lvl_data.stars) then
         lvl_data.stars = stars;
         self.storage:save()
     end
+end
+
+function M:level_get_stars(idx)
+    local lvl_data = assert(self.storage.data.levels[idx])
+    return lvl_data.stars
 end
 
 function M:dispose()

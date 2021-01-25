@@ -74,11 +74,18 @@ function M:show(name, input, options)
 
 end
 
-function M:reload(input, use_current_input)
+function M:reload(input, options)
+    checks("?","?",{
+        use_current_input = "?boolean",
+        close_modals = "?boolean"
+    })
     assert(not self:is_working())
     self.co = coroutine.create(function()
+        if(options.close_modals)then
+            self:_close_modals_f()
+        end
         local scene = self.stack:peek()
-        if (use_current_input) then
+        if (options.use_current_input) then
             input = scene._input
         end
         self:_unload_scene_f(scene)
@@ -89,14 +96,18 @@ end
 
 function M:replace(name, input, options)
     checks("?", "string", "?", {
-        reload = "?boolean", --if scene already in top reload it
+    --    reload = "?boolean", --if scene already in top reload it
+        close_modals = "?boolean", --close_modals
     })
     options = options or {}
     assert(not self:is_working())
+    if(options.close_modals)then
+
+    end
 
     local new_scene = self:get_scene_by_name(name)
     if (new_scene == self.stack:peek() and options.reload) then
-        self:reload(input)
+        self:reload(input,{close_modals = options.close_modals})
     else
         self.co = coroutine.create(function()
             self:_replace_scene_f(new_scene, input)
