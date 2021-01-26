@@ -1,17 +1,15 @@
 local BaseLvl = require "assets.levels.level_config"
 local Region = require "assets.levels.region"
 
-local Lvl = BaseLvl:subclass("Lvl1")
+local Lvl = BaseLvl:subclass("Lvl")
 
 function Lvl:initialize(...)
-    BaseLvl.initialize(self,"Lvl2")
+    BaseLvl.initialize(self,"region_rect_5")
+    --bg
     self.regions = {
-        Region("region_2",0,0,1)
+        Region("region_rect_5",0,0,1)
     }
 
-    self.figures = {
-        Region("circle",0,-120,0.5)
-    }
 end
 
 return Lvl

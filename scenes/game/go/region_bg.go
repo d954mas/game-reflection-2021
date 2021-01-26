@@ -2,7 +2,7 @@ embedded_components {
   id: "sprite"
   type: "sprite"
   data: "tile_set: \"/assets/images/regions/regions.atlas\"\n"
-  "default_animation: \"region_1\"\n"
+  "default_animation: \"region_rect_1\"\n"
   "material: \"/assets/materials/sprite_bg.material\"\n"
   "blend_mode: BLEND_MODE_ALPHA\n"
   ""

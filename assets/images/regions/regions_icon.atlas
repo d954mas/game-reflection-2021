@@ -1,26 +1,58 @@
 images {
-  image: "/assets/images/regions/icons/region_1.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_8
+  image: "/assets/images/regions/icons/region_3cells_1.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/assets/images/regions/icons/region_2.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_8
+  image: "/assets/images/regions/icons/region_3cells_2.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/assets/images/regions/icons/region_3.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_8
+  image: "/assets/images/regions/icons/region_circle_1.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/assets/images/regions/icons/region_4.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_8
+  image: "/assets/images/regions/icons/region_circle_2.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/assets/images/regions/icons/region_5.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_8
+  image: "/assets/images/regions/icons/region_circle_3.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/assets/images/regions/icons/region_circle.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_8
+  image: "/assets/images/regions/icons/region_crest_1.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/images/regions/icons/region_heart_1.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/images/regions/icons/region_in_an_1.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/images/regions/icons/region_in_an_2.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/images/regions/icons/region_rect_1.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/images/regions/icons/region_rect_2.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/images/regions/icons/region_rect_3.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/images/regions/icons/region_rect_4.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
+}
+images {
+  image: "/assets/images/regions/icons/region_rect_5.png"
+  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 margin: 0
 extrude_borders: 2

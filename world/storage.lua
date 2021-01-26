@@ -7,7 +7,7 @@ local TAG = "Storage"
 
 local Storage = COMMON.class("Storage")
 
-Storage.VERSION = 5
+Storage.VERSION = 6
 Storage.AUTOSAVE = 30 --seconds
 Storage.CLEAR = CONSTANTS.IS_DEBUG and false --BE CAREFUL. Do not use in prod
 Storage.LOCAL = CONSTANTS.IS_DEBUG and true --BE CAREFUL. Do not use in prod
@@ -113,6 +113,7 @@ function Storage:_migration()
         self:_check_levels()
         self.data.version = Storage.VERSION
     end
+    self:_check_levels()
 end
 
 function Storage:save(force)

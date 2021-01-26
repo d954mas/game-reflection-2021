@@ -4,15 +4,34 @@
           "can_play_any": true,
           "draw_level_matcher": false
      },
+     "level_current": 1,
      "levels": [
           {
-               "stars": 1
+               "stars": 3
           },
           {
-               "stars": 2
+               "stars": 3
           },
           {
-               "stars": 1
+               "stars": 3
+          },
+          {
+               "stars": 3
+          },
+          {
+               "stars": 3
+          },
+          {
+               "stars": 0
+          },
+          {
+               "stars": 0
+          },
+          {
+               "stars": 0
+          },
+          {
+               "stars": 0
           },
           {
                "stars": 0
@@ -24,6 +43,5 @@
                "stars": 0
           }
      ],
-     "version": 5,
-     "level_current": 6
+     "version": 6
 }

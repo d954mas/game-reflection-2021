@@ -12,6 +12,12 @@ uniform highp vec4 color_current;
 uniform highp vec4 color_new;
 uniform highp vec4 color_removed;
 
+bool colors_eq(vec4 color, vec4 color2){
+  return ((abs(color.r - color2.r)) < 0.2)
+  && (abs(color.g - color2.g) < 0.2)
+  && (abs(color.b - color2.b) < 0.2);
+}
+
 void main()
 {
     // Pre-multiply alpha since all runtime textures already are
@@ -34,29 +40,29 @@ void main()
             highp float x = x0 - (2.0 * a * calc_1)/calc_2;
             highp float y = y0 - (2.0 * b * calc_1)/calc_2;
              highp vec4 color_flip = texture2D(tex0, vec2(x/screen.x,y/screen.y)) * tint_pm;
-            if (color_flip.r == color_current.r && color_flip.g == color_current.g && color_flip.b == color_current.b) {
+            if (colors_eq(color_flip,color_current)) {
                 gl_FragColor =  vec4(color_new.rgb, tint.w);
             }else{
-                 if (color.r == color_current.r && color.g == color_current.g && color.b == color_current.b) {
+                 if (colors_eq(color,color_current)) {
                     gl_FragColor =  vec4(color_removed.rgb, tint.w);;
                  }else{
-                    discard;
+                     gl_FragColor =  vec4(1,1,1, tint.w);
                 }
             }
            //gl_FragColor =  vec4(vec3(0,0,1), 0.5);
         }else{
-            if (color.r == color_current.r && color.g == color_current.g && color.b == color_current.b) {
+            if (colors_eq(color,color_current)) {
                  gl_FragColor =  vec4(color_current.rgb, tint.w);;
             }else{
-               discard;
+                gl_FragColor =  vec4(1,1,1, tint.w);
             }
            // gl_FragColor =  vec4(vec3(0,1,0), 0.5);
         }
    }else{
-          if (color.r == color_current.r && color.g == color_current.g && color.b == color_current.b) {
+          if (colors_eq(color, color_current)) {
             gl_FragColor =  vec4(color_current.rgb, tint.w);
         }else{
-           discard;
+           gl_FragColor =  vec4(1,1,1, tint.w);
         }
     }
 

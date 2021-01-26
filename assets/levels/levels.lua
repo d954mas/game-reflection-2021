@@ -1,12 +1,19 @@
 local M = {}
 
 local levels = {
-    require "assets.levels.level_6",
-    require "assets.levels.level_1",
-    require "assets.levels.level_4",
-    require "assets.levels.level_3",
-    require "assets.levels.level_5",
-    require "assets.levels.level_2"
+    require "assets.levels.level_rect_1",
+    require "assets.levels.level_rect_2",
+    require "assets.levels.level_rect_4",
+    require "assets.levels.level_circle_3",
+    require "assets.levels.level_rect_3",
+    require "assets.levels.level_3cells_1",
+    require "assets.levels.level_circle_1",
+    require "assets.levels.level_heart_1",
+    require "assets.levels.level_crest_1",
+    require "assets.levels.level_3cells_2",
+    require "assets.levels.level_in_an_1",
+    require "assets.levels.level_in_an_2",
+
 }
 
 
@@ -22,7 +29,7 @@ local function addLevel(lvl)
     assert(not M.level_by_id[lvl.id], "level with id:" .. lvl.id .. " already exist. Idx:" .. lvl.idx)
     M.level_by_id[lvl.id] = lvl
     assert(#lvl.regions == 1, "only 1 region is support")
-    assert(#lvl.figures >= 1, "need >= 1 figures")
+--    assert(#lvl.figures >= 1, "need >= 1 figures")
 end
 
 for _, level in ipairs(levels)do

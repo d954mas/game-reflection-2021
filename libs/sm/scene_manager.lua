@@ -79,6 +79,7 @@ function M:reload(input, options)
         use_current_input = "?boolean",
         close_modals = "?boolean"
     })
+    options = options or {}
     assert(not self:is_working())
     self.co = coroutine.create(function()
         if(options.close_modals)then

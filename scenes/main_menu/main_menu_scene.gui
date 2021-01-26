@@ -411,7 +411,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "regions_icon/region_1"
+  texture: "regions_icon/region_rect_1"
   id: "levels_1/1/icon"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -781,7 +781,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "regions_icon/region_1"
+  texture: "regions_icon/region_rect_1"
   id: "levels_1/2/icon"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -1151,7 +1151,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "regions_icon/region_1"
+  texture: "regions_icon/region_rect_1"
   id: "levels_1/3/icon"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -1521,7 +1521,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "regions_icon/region_1"
+  texture: "regions_icon/region_rect_1"
   id: "levels_1/4/icon"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -1891,7 +1891,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "regions_icon/region_1"
+  texture: "regions_icon/region_rect_1"
   id: "levels_1/5/icon"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -2261,7 +2261,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "regions_icon/region_1"
+  texture: "regions_icon/region_rect_1"
   id: "levels_1/6/icon"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE

@@ -84,6 +84,10 @@ function Lvl:load()
             local dt = coroutine.yield()
             sequence:update(dt)
         end
+        for _, figure in ipairs(self.go_regions) do
+            local sprite_url = msg.url(figure.socket, figure.path, "sprite")
+            msg.post(sprite_url,COMMON.HASHES.MSG.DISABLE)
+        end
     end)
     self.command_sequence:add_action(function()
         go.set_position(vmath.vector3(0, 0, 0), "game:/level_view")

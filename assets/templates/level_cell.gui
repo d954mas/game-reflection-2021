@@ -155,7 +155,7 @@ nodes {
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "regions_icon/region_1"
+  texture: "regions_icon/region_rect_1"
   id: "icon"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
