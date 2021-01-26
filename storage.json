@@ -1,10 +1,10 @@
 {
      "debug": {
+          "can_play_any": false,
           "developer": true,
-          "can_play_any": true,
           "draw_level_matcher": false
      },
-     "level_current": 1,
+     "level_current": 7,
      "levels": [
           {
                "stars": 3
@@ -22,7 +22,7 @@
                "stars": 3
           },
           {
-               "stars": 0
+               "stars": 1
           },
           {
                "stars": 0

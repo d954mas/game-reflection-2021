@@ -2,6 +2,7 @@ local COMMON = require "libs.common"
 local GUI = require "libs_project.gui.gui"
 local SM = require "libs_project.sm"
 local LEVELS = require "assets.levels.levels"
+local WORLD = require "world.world"
 local LevelCell = require "libs_project.gui.level_cell"
 
 local Script = COMMON.new_n28s()
@@ -23,15 +24,33 @@ function Script:bind_vh()
 end
 
 function Script:levels_set_page(idx)
+	self.page_idx = idx
+	assert(self:levels_page_valid(idx))
 	for i=1,6 do
 		self.view.levels[i]:level_set_idx((idx-1)*6 + i)
 	end
+	self.view.btn_lvl_prev:set_ignore_input(not self:levels_page_valid(idx-1))
+	self.view.btn_lvl_next:set_ignore_input(not self:levels_page_valid(idx+1))
+end
+
+function Script:levels_page_valid(idx)
+	return idx > 0 and idx <= math.ceil(#LEVELS.levels/6)
 end
 
 function Script:init_gui()
 	gui.set_render_order(COMMON.CONSTANTS.GUI_ORDER.MODAL_1)
 	self.view.btn_exit:set_input_listener(function()
 		SM:back()
+	end)
+	self.view.btn_lvl_next:set_input_listener(function()
+		if(self:levels_page_valid(self.page_idx+1))then
+			self:levels_set_page(self.page_idx+1)
+		end
+	end)
+	self.view.btn_lvl_prev:set_input_listener(function()
+		if(self:levels_page_valid(self.page_idx-1))then
+			self:levels_set_page(self.page_idx-1)
+		end
 	end)
 	gui.set_color(self.vh.root,vmath.vector4(1,1,1,0))
     self:levels_set_page(1)
@@ -46,6 +65,9 @@ end
 
 function Script:show_gui()
 	gui.set_color(self.vh.root,vmath.vector4(1,1,1,0))
+	local level_idx = WORLD.storage.data.level_current
+	local page_idx = math.ceil(level_idx/6)
+	self:levels_set_page(page_idx)
 	gui.animate(self.vh.root,"color",vmath.vector4(1,1,1,1),gui.EASING_INCUBIC,0.66,0,nil,gui.PLAYBACK_ONCE_FORWARD)
 end
 
