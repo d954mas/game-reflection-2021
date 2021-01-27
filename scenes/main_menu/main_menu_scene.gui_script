@@ -8,88 +8,116 @@ local LevelCell = require "libs_project.gui.level_cell"
 local Script = COMMON.new_n28s()
 
 function Script:bind_vh()
-	self.vh = {
-		root = gui.get_node("root")
-	}
-	self.view = {
-		btn_lvl_next = GUI.ButtonBase("btn_lvl_next"),
-		btn_lvl_prev = GUI.ButtonBase("btn_lvl_prev"),
-		btn_exit = GUI.ButtonScale("btn_exit"),
+    self.vh = {
+        root = gui.get_node("root")
+    }
+    self.view = {
+        btn_lvl_next = GUI.ButtonBase("btn_lvl_next"),
+        btn_lvl_prev = GUI.ButtonBase("btn_lvl_prev"),
+        btn_sound = GUI.ButtonBase("btn_sound"),
+        btn_music = GUI.ButtonBase("btn_music"),
+        btn_exit = GUI.ButtonScale("btn_exit"),
         ---@type LevelCellGui[]
-		levels = {
-			LevelCell("levels_1/1"),LevelCell("levels_1/2"),LevelCell("levels_1/3"),
-			LevelCell("levels_1/4"),LevelCell("levels_1/5"),LevelCell("levels_1/6")
-		}
-	}
+        levels = {
+            LevelCell("levels_1/1"), LevelCell("levels_1/2"), LevelCell("levels_1/3"),
+            LevelCell("levels_1/4"), LevelCell("levels_1/5"), LevelCell("levels_1/6")
+        }
+    }
 end
 
 function Script:levels_set_page(idx)
-	self.page_idx = idx
-	assert(self:levels_page_valid(idx))
-	for i=1,6 do
-		self.view.levels[i]:level_set_idx((idx-1)*6 + i)
-	end
-	self.view.btn_lvl_prev:set_ignore_input(not self:levels_page_valid(idx-1))
-	self.view.btn_lvl_next:set_ignore_input(not self:levels_page_valid(idx+1))
+    self.page_idx = idx
+    assert(self:levels_page_valid(idx))
+    for i = 1, 6 do
+        self.view.levels[i]:level_set_idx((idx - 1) * 6 + i)
+    end
+    self.view.btn_lvl_prev:set_ignore_input(not self:levels_page_valid(idx - 1))
+    self.view.btn_lvl_next:set_ignore_input(not self:levels_page_valid(idx + 1))
 end
 
 function Script:levels_page_valid(idx)
-	return idx > 0 and idx <= math.ceil(#LEVELS.levels/6)
+    return idx > 0 and idx <= math.ceil(#LEVELS.levels / 6)
 end
 
 function Script:init_gui()
-	gui.set_render_order(COMMON.CONSTANTS.GUI_ORDER.MODAL_1)
-	self.view.btn_exit:set_input_listener(function()
-		SM:back()
-	end)
-	self.view.btn_lvl_next:set_input_listener(function()
-		if(self:levels_page_valid(self.page_idx+1))then
-			self:levels_set_page(self.page_idx+1)
-		end
-	end)
-	self.view.btn_lvl_prev:set_input_listener(function()
-		if(self:levels_page_valid(self.page_idx-1))then
-			self:levels_set_page(self.page_idx-1)
-		end
-	end)
-	gui.set_color(self.vh.root,vmath.vector4(1,1,1,0))
+    gui.set_render_order(COMMON.CONSTANTS.GUI_ORDER.MODAL_1)
+    self.view.btn_exit:set_input_listener(function()
+        SM:back()
+    end)
+    self.view.btn_lvl_next:set_input_listener(function()
+        if (self:levels_page_valid(self.page_idx + 1)) then
+            self:levels_set_page(self.page_idx + 1)
+        end
+    end)
+    self.view.btn_lvl_prev:set_input_listener(function()
+        if (self:levels_page_valid(self.page_idx - 1)) then
+            self:levels_set_page(self.page_idx - 1)
+        end
+    end)
+    self.view.btn_music:set_input_listener(function()
+        WORLD.storage:options_music_set(not WORLD.storage.data.options.music)
+    end)
+    self.view.btn_sound:set_input_listener(function()
+        WORLD.storage:options_sound_set(not WORLD.storage.data.options.sound)
+    end)
+
+    gui.set_color(self.vh.root, vmath.vector4(1, 1, 1, 0))
     self:levels_set_page(1)
 end
 
 function Script:init()
-	COMMON.CONTEXT:register(COMMON.CONTEXT.NAMES.MENU_GUI,self)
-	self:bind_vh()
-	self:init_gui()
-	COMMON.input_acquire()
+    COMMON.CONTEXT:register(COMMON.CONTEXT.NAMES.MENU_GUI, self)
+    self:bind_vh()
+    self.subscription = COMMON.RX.SubscriptionsStorage()
+    self.scheduler = COMMON.RX.CooperativeScheduler.create()
+    self.subscription:add(COMMON.EVENT_BUS:subscribe(COMMON.EVENTS.STORAGE_CHANGED):go_distinct(self.scheduler):subscribe(function()
+        self:on_storage_changed()
+    end))
+    self:init_gui()
+    self:on_storage_changed()
+    COMMON.input_acquire()
+end
+
+function Script:on_storage_changed()
+    local options = WORLD.storage.data.options
+    gui.play_flipbook(self.view.btn_sound.vh.root,
+            COMMON.HASHES.hash(options.sound and "btn_sound_on" or "btn_sound_off"))
+    gui.play_flipbook(self.view.btn_music.vh.root,
+            COMMON.HASHES.hash(options.music and "btn_music_on" or "btn_music_off"))
 end
 
 function Script:show_gui()
-	gui.set_color(self.vh.root,vmath.vector4(1,1,1,0))
-	local level_idx = WORLD.storage.data.level_current
-	local page_idx = math.ceil(level_idx/6)
-	self:levels_set_page(page_idx)
-	gui.animate(self.vh.root,"color",vmath.vector4(1,1,1,1),gui.EASING_INCUBIC,0.66,0,nil,gui.PLAYBACK_ONCE_FORWARD)
+    gui.set_color(self.vh.root, vmath.vector4(1, 1, 1, 0))
+    local level_idx = WORLD.storage.data.level_current
+    local page_idx = math.ceil(level_idx / 6)
+    self:levels_set_page(page_idx)
+    gui.animate(self.vh.root, "color", vmath.vector4(1, 1, 1, 1), gui.EASING_INCUBIC, 0.66, 0, nil, gui.PLAYBACK_ONCE_FORWARD)
 end
 
 function Script:hide_gui()
-	gui.set_color(self.vh.root,vmath.vector4(1,1,1,1))
-	gui.animate(self.vh.root,"color",vmath.vector4(1,1,1,0),gui.EASING_INCUBIC,0.66,0,nil,gui.PLAYBACK_ONCE_FORWARD)
+    gui.set_color(self.vh.root, vmath.vector4(1, 1, 1, 1))
+    gui.animate(self.vh.root, "color", vmath.vector4(1, 1, 1, 0), gui.EASING_INCUBIC, 0.66, 0, nil, gui.PLAYBACK_ONCE_FORWARD)
 end
 
-function Script:update(dt) end
+function Script:update(dt)
+    self.scheduler:update(dt)
+end
 
 function Script:final()
-	COMMON.CONTEXT:unregister(COMMON.CONTEXT.NAMES.MENU_GUI,self)
-	COMMON.input_release()
+    COMMON.CONTEXT:unregister(COMMON.CONTEXT.NAMES.MENU_GUI, self)
+    COMMON.input_release()
+    self.subscription:unsubscribe()
 end
 
 function Script:on_input(action_id, action)
-	if (self.view.btn_exit:on_input(action_id, action)) then return true end
-	if (self.view.btn_lvl_prev:on_input(action_id, action)) then return true end
-	if (self.view.btn_lvl_next:on_input(action_id, action)) then return true end
-	for _,lvl in ipairs(self.view.levels)do
-		if(lvl:on_input(action_id,action))then return true end
-	end
+    if (self.view.btn_exit:on_input(action_id, action)) then return true end
+    if (self.view.btn_lvl_prev:on_input(action_id, action)) then return true end
+    if (self.view.btn_lvl_next:on_input(action_id, action)) then return true end
+    if (self.view.btn_music:on_input(action_id, action)) then return true end
+    if (self.view.btn_sound:on_input(action_id, action)) then return true end
+    for _, lvl in ipairs(self.view.levels) do
+        if (lvl:on_input(action_id, action)) then return true end
+    end
 end
 
 COMMON.N28S.register(Script())

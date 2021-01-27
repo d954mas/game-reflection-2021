@@ -11,6 +11,7 @@ local LEVELS = require "assets.levels.levels"
 
 local RUN_TEST = false
 local CAMERAS = require "libs_project.cameras"
+local SOUNDS = require "libs.sounds"
 
 local WORLD = require "world.world"
 
@@ -76,6 +77,9 @@ function Script:init()
         self.test_runner.run()
     end
 
+    SOUNDS:on_storage_changed()
+    SOUNDS:play_music(SOUNDS.music.game_music)
+
     COMMON.GLOBAL.time_init_end = os.clock()
     COMMON.i("init time:" .. (COMMON.GLOBAL.time_init_end - COMMON.GLOBAL.time_init_start))
 end
@@ -86,6 +90,7 @@ function Script:update(dt)
     COMMON.APPLICATION.THREAD:update(dt)
     SM:update(dt)
     CAMERAS:update(dt)
+    SOUNDS:update(dt)
     self.thread:update(dt)
 
     if self.test_runner then

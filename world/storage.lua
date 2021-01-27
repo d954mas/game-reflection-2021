@@ -7,7 +7,7 @@ local TAG = "Storage"
 
 local Storage = COMMON.class("Storage")
 
-Storage.VERSION = 6
+Storage.VERSION = 7
 Storage.AUTOSAVE = 30 --seconds
 Storage.CLEAR = CONSTANTS.IS_DEBUG and false --BE CAREFUL. Do not use in prod
 Storage.LOCAL = CONSTANTS.IS_DEBUG and true --BE CAREFUL. Do not use in prod
@@ -77,6 +77,10 @@ function Storage:_init_storage()
             can_play_any = false,
             developer = true,
         },
+        options = {
+            sound = true,
+            music = false
+        },
         level_current = 1;
         levels = {
 
@@ -104,7 +108,7 @@ function Storage:_migration()
     if (self.data.version < Storage.VERSION) then
         COMMON.i(string.format("migrate from:%s to %s", self.data.version, Storage.VERSION), TAG)
         -- 1->5
-        if (self.data.version < 5) then
+        if (self.data.version < 7) then
             self:_init_storage()
         end
 
@@ -128,6 +132,18 @@ function Storage:save(force)
         self.save_on_update = true
     end
 
+end
+
+function Storage:options_sound_set(enable)
+    self.data.options.sound = enable
+    self:changed()
+    self:save()
+end
+
+function Storage:options_music_set(enable)
+    self.data.options.music = enable
+    self:changed()
+    self:save()
 end
 
 

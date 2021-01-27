@@ -1,28 +1,22 @@
 {
-     "debug": {
-          "can_play_any": false,
-          "developer": true,
-          "draw_level_matcher": false
-     },
-     "level_current": 7,
      "levels": [
           {
-               "stars": 3
+               "stars": 0
           },
           {
-               "stars": 3
+               "stars": 0
           },
           {
-               "stars": 3
+               "stars": 0
           },
           {
-               "stars": 3
+               "stars": 0
           },
           {
-               "stars": 3
+               "stars": 0
           },
           {
-               "stars": 1
+               "stars": 0
           },
           {
                "stars": 0
@@ -43,5 +37,15 @@
                "stars": 0
           }
      ],
-     "version": 6
+     "options": {
+          "music": false,
+          "sound": true
+     },
+     "debug": {
+          "developer": true,
+          "can_play_any": false,
+          "draw_level_matcher": false
+     },
+     "level_current": 1,
+     "version": 7
 }
