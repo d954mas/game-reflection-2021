@@ -42,8 +42,8 @@
           "sound": true
      },
      "debug": {
+          "can_play_any": true,
           "developer": true,
-          "can_play_any": false,
           "draw_level_matcher": false
      },
      "level_current": 1,
