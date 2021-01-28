@@ -8,6 +8,7 @@ Manager.NAMES = {
 	MAIN = "MAIN",
 	MENU_GUI = "MENU_GUI",
 	GAME = "GAME",
+	GAME_GUI = "GAME_GUI",
 	DEBUG_GUI = "DEBUG_GUI",
 }
 

@@ -16,7 +16,13 @@ function Script:bind_vh()
         top = gui.get_node("top"),
         flare = gui.get_node("flare"),
         flare_2 = gui.get_node("flare_2"),
-        btn_lvl_next_ctr = gui.get_node("btn_lvl_next_ctr")
+        btn_lvl_next_ctr = gui.get_node("btn_lvl_next_ctr"),
+        btn_accept_ctr = gui.get_node("btn_accept_ctr"),
+        tutorial = {
+            root = gui.get_node("tutorial"),
+            lbl = gui.get_node("tutorial/lbl"),
+            finger = gui.get_node("tutorial/finger"),
+        }
     }
     self.view = {
         btn_menu = GUI.ButtonBase("btn_menu"),
@@ -39,14 +45,69 @@ function Script:bind_vh()
     self.view.progress_level:set_value_max(1)
 end
 
+function Script:tutorial_check_start()
+    if (WORLD.storage.data.level_current == 1) then
+        self.tutorial_showing = true
+        if (self.tutorial_step == 0) then
+            gui.set_scale(self.vh.btn_accept_ctr,vmath.vector4(1,1,1,1))
+            gui.cancel_animation(self.vh.btn_accept_ctr,"scale")
+            self.tutorial_step = 1
+            gui.set_text(self.vh.tutorial.lbl, "SWIPE DOWN")
+            local animate
+            self:tutorial_show()
+            animate = function()
+                gui.cancel_animation(self.vh.tutorial.finger, "color")
+                gui.cancel_animation(self.vh.tutorial.finger, "position")
+
+                gui.set_position(self.vh.tutorial.finger, vmath.vector3(270, 560, 0))
+                gui.set_color(self.vh.tutorial.finger, vmath.vector4(1, 1, 1, 0))
+                gui.animate(self.vh.tutorial.finger, "color", vmath.vector4(1, 1, 1, 1), gui.EASING_INCUBIC, 0.3, 0)
+                gui.animate(self.vh.tutorial.finger, "position", vmath.vector3(270, 560 - 420, 0), gui.EASING_INCUBIC, 2, 0.6, function()
+                    gui.animate(self.vh.tutorial.finger, "color", vmath.vector4(1, 1, 1, 0), gui.EASING_INCUBIC, 0.3, 0.3, function()
+                        timer.delay(0.5, false, function()
+                            animate()
+                        end)
+                    end)
+                end)
+            end
+            animate()
+        elseif (self.tutorial_step == 2) then
+            self:tutorial_hide()
+            gui.set_scale(self.vh.btn_accept_ctr,vmath.vector4(1,1,1,1))
+            gui.animate(self.vh.btn_accept_ctr, "scale", 1.4, gui.EASING_INCUBIC, 2, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
+        elseif (self.tutorial_step == 3) then
+            self:tutorial_hide()
+            gui.set_scale(self.vh.btn_accept_ctr,vmath.vector4(1,1,1,1))
+            gui.cancel_animation(self.vh.btn_accept_ctr, "scale")
+        end
+    end
+end
+
+function Script:tutorial_show()
+    if (self.tutorial_showing and not gui.is_enabled(self.vh.tutorial.root)) then
+        gui.set_enabled(self.vh.tutorial.root, true)
+        gui.set_color(self.vh.tutorial.root, vmath.vector4(1, 1, 1, 0))
+        gui.animate(self.vh.tutorial.root, "color", vmath.vector4(1, 1, 1, 1), gui.EASING_INCUBIC, 0.6, 0)
+    end
+end
+
+function Script:tutorial_hide()
+    gui.set_enabled(self.vh.tutorial.root, false)
+    gui.set_color(self.vh.tutorial.root, vmath.vector4(1, 1, 1, 0))
+end
+
 function Script:init_gui()
+    self.tutorial_step = 0;
     gui.set_render_order(COMMON.CONSTANTS.GUI_ORDER.GAME)
+    gui.set_enabled(self.vh.tutorial.root, false)
+
+    gui.animate(self.vh.tutorial.lbl, "scale", 2.3, gui.EASING_INCUBIC, 1, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
     self.percent = 0
     self.view.btn_menu:set_input_listener(function()
         SM:show(SM.MODALS.MAIN_MENU)
     end)
     self.view.btn_restart:set_input_listener(function()
-        SM:reload(nil, {use_current_input = true})
+        SM:reload(nil, { use_current_input = true })
     end)
     self.view.btn_accept:set_input_listener(function()
         local ctx = COMMON.CONTEXT:set_context_top_by_name(COMMON.CONTEXT.NAMES.GAME)
@@ -95,33 +156,31 @@ function Script:init_gui()
     self.view.btn_revert_left:set_ignore_input(true)
     self.view.btn_revert_right:set_ignore_input(true)
     self.view.btn_restart:set_ignore_input(true)
-    self.view.btn_left:set_ignore_input((WORLD.lvl.config.idx==1))
-    self.view.btn_right:set_ignore_input(not WORLD:level_can_play(WORLD.lvl.config.idx+1))
+    self.view.btn_left:set_ignore_input((WORLD.lvl.config.idx == 1))
+    self.view.btn_right:set_ignore_input(not WORLD:level_can_play(WORLD.lvl.config.idx + 1))
 
     self.next_level_opened = not self.view.btn_right.ignore_input
 
-    gui.set_enabled(self.vh.flare,false)
-    gui.set_enabled(self.vh.flare_2,false)
-    gui.animate(self.vh.flare,"scale",2,gui.EASING_INCUBIC,2,0,nil,gui.PLAYBACK_LOOP_PINGPONG)
-    gui.animate(self.vh.flare_2,"scale",2,gui.EASING_INCUBIC,2,0,nil,gui.PLAYBACK_LOOP_PINGPONG)
-    gui.animate(self.vh.flare,"rotation.z",-360,gui.EASING_LINEAR,30,0,nil,gui.PLAYBACK_LOOP_FORWARD)
-    gui.animate(self.vh.flare_2,"rotation.z",-360,gui.EASING_LINEAR,60,0,nil,gui.PLAYBACK_LOOP_FORWARD)
+    gui.set_enabled(self.vh.flare, false)
+    gui.set_enabled(self.vh.flare_2, false)
+    gui.animate(self.vh.flare, "scale", 2, gui.EASING_INCUBIC, 2, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
+    gui.animate(self.vh.flare_2, "scale", 2, gui.EASING_INCUBIC, 2, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
+    gui.animate(self.vh.flare, "rotation.z", -360, gui.EASING_LINEAR, 30, 0, nil, gui.PLAYBACK_LOOP_FORWARD)
+    gui.animate(self.vh.flare_2, "rotation.z", -360, gui.EASING_LINEAR, 60, 0, nil, gui.PLAYBACK_LOOP_FORWARD)
 end
 
 function Script:animate_next_level()
-    gui.set_enabled(self.vh.flare,true)
-    gui.set_enabled(self.vh.flare_2,true)
-    gui.set_color(self.vh.flare,vmath.vector4(1,1,1,0))
-    gui.set_color(self.vh.flare_2,vmath.vector4(1,1,1,0))
-    gui.animate(self.vh.flare,"color",vmath.vector4(1,1,1,1),gui.EASING_INCUBIC,1,0,nil,gui.PLAYBACK_ONCE_FORWARD)
-    gui.animate(self.vh.flare_2,"color",vmath.vector4(1,1,1,1),gui.EASING_INCUBIC,2,0,nil,gui.PLAYBACK_ONCE_FORWARD)
-    gui.animate(self.vh.btn_lvl_next_ctr,"scale",1.2,gui.EASING_INCUBIC,2.5,0,nil,gui.PLAYBACK_LOOP_PINGPONG)
+    gui.set_enabled(self.vh.flare, true)
+    gui.set_enabled(self.vh.flare_2, true)
+    gui.set_color(self.vh.flare, vmath.vector4(1, 1, 1, 0))
+    gui.set_color(self.vh.flare_2, vmath.vector4(1, 1, 1, 0))
+    gui.animate(self.vh.flare, "color", vmath.vector4(1, 1, 1, 1), gui.EASING_INCUBIC, 1, 0, nil, gui.PLAYBACK_ONCE_FORWARD)
+    gui.animate(self.vh.flare_2, "color", vmath.vector4(1, 1, 1, 1), gui.EASING_INCUBIC, 2, 0, nil, gui.PLAYBACK_ONCE_FORWARD)
+    gui.animate(self.vh.btn_lvl_next_ctr, "scale", 1.2, gui.EASING_INCUBIC, 2.5, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
 end
 
-
-
-
 function Script:init()
+    COMMON.CONTEXT:register(COMMON.CONTEXT.NAMES.GAME_GUI, self)
     self:bind_vh()
     self:init_gui()
     COMMON.input_acquire()
@@ -155,6 +214,7 @@ function Script:update_percent()
             star:activate()
         end
     end
+
 end
 
 function Script:update(dt)
@@ -170,17 +230,40 @@ function Script:update(dt)
         gui.set_enabled(self.vh.bottom_passive, true)
     end
 
-
-    if(loaded)then
+    if (loaded) then
         self.view.btn_revert_left:set_ignore_input((#WORLD.lvl.matcher.history <= 1))
-        self.view.btn_revert_right:set_ignore_input( (#WORLD.lvl.matcher.history_revert == 0))
-        self.view.btn_right:set_ignore_input(not WORLD:level_can_play(WORLD.lvl.config.idx+1))
+        self.view.btn_revert_right:set_ignore_input((#WORLD.lvl.matcher.history_revert == 0))
+        self.view.btn_right:set_ignore_input(not WORLD:level_can_play(WORLD.lvl.config.idx + 1))
         self.view.btn_restart:set_ignore_input((#WORLD.lvl.matcher.history <= 1))
 
-        if(not self.next_level_opened)then
-            if(not self.view.btn_right.ignore_input) then
+        if (not self.next_level_opened) then
+            if (not self.view.btn_right.ignore_input) then
                 self.next_level_opened = true
                 self:animate_next_level()
+            end
+        end
+        if (self.tutorial_step == 1) then
+            if (WORLD.lvl.views.line_view.show and not WORLD.lvl.views.line_view.input_pressed) then
+                self.tutorial_step = 2
+                self:tutorial_check_start()
+            else
+                self:tutorial_show()
+            end
+        elseif (self.tutorial_step == 2) then
+            if( #WORLD.lvl.matcher.history <= 1 and not WORLD.lvl.views.line_view.show)then
+                self.tutorial_step = 0
+                self:tutorial_check_start()
+            end
+            if( #WORLD.lvl.matcher.history > 1)then
+                self.tutorial_step = 3
+                self:tutorial_check_start()
+            end
+
+        end
+        if (self.tutorial_step == 3) then
+            if( #WORLD.lvl.matcher.history <= 1 and not WORLD.lvl.views.line_view.show)then
+                self.tutorial_step = 0
+                self:tutorial_check_start()
             end
         end
     end
@@ -188,6 +271,7 @@ function Script:update(dt)
 end
 
 function Script:final()
+    COMMON.CONTEXT:unregister(COMMON.CONTEXT.NAMES.GAME_GUI)
     COMMON.input_release()
 end
 

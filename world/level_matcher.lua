@@ -82,6 +82,9 @@ function Matcher:update_screenshot()
     table.insert(self.command_sequence, ACTIONS.Function { fun = function()
         local time = os.clock()
         self.working = true
+        local ctx = COMMON.CONTEXT:set_context_top_by_name(COMMON.CONTEXT.NAMES.GAME_GUI)
+        ctx.data:tutorial_hide()
+        ctx:remove()
         coroutine.yield()--wait for input view is hide
         coroutine.yield()--wait for input view is hide
 
