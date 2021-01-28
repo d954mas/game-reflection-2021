@@ -14,6 +14,9 @@ function Script:bind_vh()
         bottom_passive = gui.get_node("bottom/passive"),
         bottom = gui.get_node("bottom"),
         top = gui.get_node("top"),
+        flare = gui.get_node("flare"),
+        flare_2 = gui.get_node("flare_2"),
+        btn_lvl_next_ctr = gui.get_node("btn_lvl_next_ctr")
     }
     self.view = {
         btn_menu = GUI.ButtonBase("btn_menu"),
@@ -94,7 +97,27 @@ function Script:init_gui()
     self.view.btn_restart:set_ignore_input(true)
     self.view.btn_left:set_ignore_input((WORLD.lvl.config.idx==1))
     self.view.btn_right:set_ignore_input(not WORLD:level_can_play(WORLD.lvl.config.idx+1))
+
+    self.next_level_opened = not self.view.btn_right.ignore_input
+
+    gui.set_enabled(self.vh.flare,false)
+    gui.set_enabled(self.vh.flare_2,false)
+    gui.animate(self.vh.flare,"scale",2,gui.EASING_INCUBIC,2,0,nil,gui.PLAYBACK_LOOP_PINGPONG)
+    gui.animate(self.vh.flare_2,"scale",2,gui.EASING_INCUBIC,2,0,nil,gui.PLAYBACK_LOOP_PINGPONG)
+    gui.animate(self.vh.flare,"rotation.z",-360,gui.EASING_LINEAR,30,0,nil,gui.PLAYBACK_LOOP_FORWARD)
+    gui.animate(self.vh.flare_2,"rotation.z",-360,gui.EASING_LINEAR,60,0,nil,gui.PLAYBACK_LOOP_FORWARD)
 end
+
+function Script:animate_next_level()
+    gui.set_enabled(self.vh.flare,true)
+    gui.set_enabled(self.vh.flare_2,true)
+    gui.set_color(self.vh.flare,vmath.vector4(1,1,1,0))
+    gui.set_color(self.vh.flare_2,vmath.vector4(1,1,1,0))
+    gui.animate(self.vh.flare,"color",vmath.vector4(1,1,1,1),gui.EASING_INCUBIC,1,0,nil,gui.PLAYBACK_ONCE_FORWARD)
+    gui.animate(self.vh.flare_2,"color",vmath.vector4(1,1,1,1),gui.EASING_INCUBIC,2,0,nil,gui.PLAYBACK_ONCE_FORWARD)
+    gui.animate(self.vh.btn_lvl_next_ctr,"scale",1.2,gui.EASING_INCUBIC,2.5,0,nil,gui.PLAYBACK_LOOP_PINGPONG)
+end
+
 
 
 
@@ -153,6 +176,13 @@ function Script:update(dt)
         self.view.btn_revert_right:set_ignore_input( (#WORLD.lvl.matcher.history_revert == 0))
         self.view.btn_right:set_ignore_input(not WORLD:level_can_play(WORLD.lvl.config.idx+1))
         self.view.btn_restart:set_ignore_input((#WORLD.lvl.matcher.history <= 1))
+
+        if(not self.next_level_opened)then
+            if(not self.view.btn_right.ignore_input) then
+                self.next_level_opened = true
+                self:animate_next_level()
+            end
+        end
     end
 
 end
