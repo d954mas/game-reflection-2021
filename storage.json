@@ -38,14 +38,14 @@
           }
      ],
      "options": {
-          "music": false,
+          "music": true,
           "sound": false
      },
      "debug": {
-          "developer": true,
           "can_play_any": true,
+          "developer": true,
           "draw_level_matcher": false
      },
-     "level_current": 3,
+     "level_current": 1,
      "version": 7
-}
+}}
