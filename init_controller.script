@@ -78,6 +78,8 @@ function Script:init()
     end
 
     SOUNDS:on_storage_changed()
+
+    
     SOUNDS:play_music(SOUNDS.music.game_music)
 
     COMMON.GLOBAL.time_init_end = os.clock()

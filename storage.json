@@ -1,13 +1,13 @@
 {
      "levels": [
           {
-               "stars": 0
+               "stars": 3
           },
           {
                "stars": 0
           },
           {
-               "stars": 0
+               "stars": 3
           },
           {
                "stars": 0
@@ -39,13 +39,13 @@
      ],
      "options": {
           "music": false,
-          "sound": true
+          "sound": false
      },
      "debug": {
-          "can_play_any": true,
           "developer": true,
+          "can_play_any": true,
           "draw_level_matcher": false
      },
-     "level_current": 1,
+     "level_current": 3,
      "version": 7
 }

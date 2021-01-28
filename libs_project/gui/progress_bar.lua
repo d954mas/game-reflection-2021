@@ -19,7 +19,6 @@ function Bar:initialize(root_name)
     end
     self.value_max = 100
     self.value = 0
-    self.value_animated = self.value
     self.padding_progress = gui.get_position(self.vh.progress).x
     self.progress_width_max = gui.get_size(self.vh.bg).x - self.padding_progress * 2
     self.nine_texture_size = gui.get_slice9(self.vh.progress)

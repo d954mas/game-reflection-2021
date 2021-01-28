@@ -1,4 +1,5 @@
 local COMMON = require "libs.common"
+local SOUNDS = require "libs.sounds"
 
 
 ---@class StarGui
@@ -33,6 +34,13 @@ end
 
 function Star:activate()
 	if(self.active)then return true end
+	self.active = true
+	SOUNDS:play_sound(SOUNDS.sounds.star_new)
+	local scale = gui.get_scale(self.vh.star)
+	gui.animate(self.vh.star,"scale",scale*1.35,gui.EASING_INCUBIC,0.66,0,function ()
+		gui.animate(self.vh.star,"scale",scale,gui.EASING_INCUBIC,0.66,0.2)
+	end)
+
 	gui.play_flipbook(self.vh.star,COMMON.HASHES.hash("icon_star_on"))
 end
 
