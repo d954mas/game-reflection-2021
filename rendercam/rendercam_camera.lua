@@ -4,7 +4,7 @@ local PERLIN = require "libs.perlin"
 -- Vectors used in calculations for public transform functions
 local nv = vmath.vector4(0, 0, -1, 1)
 local fv = vmath.vector4(0, 0, 1, 1)
---local pv = vmath.vector4(0, 0, 0, 1)
+local pv = vmath.vector4(0, 0, 0, 1)
 
 PERLIN.init()
 
@@ -381,22 +381,6 @@ function Camera:fov_calculate(distance, y)
 	return math.atan(y / distance) * 2
 end
 
-function Camera:world_to_screen(pos, adjust)
-	local m = self.proj * self.view
-	pos = vmath.vector4(pos.x, pos.y, pos.z, 1)
-
-	pos = m * pos
-	pos = pos * (1/pos.w)
-	pos.x = (pos.x / 2 + 0.5) * self.viewport.width + self.viewport.x
-	pos.y = (pos.y / 2 + 0.5) * self.viewport.height + self.viewport.y
-
-	if adjust then
-		pos.x = pos.x / self.gui_adjust[adjust].sx - self.gui_adjust[adjust].ox
-		pos.y = pos.y / self.gui_adjust[adjust].sy - self.gui_adjust[adjust].oy
-	end
-
-	return vmath.vector3(pos.x, pos.y, 0)
-end
 
 function Camera:calculate_gui_adjust_data(winX, winY, configX, configY)
 	local sx, sy = winX / configX, winY / configY
@@ -462,6 +446,41 @@ function Camera:screen_to_world_2d(x, y, delta, worldz, raw)
 
 	if raw then return worldpos.x, worldpos.y, worldpos.z
 	else return vmath.vector3(worldpos.x, worldpos.y, worldpos.z) end -- convert vector4 to vector3
+end
+
+function Camera:screen_to_gui(x, y, adjust, isSize)
+	if not isSize then
+		x = x / self.gui_adjust[adjust].sx - self.gui_adjust[adjust].ox
+		y = y / self.gui_adjust[adjust].sy - self.gui_adjust[adjust].oy
+	else
+		x = x / self.gui_adjust[adjust].sx
+		y = y / self.gui_adjust[adjust].sy
+	end
+	return x, y
+end
+
+function Camera:screen_to_gui_pick(x, y)
+	return x / self.gui_adjust[Camera.GUI_ADJUST.ZOOM].sx, y / self.gui_adjust[Camera.GUI_ADJUST.ZOOM].sy
+end
+
+
+
+function Camera:world_to_screen(pos, adjust, raw)
+	local m = self.proj * self.view
+	pv.x, pv.y, pv.z, pv.w = pos.x, pos.y, pos.z, 1
+
+	pv = m * pv
+	pv = pv * (1/pv.w)
+	pv.x = (pv.x / 2 + 0.5) * self.viewport.width + self.viewport.x
+	pv.y = (pv.y / 2 + 0.5) * self.viewport.height + self.viewport.y
+
+	if adjust then
+		pv.x = pv.x / self.gui_adjust[adjust].sx - self.gui_adjust[adjust].ox
+		pv.y = pv.y / self.gui_adjust[adjust].sy - self.gui_adjust[adjust].oy
+	end
+
+	if raw then return pv.x, pv.y, 0
+	else return vmath.vector3(pv.x, pv.y, 0) end
 end
 
 return Camera

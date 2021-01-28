@@ -3,6 +3,7 @@ local GUI = require "libs_project.gui.gui"
 local SM = require "libs_project.sm"
 local WORLD = require "world.world"
 local LEVELS = require "assets.levels.levels"
+local CAMERAS = require "libs_project.cameras"
 
 local Script = COMMON.new_n28s()
 
@@ -56,13 +57,23 @@ function Script:tutorial_check_start()
             local animate
             self:tutorial_show()
             animate = function()
+                local lbl_pos = CAMERAS.game_camera:world_to_screen(vmath.vector3(16,512/2+COMMON.CONSTANTS.level_view_dy-30,0))
+                lbl_pos.x,lbl_pos.y = CAMERAS.game_camera:screen_to_gui(lbl_pos.x,lbl_pos.y,CAMERAS.game_camera.GUI_ADJUST.FIT,true)
+                gui.set_position(self.vh.tutorial.lbl,vmath.vector3(263,lbl_pos.y,0))
+
+                local start_pos = CAMERAS.game_camera:world_to_screen(vmath.vector3(16,512/2+COMMON.CONSTANTS.level_view_dy-70,0))
+                start_pos.x,start_pos.y = CAMERAS.game_camera:screen_to_gui(start_pos.x,start_pos.y,CAMERAS.game_camera.GUI_ADJUST.FIT,true)
+
+                local end_pos = CAMERAS.game_camera:world_to_screen(vmath.vector3(16,-512/2+COMMON.CONSTANTS.level_view_dy-40,0))
+                end_pos.x,end_pos.y = CAMERAS.game_camera:screen_to_gui(end_pos.x,end_pos.y,CAMERAS.game_camera.GUI_ADJUST.FIT,true)
+
                 gui.cancel_animation(self.vh.tutorial.finger, "color")
                 gui.cancel_animation(self.vh.tutorial.finger, "position")
 
-                gui.set_position(self.vh.tutorial.finger, vmath.vector3(270, 560, 0))
+                gui.set_position(self.vh.tutorial.finger, start_pos)
                 gui.set_color(self.vh.tutorial.finger, vmath.vector4(1, 1, 1, 0))
                 gui.animate(self.vh.tutorial.finger, "color", vmath.vector4(1, 1, 1, 1), gui.EASING_INCUBIC, 0.3, 0)
-                gui.animate(self.vh.tutorial.finger, "position", vmath.vector3(270, 560 - 420, 0), gui.EASING_INCUBIC, 2, 0.6, function()
+                gui.animate(self.vh.tutorial.finger, "position", end_pos, gui.EASING_INCUBIC, 2, 0.6, function()
                     gui.animate(self.vh.tutorial.finger, "color", vmath.vector4(1, 1, 1, 0), gui.EASING_INCUBIC, 0.3, 0.3, function()
                         timer.delay(0.5, false, function()
                             animate()
