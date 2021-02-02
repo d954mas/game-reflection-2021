@@ -17,6 +17,8 @@ function Script:bind_vh()
         top = gui.get_node("top"),
         flare = gui.get_node("flare"),
         flare_2 = gui.get_node("flare_2"),
+        flare_accept = gui.get_node("flare_accept"),
+        flare_accept_2 = gui.get_node("flare_accept_2"),
         btn_lvl_next_ctr = gui.get_node("btn_lvl_next_ctr"),
         btn_accept_ctr = gui.get_node("btn_accept_ctr"),
         tutorial = {
@@ -56,6 +58,8 @@ function Script:tutorial_check_start()
             gui.set_text(self.vh.tutorial.lbl, "SWIPE DOWN")
             local animate
             self:tutorial_show()
+            gui.set_enabled(self.vh.flare_accept, false)
+            gui.set_enabled(self.vh.flare_accept_2, false)
             animate = function()
                 local lbl_pos = CAMERAS.game_camera:world_to_screen(vmath.vector3(16,512/2+COMMON.CONSTANTS.level_view_dy-30,0))
                 lbl_pos.x,lbl_pos.y = CAMERAS.game_camera:screen_to_gui(lbl_pos.x,lbl_pos.y,CAMERAS.game_camera.GUI_ADJUST.FIT,true)
@@ -86,8 +90,12 @@ function Script:tutorial_check_start()
             self:tutorial_hide()
             gui.set_scale(self.vh.btn_accept_ctr,vmath.vector4(1,1,1,1))
             gui.animate(self.vh.btn_accept_ctr, "scale", 1.4, gui.EASING_INCUBIC, 2, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
+            gui.set_enabled(self.vh.flare_accept, true)
+            gui.set_enabled(self.vh.flare_accept_2, true)
         elseif (self.tutorial_step == 3) then
             self:tutorial_hide()
+            gui.set_enabled(self.vh.flare_accept, false)
+            gui.set_enabled(self.vh.flare_accept_2, false)
             gui.set_scale(self.vh.btn_accept_ctr,vmath.vector4(1,1,1,1))
             gui.cancel_animation(self.vh.btn_accept_ctr, "scale")
         end
@@ -174,10 +182,18 @@ function Script:init_gui()
 
     gui.set_enabled(self.vh.flare, false)
     gui.set_enabled(self.vh.flare_2, false)
+    gui.set_enabled(self.vh.flare_accept, false)
+    gui.set_enabled(self.vh.flare_accept_2, false)
+
     gui.animate(self.vh.flare, "scale", 2, gui.EASING_INCUBIC, 2, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
     gui.animate(self.vh.flare_2, "scale", 2, gui.EASING_INCUBIC, 2, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
+    gui.animate(self.vh.flare_accept, "scale", 2, gui.EASING_INCUBIC, 2, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
+    gui.animate(self.vh.flare_accept_2, "scale", 2, gui.EASING_INCUBIC, 2, 0, nil, gui.PLAYBACK_LOOP_PINGPONG)
+
     gui.animate(self.vh.flare, "rotation.z", -360, gui.EASING_LINEAR, 30, 0, nil, gui.PLAYBACK_LOOP_FORWARD)
     gui.animate(self.vh.flare_2, "rotation.z", -360, gui.EASING_LINEAR, 60, 0, nil, gui.PLAYBACK_LOOP_FORWARD)
+    gui.animate(self.vh.flare_accept, "rotation.z", -360, gui.EASING_LINEAR, 30, 0, nil, gui.PLAYBACK_LOOP_FORWARD)
+    gui.animate(self.vh.flare_accept_2, "rotation.z", -360, gui.EASING_LINEAR, 60, 0, nil, gui.PLAYBACK_LOOP_FORWARD)
 end
 
 function Script:animate_next_level()
