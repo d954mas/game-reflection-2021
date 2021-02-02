@@ -1,5 +1,6 @@
 local COMMON = require "libs.common"
 local CAMERA = require "libs_project.cameras"
+local COLORS = require "richtext.color"
 
 local View = COMMON.class("LevelLineView")
 
@@ -7,12 +8,14 @@ local COLOR_CURRENT = vmath.vector4(1, 0, 0, 1)
 local COLOR_NEW = vmath.vector4(0, 1, 0, 1)
 local COLOR_REMOVED = vmath.vector4(0.4, 0.4, 0.4, 1)
 local COLOR_WHITE = vmath.vector4(1, 1, 1, 1)
+local COLOR_LINE = COLORS.parse_hex("#80800099")
 
 function View:bind_vh()
     self.vh = {
-        top = { root = msg.url("game:/line_top"), sprite = msg.url("game:/line_top#sprite") },
-        bottom = { root = msg.url("game:/line_bottom") },
-        model = msg.url("game:/level_view#model")
+        top = { root = msg.url("game:/line_top"), sprite = msg.url("game:/line_top#sprite"),arrow =msg.url("game:/line_top/arrow")  },
+        bottom = { root = msg.url("game:/line_bottom"),arrow =msg.url("game:/line_bottom/arrow") },
+        model = msg.url("game:/level_view#model"),
+        line ={root = msg.url("game:/line_line_root"),line = msg.url("game:/line_line"),arrow = msg.url("game:/line_line_arrow"), sprite = msg.url("game:/line_line#sprite")}
     }
 end
 
@@ -33,6 +36,8 @@ function View:initialize(world)
     self:bind_vh()
     self:init()
     self:hide()
+    go.set_scale(vmath.vector3(10000,20,1),self.vh.line.line)
+    sprite.set_constant(self.vh.line.sprite,"tint",COLOR_LINE)
 end
 
 function View:hide()
@@ -43,11 +48,17 @@ function View:hide()
         finish = vmath.vector3(0, 0, 0),
         touch = nil
     }
+    msg.post(self.vh.line.root,COMMON.HASHES.MSG.DISABLE)
+    msg.post(self.vh.line.line,COMMON.HASHES.MSG.DISABLE)
+    msg.post(self.vh.line.arrow,COMMON.HASHES.MSG.DISABLE)
     self:update_position()
 end
 
 function View:hide_for_screenshot()
     self.taking_screenshot = true
+    msg.post(self.vh.line.root,COMMON.HASHES.MSG.DISABLE)
+    msg.post(self.vh.line.line,COMMON.HASHES.MSG.DISABLE)
+    msg.post(self.vh.line.arrow,COMMON.HASHES.MSG.DISABLE)
     self:update_position()
 end
 
@@ -102,6 +113,9 @@ function View:on_input(action_id, action)
                 self.positions.start.y = touch_pos.y
                 self.positions.finish.x = touch_pos.x
                 self.positions.finish.y = touch_pos.y
+                msg.post(self.vh.line.root,COMMON.HASHES.MSG.ENABLE)
+                msg.post(self.vh.line.line,COMMON.HASHES.MSG.ENABLE)
+                msg.post(self.vh.line.arrow,COMMON.HASHES.MSG.ENABLE)
             end
         end
 
@@ -122,6 +136,7 @@ function View:on_input(action_id, action)
                 self.positions.finish.x = self.positions.finish.x + dx
                 self.positions.finish.y = self.positions.finish.y + dy
             end
+
         end
 
         if self.input_pressed and action.released then
@@ -139,16 +154,29 @@ function View:on_input(action_id, action)
                     move_point = self.positions.finish
                 end
 
+                local min_dist = 100
                 local dist = vmath.length(move_point - stay_point)
-                if (dist >0 and dist < 100) then
-                    local dist_v = stay_point + (move_point - stay_point) / dist * 100
+                if (dist >0 and dist < min_dist) then
+                    local dist_v = stay_point + (move_point - stay_point) / dist * min_dist
 
                     if( dist_v.x >-250 and dist_v.x <250 and dist_v.y > -310 and dist_v.y < 220)then
                         move_point.x = dist_v.x
                         move_point.y = dist_v.y
                     end
-
                 end
+
+                min_dist = 140
+                dist = vmath.length(move_point - stay_point)
+                if (dist >0 and dist < min_dist) then
+                    local dist_v = stay_point + (move_point - stay_point) / dist * min_dist
+
+                    if( dist_v.x >-250 and dist_v.x <250 and dist_v.y > -310 and dist_v.y < 220)then
+                        move_point.x = dist_v.x
+                        move_point.y = dist_v.y
+                    end
+                end
+
+
                 if(dist == 0)then
                     self:hide()
                 end
@@ -219,10 +247,16 @@ function View:update_position()
         --  local p2a = vmath.vector3(540 / 2, (-540 / 2 * a - c) / b, 0)
         --pprint(p1)
         -- pprint(p2)
+        local v2 = vmath.normalize(self.positions.finish-self.positions.start)
+        local angle =  math.atan2(v2.y,v2.x)
+
+        go.set(self.vh.line.root,"euler.z",math.deg(angle))
+        go.set(self.vh.top.arrow,"euler.z",math.deg(angle))
+        go.set(self.vh.bottom.arrow,"euler.z",math.deg(angle))
+        go.set(self.vh.line.root,"euler.z",math.deg(angle))
+        go.set_position(self.positions.start + (self.positions.finish-self.positions.start)/2,self.vh.line.root)
+
         if (not self.taking_screenshot) then
-            msg.post("@render:", "draw_line", { start_point = p1, end_point = p2, color = vmath.vector4(0, 1, 0, 0.66) })
-            msg.post("@render:", "draw_line", { start_point = self.positions.start, end_point = self.positions.finish,
-                                                color = vmath.vector4(1, 1, 0, 0.66) })
             local v = vmath.vector3()
             v.x, v.y, v.z = self.positions.start.x, self.positions.start.y, 0.1
             go.set_position(v, self.vh.top.root)
