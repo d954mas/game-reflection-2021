@@ -10,7 +10,7 @@
                "stars": 3
           },
           {
-               "stars": 0
+               "stars": 1
           },
           {
                "stars": 0
@@ -42,10 +42,10 @@
           "sound": true
      },
      "debug": {
-          "can_play_any": false,
           "developer": true,
+          "can_play_any": false,
           "draw_level_matcher": false
      },
-     "level_current": 1,
+     "level_current": 4,
      "version": 7
 }

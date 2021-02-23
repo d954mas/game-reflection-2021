@@ -2,7 +2,6 @@ local _ = require "libs.checks"
 local Features = require "libs.features"
 
 local COMMON = require "libs.common"
-local GA = require "libs.google_analytics"
 local JSON = require "libs.json"
 local SM = require "libs_project.sm"
 local DEBUG_INFO = require "debug.debug_info"
@@ -14,6 +13,7 @@ local CAMERAS = require "libs_project.cameras"
 local SOUNDS = require "libs.sounds"
 
 local WORLD = require "world.world"
+local GAME_DISTRIBUTION = require "libs_project.platforms.game_distribution"
 
 COMMON.empty_ne("defos")
 
@@ -45,6 +45,10 @@ function Script:init_msg()
 end
 
 function Script:init()
+    if(COMMON.CONSTANTS.PLATFORM_IS_WEB)then
+        GAME_DISTRIBUTION.init()
+    end
+
     COMMON.FEATURES = Features()
     COMMON.FEATURES:debug_config()
     COMMON.FEATURES:load()

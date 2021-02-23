@@ -84,7 +84,7 @@ iap_provider =
 
 [html5]
 archive_location_prefix = archive
-htmlfile = /builtins/manifests/web/engine_template.html
+htmlfile = /platform/web/engine_template.html
 show_fullscreen_button = 0
 show_made_with_defold = 0
 scale_mode = fit
@@ -127,4 +127,7 @@ bundle_identifier = com.d954mas.game
 
 [mesh]
 max_count = 0
+
+[gamedistribution]
+game_id = 4b26eaedaacb4f6f81564a9169ec81b2
 

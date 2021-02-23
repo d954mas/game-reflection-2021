@@ -29,6 +29,22 @@ function Sounds:on_storage_changed()
 	sound.set_group_gain(COMMON.HASHES.hash("sound"),WORLD.storage.data.options.sound and 1 or 0)
 end
 
+function Sounds:pause()
+	self.gain_music = sound.get_group_gain(COMMON.HASHES.hash("music"))
+	self.gain_sound = sound.get_group_gain(COMMON.HASHES.hash("sound"))
+end
+
+function Sounds:resume()
+	if(self.gain_music) then
+		sound.set_group_gain(COMMON.HASHES.hash("music"),self.gain_music)
+		self.gain_music = nil
+	end
+	if(self.gain_sound) then
+		sound.set_group_gain(COMMON.HASHES.hash("sound"),self.gain_sound)
+		self.gain_sound = nil
+	end
+end
+
 function Sounds:update(dt)
 	self.scheduler:update(dt)
 	for k, v in pairs(self.gate_sounds) do

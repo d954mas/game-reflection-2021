@@ -1,5 +1,6 @@
 local COMMON = require "libs.common"
 local ACTIONS = require "libs.actions.actions"
+local GAME_DISTRIBUTION = require "libs_project.platforms.game_distribution"
 local LevelMatcher = require "world.level_matcher"
 local LineView = require "scenes.game.go.level_line_view"
 
@@ -99,6 +100,9 @@ function Lvl:load()
         for _, figure in ipairs(self.go_figures) do
             go.delete(figure)
         end
+    end)
+    self.command_sequence:add_action(function ()
+        GAME_DISTRIBUTION.ad_show()
     end)
 
 end
