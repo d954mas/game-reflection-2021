@@ -14,6 +14,7 @@ local SOUNDS = require "libs.sounds"
 
 local WORLD = require "world.world"
 local GAME_DISTRIBUTION = require "libs_project.platforms.game_distribution"
+local UNITY_ADS = require "libs_project.platforms.unity_ads"
 
 COMMON.empty_ne("defos")
 
@@ -48,9 +49,12 @@ function Script:init()
     if(COMMON.CONSTANTS.PLATFORM_IS_WEB)then
         GAME_DISTRIBUTION.init()
     end
+    if(COMMON.CONSTANTS.PLATFORM_IS_ANDROID)then
+        UNITY_ADS.init()
+    end
 
     COMMON.FEATURES = Features()
-    COMMON.FEATURES:debug_config()
+    COMMON.FEATURES:prod_config()
     COMMON.FEATURES:load()
     CAMERAS:init()
     self.thread = COMMON.ThreadManager()

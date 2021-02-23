@@ -1,6 +1,7 @@
 local COMMON = require "libs.common"
 local ACTIONS = require "libs.actions.actions"
 local GAME_DISTRIBUTION = require "libs_project.platforms.game_distribution"
+local UNITY_ADS = require "libs_project.platforms.unity_ads"
 local LevelMatcher = require "world.level_matcher"
 local LineView = require "scenes.game.go.level_line_view"
 
@@ -15,7 +16,7 @@ local Lvl = COMMON.class("Level")
 
 ---@param world World
 ---@param config LevelConfig
-function Lvl:initialize(world,config)
+function Lvl:initialize(world, config)
     self.world = assert(world)
     self.config = assert(config)
     self.command_sequence = ACTIONS.Sequence()
@@ -52,10 +53,10 @@ function Lvl:load()
         sprite.play_flipbook(sprite_url, hash(region.art))
 
 
-    --    local go_url = self:_create_go(FACTORY_REGION_BG_URL, vmath.vector3(region.position.x, region.position.y, 0),
+        --    local go_url = self:_create_go(FACTORY_REGION_BG_URL, vmath.vector3(region.position.x, region.position.y, 0),
         --region.scale, COMMON.HASHES.hash(region.art .. "_bg"))
-      -- local sprite_url = msg.url(go_url.socket, go_url.path, "sprite")
-      --  sprite.set_constant(sprite_url, "tint", vmath.vector4(0.55, 0.55, 0.55, 1))
+        -- local sprite_url = msg.url(go_url.socket, go_url.path, "sprite")
+        --  sprite.set_constant(sprite_url, "tint", vmath.vector4(0.55, 0.55, 0.55, 1))
     end
     COMMON.d("load figures", TAG)
     for _, region in ipairs(self.config.figures) do
@@ -87,7 +88,7 @@ function Lvl:load()
         end
         for _, figure in ipairs(self.go_regions) do
             local sprite_url = msg.url(figure.socket, figure.path, "sprite")
-            msg.post(sprite_url,COMMON.HASHES.MSG.DISABLE)
+            msg.post(sprite_url, COMMON.HASHES.MSG.DISABLE)
         end
         local ctx = COMMON.CONTEXT:set_context_top_by_name(COMMON.CONTEXT.NAMES.GAME_GUI)
         ctx.data:tutorial_check_start()
@@ -101,8 +102,9 @@ function Lvl:load()
             go.delete(figure)
         end
     end)
-    self.command_sequence:add_action(function ()
+    self.command_sequence:add_action(function()
         GAME_DISTRIBUTION.ad_show()
+        UNITY_ADS.ad_show()
     end)
 
 end

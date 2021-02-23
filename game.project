@@ -1,7 +1,7 @@
 [project]
-title = game
+title = Reflection Symmetry
 version = 0.1.0
-dependencies = https://github.com/AGulev/jstodef/archive/1.2.1.zip,https://github.com/DanEngelbrecht/LuaScriptInstance/archive/master.zip,https://github.com/britzl/defold-png/archive/master.zip
+dependencies = https://github.com/AGulev/jstodef/archive/1.2.1.zip,https://github.com/DanEngelbrecht/LuaScriptInstance/archive/master.zip,https://github.com/britzl/defold-png/archive/master.zip,https://github.com/AGulev/DefVideoAds/archive/master.zip
 custom_resources = 
 bundle_exclude_resources = 
 bundle_resources = assets/bundle
@@ -46,7 +46,14 @@ app_manifest = /app_manifest_debug.appmanifest
 gcm_sender_id = 
 push_field_text = 
 manifest = /builtins/manifests/android/AndroidManifest.xml
-package = com.d954mas.game
+package = com.d954mas.game.reflection_symmetry
+app_icon_36x36 = /platform/android/icon/mipmap-mdpi/ic_launcher.png
+app_icon_48x48 = /platform/android/icon/mipmap-hdpi/ic_launcher.png
+app_icon_72x72 = /platform/android/icon/mipmap-xhdpi/ic_launcher.png
+app_icon_96x96 = /platform/android/icon/mipmap-xxhdpi/ic_launcher.png
+app_icon_144x144 = /platform/android/icon/mipmap-xxxhdpi/ic_launcher.png
+app_icon_192x192 = /platform/android/icon/mipmap-xxxhdpi/ic_launcher.png
+version_code = 2
 
 [graphics]
 texture_profiles = /render/my.texture_profiles

@@ -23,18 +23,22 @@ function Sounds:initialize()
 end
 
 function Sounds:on_storage_changed()
-	pprint("music")
-	pprint(WORLD.storage.data.options.music and 1 or 0)
 	sound.set_group_gain(COMMON.HASHES.hash("music"),WORLD.storage.data.options.music and 1 or 0)
 	sound.set_group_gain(COMMON.HASHES.hash("sound"),WORLD.storage.data.options.sound and 1 or 0)
 end
 
 function Sounds:pause()
+	print("PAUSE SOUND")
+	COMMON.i("pause", TAG)
 	self.gain_music = sound.get_group_gain(COMMON.HASHES.hash("music"))
 	self.gain_sound = sound.get_group_gain(COMMON.HASHES.hash("sound"))
+	sound.set_group_gain(COMMON.HASHES.hash("music"),0)
+	sound.set_group_gain(COMMON.HASHES.hash("sound"),0)
 end
 
 function Sounds:resume()
+	print("RESUME SOUND")
+	COMMON.i("resume", TAG)
 	if(self.gain_music) then
 		sound.set_group_gain(COMMON.HASHES.hash("music"),self.gain_music)
 		self.gain_music = nil
