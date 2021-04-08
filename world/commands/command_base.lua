@@ -6,7 +6,7 @@ local Command = COMMON.class("Command")
 function Command:initialize(name, data)
     self.name = assert(name)
     self.data = data or {}
-    self.world = requiref "models.world"
+    self.world = reqf "models.world"
     self:check_data(data)
 end
 

@@ -85,5 +85,6 @@ globals = {
   "on_reload",
   "interactive_canvas",
   "requiref",
+  "reqf",
   "__dm_script_instance__"
 }

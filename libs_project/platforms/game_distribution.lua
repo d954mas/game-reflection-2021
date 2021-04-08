@@ -2,7 +2,8 @@ local COMMON = require "libs.common"
 local SCENE_ENUMS = require "libs.sm.enums"
 
 local TAG = "GAME_DISTRIBUTION"
-local TIME_DELAY = 10 * 60
+local TIME_DELAY = 3 * 60
+local FIRST_TIME_DELAY = 1 * 60
 
 local M = {}
 
@@ -11,21 +12,21 @@ function M.init()
     assert(gdsdk,"no sdk")
     COMMON.w("init",TAG)
     M.inited = true
-    M.ad_next_time = os.clock() + TIME_DELAY
+    M.ad_next_time = os.clock() + FIRST_TIME_DELAY
     gdsdk.set_listener(function(self, event, message)
         COMMON.w("event:" .. tostring(event) ,TAG)
-        local SM = requiref "libs_project.sm"
-        local SOUNDS = requiref "libs.sounds"
+        local SM = reqf "libs_project.sm"
+        local SOUNDS = reqf "libs.sounds"
         if event == gdsdk.SDK_GAME_PAUSE then
             SOUNDS:pause()
             local scene = SM:get_top()
-            if(scene._state == SCENE_ENUMS.STATES.RUNNING)then
+            if(scene and scene._state == SCENE_ENUMS.STATES.RUNNING)then
                 scene:pause()
             end
         elseif event == gdsdk.SDK_GAME_START then
             SOUNDS:resume()
             local scene = SM:get_top()
-            if(scene._state == SCENE_ENUMS.STATES.PAUSED)then
+            if(scene and scene._state == SCENE_ENUMS.STATES.PAUSED)then
                 scene:resume()
             end
         end

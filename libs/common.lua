@@ -1,4 +1,4 @@
-requiref = require -- to fix cyclic dependencies
+reqf = _G.require -- to fix cyclic dependencies
 
 local M = {}
 M.GLOBAL = {

@@ -21,7 +21,7 @@ function M:event(name,data)
 	pprint(data)
 	assert(not data.name)
 	data.name = name
-	local common = requiref "libs.common"
+	local common = reqf "libs.common"
 	common.i("event:" .. name,TAG)
 	self.subject:onNext(data)
 
